@@ -43,7 +43,7 @@ export const constantRoutes = [
   },
   {
     path: '/Customer',
-    component: () => import('@/views/Customer/Customer'),
+    component: () => import('@/views/Customer'),
   },
   {
     path: '/Home',
@@ -59,14 +59,15 @@ export const constantRoutes = [
   },
   {
     path: '/House_d',
-    component: () => import('@/views/House_d/House_d'),
+    name: 'house_d',
+    component: () => import('@/views/House/House_d'),
   },
   {
     path: '/House?from=home',
     component: () => import('@/views/Home'),
     meta: {
-			showTab: true//如果需要显示就加上这个
-		}
+      showTab: true//如果需要显示就加上这个
+    }
   },
   {
     path: '/More',
@@ -76,10 +77,40 @@ export const constantRoutes = [
     path: '/House',
     component: () => import('@/views/House'),
     meta: {
-			showTab: false//如果需要显示就加上这个
-		}
+      showTab: false//如果需要显示就加上这个
+    }
   },
-
+  {
+    path: '/saveSearch',
+    component: () => import('@/views/saveSearch')
+  },
+  // 新增跟進
+  {
+    path: '/AddFollow',
+    name: 'AddFollow',
+    component: () => import('@/views/AddFollow')
+  },
+  // end 新增跟進
+  //選擇提醒人
+  {
+      path:'/SelectPerson',
+      name:'SelectPerson',
+      component:()=>import('@/views/SelectPerson'),
+      meta:{
+        title:'選擇提醒人'
+      }
+  },
+  // end 選擇提醒人
+  // 更多跟進
+  {
+    path:'/MoreFollow',
+    name:'MoreFollow',
+    meta:{
+      title:'更多跟進人'
+    },
+    component:()=>import('@/views/MoreFollow')
+  }
+  // end 更多跟進
 
   // {
   //   path: '/',

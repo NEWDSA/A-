@@ -3,32 +3,31 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import defaultSettings from '@/settings'
-
+import md5 from 'js-md5' // 引入 md5加密
+//vue 产生10位时间戳
+let lc_timestamp=(new Date().getTime().toString());
+lc_timestamp=lc_timestamp.substr(0,10);
+// end vue 产生10位时间戳
+// MD5加密
+let lc_sign="CYDAP_com-group~Centa@"+lc_timestamp+"2016090007";
+let lc_md5=md5(lc_sign);
+// end MD5 加密
 // create an axios instance
 const service = axios.create({
   //baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   baseURL: defaultSettings.baseURL ?? '',
+  headers:{
+    'platform':'ios',
+    'Centaline':'9527',
+    'number':lc_timestamp,
+    'sign':lc_md5,
+    'staffno':2016090007,
+    'token':'A2FC2F70-20E1-CFA7-7C5B-08D3F0C31277|AD757BE8-0886-CA9F-FE83-08D5A43679ED|2016090007|0A0EA5B4-571E-4B4A-B9AC-0157CBA85942|3F4374B7-35CA-473F-A471-CF34B8333211'
+  }
   //timeout: 5000 // request timeout
 })
 
-// // request interceptor
-// service.interceptors.request.use(
-//   config => {
-//     // do something before request is sent
-//     if (store.getters.token ?? getToken()) {
-//       // let each request carry token
-//       // ['X-Token'] is a custom headers key
-//       // please modify it according to the actual situation
-//       config.headers['token'] = store.getters.token ?? getToken();
-//     }
-//     return config
-//   },
-//   error => {
-//     // do something with request error
-//     console.log(error) // for debug
-//     return Promise.reject(error)
-//   }
-// )
+
 
 // response interceptor
 service.interceptors.response.use(
@@ -43,34 +42,7 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    // const res = response.data
-
-    // // if the custom code is not 20000, it is judged as an error.
-    // if (res.code !== 20000) {
-    //   Message({
-    //     message: res.message || 'Error',
-    //     type: 'error',
-    //     duration: 5 * 1000
-    //   })
-
-    //   // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-    //   if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-    //     // to re-login
-    //     MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-    //       confirmButtonText: 'Re-Login',
-    //       cancelButtonText: 'Cancel',
-    //       type: 'warning'
-    //     }).then(() => {
-    //       store.dispatch('user/resetToken').then(() => {
-    //         location.reload()
-    //       })
-    //     })
-    //   }
-    //   return Promise.reject(new Error(res.message || 'Error'))
-    // } else {
-    //   return res
-    // }
-
+   
     const { success, error_msg, data} = response.data
     if(success !== undefined && error_msg!==undefined && data !== undefined){
       if(success){

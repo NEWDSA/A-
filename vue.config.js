@@ -24,6 +24,7 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
+
   publicPath: '',
   outputDir: 'dist',
   assetsDir: 'static',
@@ -37,27 +38,21 @@ module.exports = {
       errors: true
     },
     // 配置多个代理
-    proxy:{
-      '/mock':{
-        target:'/',
-        changeOrigin:true
+    proxy: {
+      '/ColdCall_Demo/api/Wechat': {
+        target: 'http://hq.centaline.com.cn/HqProcessApi',
+        changeOrigin: true
       },
-      '/':{
-        target:process.env.VUE_APP_API_ROOT,
-        changeOrigin:true
+      // '/api': {
+      //   target: 'http://10.68.2.9:8029',
+      //   changeOrigin: true
+      // }
+      '/api': {
+        target: 'http://10.1.31.83:22061',
+        changeOrigin: true
       }
     },
-    // proxy: {
-    //   '/ColdCall_Demo/api/Wechat': {
-    //     target: 'http://hq.centaline.com.cn/HqProcessApi',
-    //     changeOrigin: true
-    //   },
-    //   '/api': {
-    //     target: 'http://10.68.2.9:8029',
-    //     changeOrigin: true
-    //   }
-    // },
-    after: require('./src/mock/server-modules/server.js')
+    after: require('./mock/mock-server.js')
   },
   configureWebpack: {
     plugins: [
@@ -118,7 +113,7 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+              // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
             .end()

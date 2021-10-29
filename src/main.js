@@ -15,7 +15,8 @@ import '@/permission' // permission control
 import permission from '@/directive/permission/index.js' // 权限判断指令
 import vant from 'vant' // 引入Vant
 import 'vant/lib/index.css';
-
+import './assets/css/iconfont.css';
+import { PullRefresh } from 'vant';
 
 /**
  * If you don't want to use mock-server
@@ -34,7 +35,7 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
-import '@/mock'
+
 
 
 Vue.use(vant);
@@ -46,8 +47,12 @@ Vue.use(SwipeItem);
 Vue.directive('permission', permission)
 // 全局引入jquery
 Vue.config.productionTip = false
-Vue.prototype.$tabbar_b = true
-Vue.prototype.$arrow = true
+//Vue.prototype.$arrow = true
+
+// 全局引入 上拉刷新
+Vue.use(PullRefresh);
+// end 全局引入上拉刷新
+
 new Vue({
   el: '#app',
   router,
