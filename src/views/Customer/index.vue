@@ -226,7 +226,7 @@ export default {
       ++this.pageIndex;
       aplush.apis
         .CustomList({
-          PageIndex: this.pageIndex,
+          PageIndex: this.PageIndex,
           PageSize: this.PageSize,
           NavigationCategory: 8,
           InquiryCategory: 2,
@@ -241,15 +241,15 @@ export default {
         })
         .then((res) => {
           this.pullLoading = false;
-          let lc_temp = res.PropertysModel;
+          let lc_temp = res.Inquirys;
           console.log(lc_temp);
-          // lc_temp.forEach((item) => {
-          //   this.HouseList.push(item);
-          // });
-          // if (res.res.PropertysModel.length == 0) {
-          //   this.finishedList = 0;
-          //   this.pullLoading = false;
-          // }
+          lc_temp.forEach((item) => {
+            this.CustomList.push(item);
+          });
+          if (res.Inquirys.length == 0) {
+            this.finishedList = 0;
+            this.pullLoading = false;
+          }
         });
     },
     // end 下拉刷新
@@ -273,9 +273,9 @@ export default {
           RentPriceTo: "",
         })
         .then((res) => {
-          let lc_temp = res.PropertysModel;
+          let lc_temp = res.Inquirys;
           lc_temp.forEach((item) => {
-            this.HouseList.push(item);
+            this.CustomList.push(item);
           });
 
           this.loading = false;
