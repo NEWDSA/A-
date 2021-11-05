@@ -109,22 +109,29 @@ export const constantRoutes = [
       title:'更多跟進人'
     },
     component:()=>import('@/views/MoreFollow')
-  }
+  },
   // end 更多跟進
+  // 新增客户
+  {
+    path:'/AddCustomer',
+    name:'AddCustomer',
+    component:()=>import('@/views/AddCustomer')
+  },
+  // end 新增客户
+  //带看记录
+  {
+    path:'/LookRecord',
+    name:'LookRecord',
+    component:()=>import('@/views/LookRecord')
+  },
+  // end 带看记录
+  // 客戶詳情
+  {
+    path:'/CustomerDetail',
+    name:'CustomerDetail',
+    component:()=>import('@/views/CustomerDetail')
+  },
 
-  // {
-  //   path: '/',
-  //   //component: Layout,
-  //   component: () => import('@/views/Home'),
-  //   //redirect: '/Home'
-  //   // meta: { title: '首页', icon: 'dashboard', affix: true },
-  //   // children: [{
-  //   //   path: 'Home',
-  //   //   name: 'Home',
-  //   //   component: () => import('@/views/Home'),
-  //   //   meta: { title: '首页', icon: 'dashboard', affix: true }
-  //   // }]
-  // }
 ]
 
 const createRouter = () => new Router({

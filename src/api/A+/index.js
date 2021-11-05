@@ -21,6 +21,15 @@ export default {
 
         },
         // end 獲取房源詳情
+        //獲取系統類型
+        // end 獲取系統類型
+        SystemType(Type) {
+            return lc_request({
+                url: '/api/System/find-sys-items',
+                params: Type,
+                method: 'get'
+            })
+        },
         //房源跟进
         ListiongFollow(params) {
             return lc_request({
@@ -49,8 +58,68 @@ export default {
                 method: 'post',
                 data: params
             })
-        }
+        },
         // end 客戶管理
+        // 添加客户
+        AddCustom(params) {
+            return lc_request({
+                url: '/api/Customer/add_inquiry',
+                method: 'post',
+                data: params
+            })
+        },
+        // end 添加客户
+        // 帶看記錄 客源
+        LookRecord(params) {
+            return lc_request({
+                url: '/api/Customer/Take-See-Inquiry-Follows',
+                method: 'post',
+                data: params
+            })
+        },
+        // 帶看樓盤
+        LookRecordFloor(params) {
+            return lc_request({
+                url: '/api/Customer/find-property-take-see',
+                method: 'post',
+                data: params
+            })
+        },
+        // end 帶看記錄
+        //帶看客戶詳情
+        LookRecordDetail(KeyId) {
+            return lc_request({
+                url: '/api/Customer/Detail',
+                method: 'get',
+                params: KeyId
+            })
+        },
+        //客戶跟進
+        CustomFollow(params) {
+            return lc_request({
+                url: '/api/Customer/Inquiry-follows',
+                method: 'post',
+                data: params
+            })
+        },
+        //客戶帶看記錄
+        CustomLookRecord(params) {
+            return lc_request({
+                url: '/api/Customer/Take-See-Inquiry-Follows',
+                method: 'post',
+                data: params
+            })
+        },
+
+        // 開通vip
+        OpenVip(params) {
+            return lc_request({
+                url: '/api/Customer/open-inquirys-member',
+                method: 'post',
+                data: params
+            })
+        }
+        // end 開通vip
 
     }
 }

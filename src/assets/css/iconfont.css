@@ -17,3 +17,7 @@
   content: "\e607";
 }
 
+.my-icon-remove:before {
+  content: "\e65d";
+}
+

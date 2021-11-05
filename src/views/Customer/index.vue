@@ -1,9 +1,10 @@
 <template>
   <div id="cus">
     <div class="fixed">
-      <img src="/icon/new-customers_icon.png" alt="" />
+      <img src="/icon/new-customers_icon.png" @click="AddCustomer()" alt="" />
+
       <img src="/icon/poll_float_icon.png" alt="" />
-      <img src="/icon/look_icon.png" alt="" />
+      <img src="/icon/look_icon.png" @click="AddLook()" alt="" />
     </div>
     <div
       style="
@@ -19,14 +20,16 @@
           class="search"
           style="width: 100%"
           placeholder="輸入姓名／手機/目標樓盤"
+          v-model="lc_sccustom"
+          @search="onSearch"
         />
       </div>
-      <div style="flex: 1">
+      <div style="flex: 1" @click="lc_filter">
         <img src="/icon/screen_icon.png" alt="" style="width: 20px" />
       </div>
     </div>
 
-    <article style="margin-top: 18px; font-size: 14px">
+    <article class="lc_article" style="margin-top: 18px; font-size: 14px">
       <section>
         <div>30天租房到期</div>
         <div>渠道來電客</div>
@@ -35,59 +38,9 @@
         <div>唯一</div>
       </section>
     </article>
-    <!-- 客户内容 -->
-    <!-- <nav v-for="(item, index) in 13" @click="tap(index)" :key="index">
-      <div class="fx">
-        <div class="avater">
-          <img src="/icon/man_vip_pictur.png" alt="" />
-          <button>有效</button>
-        </div>
-
-        <div class="daikan" style="font-size: 13px">
-          <span>2</span>
-          <div>帶看</div>
-        </div>
-
-        <div class="chengjiao" style="font-size: 13px">
-          <span>0</span>
-          <div>成交</div>
-        </div>
-      </div>
-
-      <div class="fx">
-        <aside>
-          <div style="font-weight: 700; font-size: 16px">洪先生</div>
-          <van-button type="primary" class="btn_f" size="mini">
-            求購</van-button
-          >
-          <van-button type="primary" class="btn_s" size="mini">
-            三居</van-button
-          >
-        </aside>
-
-        <aside style="font-size: 14px">
-          <div>求購價：</div>
-          <div>100-300萬</div>
-        </aside>
-
-        <aside style="font-size: 14px">
-          <div>所屬人：</div>
-          <div>庄耀璟 Ken Chong HM5</div>
-        </aside>
-
-        <aside style="font-size: 14px">
-          <div>最後跟進：</div>
-          <div>2021-08-20</div>
-        </aside>
-
-        <aside style="font-size: 14px">
-          <div>意向泰和中央，想投160萬左右</div>
-        </aside>
-      </div>
-    </nav> -->
     <van-pull-refresh
       v-model="pullLoading"
-      @refresh="onPullRefresh"
+      @refresh="onRefresh"
       success-text="刷新成功"
     >
       <van-list
@@ -115,13 +68,15 @@
               </template>
               <button>{{ item.InquiryStatus }}</button>
             </div>
-            <div class="daikan" style="font-size: 13px">
-              <span>{{ item.TakeSeeCount }}</span>
-              <div>帶看</div>
-            </div>
-            <div class="chengjiao" style="font-size: 13px">
-              <span>{{ item.ReserveCount }}</span>
-              <div>成交</div>
+            <div style="background-color: #f7f7f7; border-radius: 1px">
+              <div class="daikan" style="font-size: 13px">
+                <span>{{ item.TakeSeeCount }}</span>
+                <div>帶看</div>
+              </div>
+              <div class="chengjiao" style="font-size: 13px">
+                <span>{{ item.ReserveCount }}</span>
+                <div>成交</div>
+              </div>
             </div>
           </div>
           <div class="fx">
@@ -167,12 +122,139 @@
     </van-pull-refresh>
 
     <!-- 客户内容 -->
-    <div style="height: 50px"></div>
+    <van-popup
+      v-model="show_filter"
+      position="bottom"
+      :style="{ height: '70%', overflow: 'hidden' }"
+      round
+    >
+      <van-sticky>
+        <div class="lc_filter">篩選條件</div>
+      </van-sticky>
+
+      <van-divider />
+      <div class="lc_layout">
+        <!-- 交易類型 -->
+        <div class="lc_title" v-if="TransType.SysParameter.ParameterName">
+          {{ TransType.SysParameter.ParameterName }}
+        </div>
+        <div style="display: flex; margin-left: 10px">
+          <template v-for="(item, index) in TransType.Items">
+            <div
+              :class="TransIndex === index ? 'lc_type_active' : 'lc_type'"
+              :key="index"
+              @click="e_tranType(index)"
+            >
+              {{ item.ItemName }}
+            </div>
+          </template>
+        </div>
+        <!-- end 交易類型 -->
+        <!-- 租價 -->
+        <div class="lc_title">心裡租價</div>
+        <div class="lc_container">
+          <input class="lc_input" v-model="start_mindRent" type="text" />
+          <div class="lc_divider" />
+          <input type="text" v-model="end_mindRent" class="lc_input" />
+          <div class="lc_unit">元</div>
+        </div>
+        <!-- end 租價 -->
+        <!-- 購價 -->
+        <div class="lc_title">心裡購價</div>
+        <div class="lc_container">
+          <input class="lc_input" v-model="start_mindBuy" type="text" />
+          <div class="lc_divider" />
+          <input class="lc_input" v-model="end_mindBuy" type="text" />
+          <div class="lc_unit">萬</div>
+        </div>
+        <!-- end 購價 -->
+        <!-- 房型 -->
+        <div class="lc_title" v-if="RoomType.SysParameter.ParameterName">
+          {{ RoomType.SysParameter.ParameterName }}
+        </div>
+        <div class="lc_h_layout">
+          <div
+            style="display: flex; justify-content: center"
+            v-for="(item, index) in RoomType.Items"
+            :key="index"
+          >
+            <div
+              :class="RoomIndex === index ? 'lc_type_active' : 'lc_type'"
+              @click="e_RoomType(index)"
+            >
+              {{ item.ItemName }}
+            </div>
+          </div>
+        </div>
+        <!-- end 房型 -->
+        <div class="lc_title">房源歸屬</div>
+        <div style="display: flex">
+          <input
+            type="text"
+            v-model="depart_name"
+            class="lc_department"
+            placeholder="請輸入部門名稱"
+          />
+
+          <input
+            type="text"
+            v-model="sales_man"
+            class="lc_sales_man"
+            placeholder=" 請輸入業務員姓名"
+          />
+        </div>
+        <div class="lc_title" v-if="Floor.SysParameter.ParameterName">
+          {{ Floor.SysParameter.ParameterName }}
+        </div>
+        <div
+          style="display: flex; justify-content: space-evenly; flex-wrap: wrap"
+        >
+          <template v-for="(item, index) in Floor.Items">
+            <div
+              style="display: flex; justify-content: center"
+              :key="index"
+              @click="e_Floor(index)"
+            >
+              <div :class="FloorIndex === index ? 'lc_type_active' : 'lc_type'">
+                {{ item.ItemName }}
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div
+        style="
+          position: relative;
+          height: 60px;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        "
+      >
+        <div style="width: 50%; display: flex; justify-content: center">
+          <van-button
+            style="display: inline-block; justify-content: center; flex: 1"
+            >重置</van-button
+          >
+        </div>
+        <div
+          style="width: 50%; display: flex; justify-content: center"
+          @click="Custom_filter"
+        >
+          <van-button
+            style="display: inline-block; justify-content: center; flex: 1"
+            >確定</van-button
+          >
+        </div>
+      </div>
+    </van-popup>
+    <!-- end 内容筛选弹出层 -->
   </div>
 </template>
 <script>
 import { Toast } from "vant";
 import aplush from "@/api/A+";
+import api from '@/api';
 export default {
   data() {
     return {
@@ -185,28 +267,71 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
+      lc_sccustom: "",
+      show_filter: false, //过滤内容
+      depart_name: "", //部門名稱
+      sales_man: "", //業務員
+      TransType: {}, //交易类型
+      TransIndex: "",
+      TransKeyId: "",
+      RentMind: "", //心裡租價
+      BuyMind: "", // 心裡購價
+      DepartName: "", // 部門名稱
+      SalesName: "", // 業務員
+      Floor: {}, //楼层
+      FloorIndex: "", //選中的房型
+      FloorKeyId: "",
+      RoomType: {}, //房型
+      RoomIndex: "",
+      RoomKeyId: "",
+      start_mindRent: "",
+      end_mindRent: "",
+      start_mindBuy: "",
+      end_mindBuy: "",
+      TransKeyId: "", //交易类型的KeyId
+      RoomKeyId: "", //房型keyId
     };
   },
-  mounted() {
-    let params = {
-      PageIndex: this.PageIndex,
-      PageSize: this.PageSize,
-      NavigationCategory: 8,
-      InquiryCategory: 2,
-      PrivateInquiryRange: 4,
-      CustomerName: "",
-      InquiryTradeTypeKeyId: "",
-      HouseTypeKeyIds: "",
-      SalePriceFrom: "",
-      SalePriceTo: "",
-      RentPriceFrom: "",
-      RentPriceTo: "",
-    };
-    aplush.apis.CustomList(params).then((res) => {
-      this.CustomList = res.Inquirys;
-      console.log("打印客户列表");
-      console.log(this.CustomList);
-    });
+  watch: {
+    show_filter(newd, old) {},
+  },
+
+  async mounted() {
+    console.log(this.RoomType);
+    aplush.apis
+      .SystemType({
+        Type: "25",
+      })
+      .then((res) => {
+        console.log("打印交易類型");
+        console.log(res.Result);
+        this.RoomType = res.Result;
+      });
+    // end 房型
+    // 請求樓層
+    aplush.apis
+      .SystemType({
+        Type: "26",
+      })
+      .then((res) => {
+        console.log("打印交易類型");
+        console.log(res.Result);
+        this.Floor = res.Result;
+        console.log(this.Floor.Items);
+      });
+    // end 請求樓層
+
+    // 請求交易類型
+    aplush.apis
+      .SystemType({
+        Type: "45",
+      })
+      .then((res) => {
+        console.log("請求交易類型");
+        console.log(this.TransType);
+        this.TransType = res.Result;
+      });
+    // end 請求交易類型
   },
   methods: {
     back() {
@@ -222,8 +347,15 @@ export default {
       this.$router.push("/Custom_d");
     },
     // 下拉刷新
-    onPullRefresh() {
-      ++this.pageIndex;
+    onRefresh() {
+      this.finished = false;
+      this.loading = true;
+      this.onLoad();
+    },
+    // end 下拉刷新
+    // 上滑加載列表
+    onLoad() {
+      // if (this.finishedList) return;
       aplush.apis
         .CustomList({
           PageIndex: this.PageIndex,
@@ -231,40 +363,7 @@ export default {
           NavigationCategory: 8,
           InquiryCategory: 2,
           PrivateInquiryRange: 4,
-          CustomerName: "",
-          InquiryTradeTypeKeyId: "",
-          HouseTypeKeyIds: "",
-          SalePriceFrom: "",
-          SalePriceTo: "",
-          RentPriceFrom: "",
-          RentPriceTo: "",
-        })
-        .then((res) => {
-          this.pullLoading = false;
-          let lc_temp = res.Inquirys;
-          console.log(lc_temp);
-          lc_temp.forEach((item) => {
-            this.CustomList.push(item);
-          });
-          if (res.Inquirys.length == 0) {
-            this.finishedList = 0;
-            this.pullLoading = false;
-          }
-        });
-    },
-    // end 下拉刷新
-    // 上滑加載列表
-    onLoad() {
-      if (this.finishedList) return;
-      ++this.pageIndex;
-      aplush.apis
-        .CustomList({
-          PageIndex: this.pageIndex,
-          PageSize: this.PageSize,
-          NavigationCategory: 8,
-          InquiryCategory: 2,
-          PrivateInquiryRange: 4,
-          CustomerName: "",
+          CustomerName: this.lc_sccustom,
           InquiryTradeTypeKeyId: "",
           HouseTypeKeyIds: "",
           SalePriceFrom: "",
@@ -277,14 +376,121 @@ export default {
           lc_temp.forEach((item) => {
             this.CustomList.push(item);
           });
+          this.PageIndex++;
 
           this.loading = false;
-          if (lc_temp == null || lc_temp == "" || lc_temp == 0) {
+          this.pullLoading= false;
+         if(lc_temp.length < this.PageSize){
             this.finished = true;
+            
           }
         });
     },
     // end 上滑加載列表
+    // 搜索
+    onSearch(val) {
+      this.PageIndex = 1;
+      aplush.apis
+        .CustomList({
+          PageIndex: this.PageIndex,
+          PageSize: this.PageSize,
+          NavigationCategory: 8,
+          InquiryCategory: 2,
+          PrivateInquiryRange: 4,
+          CustomerName: this.lc_sccustom,
+          InquiryTradeTypeKeyId: "",
+          HouseTypeKeyIds: "",
+          SalePriceFrom: "",
+          SalePriceTo: "",
+          RentPriceFrom: "",
+          RentPriceTo: "",
+        })
+        .then((res) => {
+          this.CustomList = res.Inquirys;
+        });
+    },
+    //end 搜索
+    // 过滤
+    lc_filter() {
+      // 請求房型
+      this.show_filter = true;
+    },
+
+    // end 过滤
+    // 客戶過濾查詢
+    Custom_filter() {
+      aplush.apis
+        .CustomList({
+          PageIndex: this.PageIndex,
+          PageSize: this.PageSize,
+          NavigationCategory: 8,
+          InquiryCategory: 2,
+          PrivateInquiryRange: 4,
+          CustomerName: this.lc_sccustom,
+          InquiryTradeTypeKeyId: this.TransKeyId, //交易类型
+          HouseTypeKeyIds: this.RoomKeyId, //房型
+          SalePriceFrom: this.start_mindBuy,
+          SalePriceTo: this.end_mindBuy,
+          RentPriceFrom: this.start_mindRent,
+          RentPriceTo: this.end_mindRent,
+        })
+        .then((res) => {
+          console.log("打印最终结果");
+          console.log(res);
+          // 查看是否有结果
+          this.CustomList = res.Inquirys;
+          this.show_filter = false;
+          // end 查看是否有结果
+        });
+    },
+    // end 客戶過濾查詢
+    // 獲取選中的交易類型
+    e_tranType(index) {
+      let lc_index = index;
+      this.TransType.Items.forEach((item, index) => {
+        if (lc_index === index) {
+          this.TransIndex = index;
+          this.TransKeyId = item.KeyId;
+        }
+      });
+    },
+    // end 獲取選中的交易類型
+    // 房型點擊事件
+    e_RoomType(index) {
+      let lc_Roomindex = index;
+      this.RoomType.Items.forEach((item, index) => {
+        if (lc_Roomindex === index) {
+          this.RoomIndex = index;
+          this.RoomKeyId = item.KeyId;
+        }
+      });
+    },
+    // end 房型點擊事件
+    // 获取选中的楼层
+    e_Floor(index) {
+      let lc_FloorIndex = index;
+      this.Floor.Items.forEach((item, index) => {
+        if (lc_FloorIndex === index) {
+          this.FloorIndex = index;
+          this.FloorKeyId = item.KeyId;
+        }
+      });
+    },
+    // end 获取选中的楼层
+    // 新增客户
+    AddCustomer() {
+      console.log("lc go page");
+      this.$router.push("AddCustomer");
+    },
+    // end 新增客户
+    // 添加帶看
+    AddLook() {
+      console.log("lc go page");
+      // 跳轉到帶看頁面
+      this.$router.push("LookRecord");
+
+    },
+    // end 添加帶看
   },
 };
 </script>
@@ -295,18 +501,21 @@ export default {
   position: fixed;
   width: 60px;
   bottom: 250px;
+  z-index: 3333;
 }
 .fixed img:nth-child(2) {
   bottom: 120px;
   right: 0;
   position: fixed;
   width: 60px;
+  z-index: 3333;
 }
 .fixed img:nth-child(3) {
   bottom: 185px;
   right: 0;
   position: fixed;
   width: 60px;
+  z-index: 3333;
 }
 .van-icon-search::before {
   content: "\F0AF";
@@ -391,7 +600,8 @@ nav {
     display: flex;
 
     .btn_f {
-      width: 46px;
+      // width: 46px;
+      width: auto;
       background-color: #f12945;
       margin: 0 5px;
       border: 0;
@@ -401,7 +611,8 @@ nav {
     }
 
     .btn_s {
-      width: 46px;
+      width: auto;
+      // width: 46px;
       background-color: #fff;
       border: solid 1px #313e60;
       margin: 0 5px;
@@ -418,5 +629,134 @@ nav {
 
 .van-search {
   height: 46px;
+}
+.lc_filter {
+  font-size: 14px;
+  position: relative;
+  text-align: center;
+  font-size: 14px;
+  margin-top: 17.5px;
+  margin-bottom: 17.5px;
+}
+.lc_title {
+  font-size: 14px;
+  margin-left: 17.5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.lc_container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+}
+.lc_divider {
+  width: 15.5px;
+  height: 2px;
+  background: #cccccc;
+  margin: 0 2px;
+}
+.lc_type_active {
+  width: fit-content;
+  background-color: #f5dbd9;
+  border-radius: 17.9px;
+  font-size: 12px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: 10px;
+  color: #de4135;
+}
+.lc_type {
+  background-color: #f4f4f4;
+  border-radius: 17.9px;
+  font-size: 12px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: 10px;
+  color: #666666;
+}
+.lc_input {
+  width: 100px;
+  // margin-left: 10px;
+  height: 29px;
+  border: none;
+  outline: none;
+  background: #dddddd;
+  border-radius: 17.9px;
+  color: #666666;
+  padding: 5px;
+  font-size: 16px;
+  text-align: center;
+}
+.lc_department {
+  display: inline-block;
+  width: 50%;
+  height: 29px;
+  border-radius: 20px;
+  outline: none;
+  border: none;
+  font-size: 14px;
+  margin: 10px 10px;
+  background-color: #f4f4f4;
+  padding: 10px;
+  color: #666666;
+}
+.lc_sales_man {
+  display: inline-block;
+  width: 50%;
+  height: 29px;
+  border-radius: 20px;
+  outline: none;
+  border: none;
+  font-size: 14px;
+  margin: 10px 10px;
+  background-color: #f4f4f4;
+  padding: 10px;
+  color: #666666;
+}
+.lc_h_layout {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 10px;
+}
+.lc_layout {
+  position: relative;
+  height: calc(100% - 120px);
+  overflow-y: scroll;
+}
+input::-webkit-input-placeholder {
+  // font-family: "\5FAE\8F6F\96C5\9ED1";
+  // font-weight: 400;
+  // font-style: normal;
+  // font-size: 12px;
+  // color: #000000;
+  // text-align: left;
+  margin-left: 20px;
+}
+input::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+
+  margin-left: 20px;
+}
+input:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+
+  margin-left: 20px;
+}
+input:-ms-input-placeholder {
+  margin-left: 20px;
+}
+.lc_unit {
+  width: 70px;
+  font-size: 14px;
+}
+.lc_article {
+  margin-top: 18px;
+  font-size: 14px;
+  color: #666666;
 }
 </style>
