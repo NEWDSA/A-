@@ -151,6 +151,7 @@ export default {
     },
     onSearch(value) {
       console.log(value);
+      
     },
     onRefresh() {
       this.finished = false;
