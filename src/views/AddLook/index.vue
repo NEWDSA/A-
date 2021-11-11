@@ -1102,9 +1102,9 @@ export default {
     line-height: 70px;
     margin-left: 10px;
     font-size: 14px;
-    ::v-deep .van-cell {
-      // padding-le
-    }
+    // ::v-deep .van-cell {
+      
+    // }
     .lc_title {
       position: relative;
       top: -5px;
