@@ -20,4 +20,15 @@
 .my-icon-remove:before {
   content: "\e65d";
 }
+.my-icon-radio-unchecked:before {
+  content: "\e731";
+}
+
+.my-icon-radio-checked:before {
+  content: "\e683";
+}
+
+.my-icon-plus-border:before {
+  content: "\e627";
+}
 

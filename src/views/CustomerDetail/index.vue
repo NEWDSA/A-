@@ -199,7 +199,7 @@
     <!-- 新增跟進、錄入帶看 -->
     <div class="lc_follow">
       <img src="/icon/float_follow-up_icon.png"  />
-      <img src="/icon/float_seeing-look_icon.png" />
+      <img src="/icon/float_seeing-look_icon.png" @click="onClickLookRecord" />
     </div>
   </div>
 </template>
@@ -270,6 +270,24 @@ export default {
           this.CustomTakeLook = res;
         });
     },
+    // 新增跟進
+    onClickFollowUp() {
+      this.$router.push({
+        path: "/follow_up",
+        query: {
+          id: this.$route.query.id,
+        },
+      });
+    },
+    // 錄入帶看
+    onClickLookRecord() {
+      this.$router.push({
+        path: "/AddLook",
+        // query: {
+        //   id: this.$route.query.id,
+        // },
+      });
+    },
   },
 };
 </script>
@@ -334,6 +352,7 @@ export default {
   }
   .lc_follow {
     position: fixed;
+    right: 20px;
     bottom: 200px;
     display: flex;
     width: 60px;

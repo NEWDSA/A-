@@ -32,6 +32,7 @@ export const constantRoutes = [
     path: '/',
     component: () => import('@/views/Home'),
     redirect: '/Home'
+    
   },
   {
     path: '/Modify',
@@ -130,6 +131,12 @@ export const constantRoutes = [
     path:'/CustomerDetail',
     name:'CustomerDetail',
     component:()=>import('@/views/CustomerDetail')
+  },
+  // 錄入帶看
+  {
+    path:'/AddLook',
+    name:'AddLook',
+    component:()=>import('@/views/AddLook')
   },
 
 ]

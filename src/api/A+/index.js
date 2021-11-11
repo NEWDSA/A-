@@ -11,7 +11,6 @@ export default {
                 data: params
             })
         },
-        // end获取房源列表
         //獲取房源詳情
         ListingDetail(keyId) {
             return lc_request({
@@ -20,9 +19,7 @@ export default {
             })
 
         },
-        // end 獲取房源詳情
         //獲取系統類型
-        // end 獲取系統類型
         SystemType(Type) {
             return lc_request({
                 url: '/api/System/find-sys-items',
@@ -44,13 +41,6 @@ export default {
                 }
             })
         },
-        // endd 房源跟进
-        // 房源跟进详情
-
-        // end 房源跟进详情
-        // 撥打業主電話
-
-        // end 撥打業主電話
         //客戶管理
         CustomList(params) {
             return lc_request({
@@ -59,7 +49,6 @@ export default {
                 data: params
             })
         },
-        // end 客戶管理
         // 添加客户
         AddCustom(params) {
             return lc_request({
@@ -68,7 +57,6 @@ export default {
                 data: params
             })
         },
-        // end 添加客户
         // 帶看記錄 客源
         LookRecord(params) {
             return lc_request({
@@ -85,7 +73,6 @@ export default {
                 data: params
             })
         },
-        // end 帶看記錄
         //帶看客戶詳情
         LookRecordDetail(KeyId) {
             return lc_request({
@@ -110,7 +97,22 @@ export default {
                 data: params
             })
         },
-
+        // 搜索帶看樓盤
+        SearchLookRecordFloor(params) {
+            return lc_request({
+                url: '/api/Customer/find-property-take-see',
+                method: 'post',
+                data: params
+            })
+        },
+        // 選擇人員或部門
+        SelectPerson(params) {
+            return lc_request({
+                url: '/api/Common/Get-User-Depart-Auto-Complete',
+                method: 'post',
+                data: params
+            })
+        },
         // 開通vip
         OpenVip(params) {
             return lc_request({
@@ -118,8 +120,31 @@ export default {
                 method: 'post',
                 data: params
             })
-        }
-        // end 開通vip
+        },
+        // 添加帶看記錄
+        AddLookRecord(params) {
+            return lc_request({
+                url: '/api/Customer/Inquiry-take-see-follow-add',
+                method: 'post',
+                data: params
+            })
+        },
+        // 添加收藏
+        AddCollection(params) {
+            return lc_request({
+                url: '/api/Customer/add-collection',
+                method: 'post',
+                data: params
+            })
+        },
 
+        // 上傳文件至服務器接口
+        UploadFile(params) {
+            return lc_request({
+                url: '/upload',
+                method: 'post',
+                data: params
+            })
+        }   
     }
 }

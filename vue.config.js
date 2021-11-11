@@ -50,6 +50,10 @@ module.exports = {
       '/api': {
         target: 'http://10.1.31.83:22061',
         changeOrigin: true
+      },
+      '/upload': {
+        target: 'https://hqstatictest.centaline.com.cn:442/image/upload2',
+        changeOrigin: true
       }
     },
     after: require('./mock/mock-server.js')
