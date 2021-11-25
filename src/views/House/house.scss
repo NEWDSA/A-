@@ -1,0 +1,342 @@
+/*
+ * @Author: luciano 
+ * @Date: 2021-11-25 17:40:25 
+ * @Last Modified by: luciano
+ *  楼盘管理
+ * @Last Modified time: 2021-11-25 18:06:40
+ */
+
+
+.lc_search {
+  display: flex;
+
+  .lc_back {
+    height: 54px;
+    flex: 1;
+  }
+
+  .search_setting {
+    height: 54px;
+    flex: 20;
+  }
+}
+
+.lc_drop_title {
+  margin: 5px;
+  font-family: PingFangSC-Medium;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.lc_box {
+  box-sizing: border-box;
+  background-color: #f1f1f1;
+  color: #333333;
+  font-size: 12px;
+  padding: 6px;
+  margin: 5px;
+}
+
+.lc_field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 5px 5px;
+  height: 30px;
+
+  ::v-deep.van-cell {
+    background-color: #f1f1f1;
+    height: 30px;
+    display: flex;
+  }
+
+  ::v-deep .van-field__label {
+    position: relative;
+    display: flex;
+    height: 100%;
+    align-items: center;
+  }
+
+  ::v-deep .van-cell__value {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.lc_house {
+  margin: 5px 5px;
+}
+
+.lc_status_txt {
+  font-family: PingFangSC-Medium;
+  font-size: 15px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.lc_status {
+  font-size: 12px;
+  font-family: PingFangSC-Regular;
+  display: flex;
+  flex-wrap: wrap;
+
+  span {
+    width: 66px;
+    height: 40px;
+    border-radius: 2px;
+    background-color: #f1f1f1;
+    padding: 9px;
+    margin-left: 10px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    box-sizing: border-box;
+    text-align: center;
+  }
+}
+
+.van-card__price {
+  display: inline-block;
+  color: #323233;
+  font-weight: 700;
+  font-size: 14px;
+  color: #f12945;
+  margin-top: 3px;
+}
+
+.lc_hisotry_contianer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+
+  .lc_pills {
+    position: relative;
+    display: flex;
+    margin-left: 20px;
+
+    .lc_button {
+      width: 50px;
+      height: 30px;
+      background-color: rgb(243, 233, 252);
+      margin: 1px;
+    }
+  }
+}
+
+.van-tag--danger.van-tag--plain {
+  background-color: #ee0a24;
+  color: #fff;
+}
+
+.van-card__title {
+  max-height: 32px;
+  color: black;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 16px;
+}
+
+.van-tag--danger.van-tag--plain {
+  background-color: #ee0a24;
+  position: relative;
+  top: -1px;
+  color: #fff;
+}
+
+.van-tag {
+  position: relative;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  padding: 0 4px;
+  color: #fff;
+  font-size: 12px;
+  line-height: 18px;
+  border-radius: 2px;
+}
+
+.van-tag--mark {
+  border-radius: 3px;
+}
+
+.van-card__tag {
+  position: absolute;
+  top: 0px;
+  left: 0;
+}
+
+.van-card__thumb img {
+  border-radius: 5px;
+}
+
+.van-card__thumb {
+  position: relative;
+  -webkit-box-flex: 0;
+  -webkit-flex: none;
+  flex: none;
+  width: 116px;
+  height: 88px;
+  margin-right: 8px;
+}
+
+.van-dropdown-menu__bar {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  background-color: #fff;
+  box-shadow: 0 0 0 rgb(100 101 102 / 12%);
+}
+
+.van-dropdown-item__content {
+  position: absolute;
+  max-height: 100%;
+}
+
+.lc_confirm {
+  flex: 0.6;
+  height: 35px;
+  background-color: #f12945;
+}
+
+.btn {
+  display: flex;
+  justify-content: space-around;
+  margin: 13px;
+
+  .btn_reset {
+    flex: 0.2;
+    height: 35px;
+    background-color: #fbeeee;
+    color: #f12945;
+    border-color: #f12945;
+  }
+
+  .btn_confrim {
+    flex: 0.6;
+    height: 35px;
+    background-color: #f12945;
+  }
+}
+
+.van-icon-search {
+  color: #999999;
+  font-size: 24px !important;
+}
+
+#app {
+  background-color: white;
+}
+
+.van-icon-arrow-left {
+  float: left;
+  font-size: 24px;
+  line-height: 54px;
+}
+
+.van-search__content--square {
+  border: 1px solid #ccc;
+  width: 320px;
+}
+
+.search {
+  float: left;
+}
+
+.lc_active {
+  padding: 0 30px 0 15px;
+  color: #f12945;
+  line-height: 46px;
+  font-size: 14px;
+}
+
+.lc_unactive {
+  padding: 0 30px 0 15px;
+  line-height: 46px;
+  font-size: 14px;
+}
+
+::v-deep .van-dropdown-menu__bar {
+  div:nth-child(5) {
+
+    //  background-image: url(https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcdn.duitang.com%2Fuploads%2Fitem%2F201201%2F21%2F20120121221738_zyAvm.jpg&refer=http%3A%2F%2Fcdn.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637381188&t=84fa3d6603a9919bfdb9ddd9e8d93b0a);
+    .van-dropdown-menu__title--down::after {
+      // margin-top: -0.02667rem;
+      // -webkit-transform: rotate(135deg);
+      // transform: rotate(135deg);
+      //background: url(/icon/sort.icon/png);
+      // top: auto;
+      // display: block;
+      // width: 15.5px;
+      // height: 15.5px;
+      // background: url("/icon/sort_select_icon.png") no-repeat center;
+      // background-size: cover;
+      // right: -0.10667rem;
+      // margin-top: -0.13333rem;
+      // border: none;
+      // content: '333';
+      // transform:none;
+    }
+
+    .van-dropdown-menu__title::after {
+      // // top: 50%;
+      top: -5px;
+      display: block;
+      width: 15.5px;
+      height: 15.5px;
+      background: url("/icon/sort_icon.png") no-repeat center;
+      background-size: cover;
+      right: -0.10667rem;
+      margin-top: -0.13333rem;
+      border: none;
+      content: "";
+      transform: none;
+    }
+
+    .van-dropdown-menu__title--active::after {
+      background: none;
+    }
+
+    .van-dropdown-menu__title--active {
+      position: relative;
+      top: 4px;
+      display: block;
+      width: 15.5px;
+      height: 15.5px;
+      background: url("/icon/sort_select_icon.png") no-repeat center;
+      background-size: cover;
+      right: -0.10667rem;
+      margin-top: -0.13333rem;
+      border: none;
+      content: "";
+      transform: none;
+    }
+  }
+}
+
+.lc_divider {
+  position: relative;
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #000;
+}
+
+.lc_luciano {
+  ::v-deep .van-cell {
+    padding: 8.9px 8px 8.9px 8px;
+
+    .van-cell__value {
+      .van-field__body {
+        border: solid 1px #e2e2e2;
+        border-radius: 2px;
+        padding: 3px;
+      }
+    }
+  }
+}

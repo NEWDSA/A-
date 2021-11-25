@@ -59,7 +59,9 @@
                 <span
                   @click="lc_item_click(item)"
                   :class="
-                    index.toString() === lc_price_acitve ? 'lc_active' : 'lc_unactive'
+                    index.toString() === lc_price_acitve
+                      ? 'lc_active'
+                      : 'lc_unactive'
                   "
                   >{{ item.text }}</span
                 >
@@ -139,11 +141,11 @@
         >
           <template #content>
             <div class="lc_drop_title">聯繫人類型</div>
+
             <div style="display: flex; flex-wrap: wrap">
-              <span class="lc_box">業主</span>
-              <span class="lc_box">中介</span>
-              <span class="lc_box">租客</span>
-              <span class="lc_box">放盤人</span>
+              <template v-for="item in lc_CustomType.Items">
+                <span class="lc_box">{{ item.ItemName }}</span>
+              </template>
             </div>
             <div class="lc_field">
               <van-field
@@ -153,23 +155,20 @@
                 size="mini"
               />
             </div>
-            <div class="lc_house">
+            <div class="lc_field lc_house">
               <van-field
-                v-model="phone"
+                v-model="PropertyID"
                 label="房源編號："
                 placeholder="请输入"
                 size="mini"
               />
             </div>
 
-            <span>狀態</span>
-            <div>
-              <span>有效</span>
-              <span>暫緩</span>
-              <span>已租</span>
-              <span>已售</span>
-              <span>無效</span>
-              <span>資料盤</span>
+            <span class="lc_status_txt">狀態</span>
+            <div class="lc_status">
+              <template v-for="item in HouseStatus">
+                <span class="lc_stauts_container">{{ item.Name }}</span>
+              </template>
             </div>
           </template>
         </van-tree-select>
@@ -286,7 +285,6 @@
         </van-card>
       </van-list>
     </van-pull-refresh>
-    <!-- <div style="height: 50px"></div> -->
   </div>
 </template>
 
@@ -300,20 +298,9 @@ export default {
   },
   mounted() {
     // 獲取房源列表
-    aplush.apis
-      .Listinglist({
-        PageIndex: this.pageIndex,
-        PageSize: 20,
-        PropType: 1,
-        EstateSelectType: 4,
-      })
-      .then((res) => {
-        this.HouseList = res.PropertysModel;
-      });
-    // 房源狀態篩選
-    aplush.apis.ListingStatus().then((res) => {
-      this.HouseStatus = res.PropertyStatus;
-    });
+    this.lc_House_List();
+    this.ck_house_status();
+    this.Custom_Type();
   },
   watch: {
     lcactiveId(val, old) {
@@ -358,6 +345,10 @@ export default {
         startPrice: 0,
         endPrice: 0,
       },
+      // 房源編號
+      PropertyID: "",
+      // 客戶類型
+      lc_CustomType: "",
       item_s: [
         {
           text: "默認",
@@ -785,6 +776,7 @@ export default {
       lc_districtKey: "",
       price_disabled: false,
       click_count: 0,
+      HouseStatus: [],
     };
   },
   methods: {
@@ -798,18 +790,6 @@ export default {
           word: this.values,
         },
       });
-      // aplush.apis
-      //   .Listinglist({
-      //     PageIndex: 1,
-      //     PageSize: 20,
-      //     PropType: 1,
-      //     EstateSelectType: 4,
-      //   })
-      //   .then((res) => {
-      //     this.HouseList = res.PropertysModel;
-      //     console.log("打印结果");
-      //     console.log(res);
-      //   });
     },
     // 條搜索頁面
     goSearch() {
@@ -845,9 +825,6 @@ export default {
           temp_data.forEach((item) => {
             this.HouseList.push(item);
           });
-          //this.HouseList=this.HouseList+ res.PropertysModel;
-          console.log(this.HouseList);
-          // this.HouseList+= res.PropertysModel;
         });
     },
     //上滑加載列表 no use
@@ -883,7 +860,6 @@ export default {
       console.log("打印內容");
       console.log(keyId);
       let lc_keyId = keyId;
-      // this.$router.push("/House_d?from=home");
       this.$router.push({ path: "house_d", query: { KeyId: lc_keyId } });
     },
     // end 跳轉房源詳情
@@ -911,7 +887,6 @@ export default {
     },
     //篩選條件使用
     baseData() {
-      console.log("BaseData 被調用");
       aplush.apis
         .Listinglist({
           PageIndex: this.pageIndex,
@@ -959,22 +934,21 @@ export default {
     lc_item_click(item) {
       console.log(item);
       this.click_count++;
-      // this.lc_price_acitve ==""?this.item.id:this.lc_price_acitve;
-    
       this.click_count == 1
         ? (this.lc_price_acitve = item.id.toString())
         : (this.lc_price_acitve = this.lc_price_acitve);
-      this.click_count==1?this.lc_price_acitve = item.id.toString():this.lc_price_acitve;
+      this.click_count == 1
+        ? (this.lc_price_acitve = item.id.toString())
+        : this.lc_price_acitve;
       this.lc_price_select.startPrice = item.startPrice;
       this.lc_price_select.endPrice = item.endPrice;
       if (this.click_count == 2) {
         if (this.lc_price_acitve == item.id.toString()) {
-
           this.click_count = 0;
           this.lc_price_acitve = "";
           this.lc_price_select.startPrice = "";
           this.lc_price_select.endPrice = "";
-        }else{
+        } else {
           this.click_count = 0;
           this.lc_price_acitve = item.id.toString();
           this.lc_price_select.startPrice = item.startPrice;
@@ -988,21 +962,13 @@ export default {
     },
     lc_item_click2(item) {
       this.activeId2 = item.id;
-      
     },
     area_left_click(left_click) {
-      console.log("左側標題點擊事件");
-      console.log(left_click);
       this.lc_area_left = left_click;
     },
     // 區域點擊
-    area_click(result_item) {
-      console.log(this.lct_area);
-    },
+    area_click(result_item) {},
     price_left_click(left_click) {
-      console.log("價格左側標題點擊事件");
-      console.log(left_click);
-
       this.lc_price_left = left_click;
     },
     price_click() {},
@@ -1030,276 +996,45 @@ export default {
       this.$refs.lc_item_price.toggle();
       this.baseData();
     },
+    // 房源列表
+    lc_House_List() {
+      aplush.apis
+        .Listinglist({
+          PageIndex: this.pageIndex,
+          PageSize: 20,
+          PropType: 1,
+          EstateSelectType: 4,
+        })
+        .then((res) => {
+          this.HouseList = res.PropertysModel;
+        });
+    },
+    // 房源狀態
+    ck_house_status() {
+      // 房源狀態篩選
+      aplush.apis.ListingStatus().then((res) => {
+        console.log("房源狀態");
+        console.log(res);
+        this.HouseStatus = res.propertyStatus;
+      });
+    },
+    // 客戶類型
+    Custom_Type() {
+      let type = {
+        Type: 41,
+      };
+      aplush.apis.SystemType(type).then((res) => {
+        console.log("客戶類型");
+        console.log(res);
+        this.lc_CustomType = res.Result;
+      });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.lc_search {
-  display: flex;
-  .lc_back {
-    height: 54px;
-    flex: 1;
-  }
-  .search_setting {
-    height: 54px;
-    flex: 20;
-  }
-}
-
-.lc_drop_title {
-  margin: 5px;
-}
-
-.lc_box {
-  // flex: 20%;
-  box-sizing: border-box;
-  background-color: #f1f1f1;
-  color: #333333;
-  font-size: 12px;
-  padding: 6px;
-  margin: 5px;
-}
-
-.lc_field {
-  margin: 5px 5px;
-  .van-cell {
-    background-color: #f1f1f1;
-  }
-}
-.lc_house {
-  margin: 5px 5px;
-}
-.van-card__price {
-  display: inline-block;
-  color: #323233;
-  font-weight: 700;
-  font-size: 14px;
-  color: #f12945;
-  margin-top: 3px;
-}
-.lc_hisotry_contianer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  .lc_pills {
-    position: relative;
-    display: flex;
-    margin-left: 20px;
-    .lc_button {
-      width: 50px;
-      height: 30px;
-      background-color: rgb(243, 233, 252);
-      margin: 1px;
-    }
-  }
-}
-
-.van-tag--danger.van-tag--plain {
-  background-color: #ee0a24;
-  color: #fff;
-}
-.van-card__title {
-  max-height: 32px;
-  color: black;
-  font-weight: 700;
-  font-size: 15px;
-  line-height: 16px;
-}
-.van-tag--danger.van-tag--plain {
-  background-color: #ee0a24;
-  position: relative;
-  top: -1px;
-  color: #fff;
-}
-.van-tag {
-  position: relative;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: inline-flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  align-items: center;
-  padding: 0 4px;
-  color: #fff;
-  font-size: 12px;
-  line-height: 18px;
-  border-radius: 2px;
-}
-.van-tag--mark {
-  border-radius: 3px;
-}
-.van-card__tag {
-  position: absolute;
-  top: 0px;
-  left: 0;
-}
-.van-card__thumb img {
-  border-radius: 5px;
-}
-.van-card__thumb {
-  position: relative;
-  -webkit-box-flex: 0;
-  -webkit-flex: none;
-  flex: none;
-  width: 116px;
-  height: 88px;
-  margin-right: 8px;
-}
-.van-dropdown-menu__bar {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  /* height: 30px; */
-  background-color: #fff;
-  box-shadow: 0 0 0 rgb(100 101 102 / 12%);
-}
-.van-dropdown-item__content {
-  position: absolute;
-  max-height: 100%;
-}
-.lc_confirm {
-  flex: 0.6;
-  height: 35px;
-  background-color: #f12945;
-}
-
-.btn {
-  display: flex;
-  justify-content: space-around;
-  margin: 13px;
-  .btn_reset {
-    flex: 0.2;
-    height: 35px;
-    background-color: #fbeeee;
-    color: #f12945;
-    border-color: #f12945;
-  }
-  .btn_confrim {
-    flex: 0.6;
-    height: 35px;
-    background-color: #f12945;
-  }
-}
-.van-icon-search {
-  color: #999999;
-  font-size: 24px !important;
-}
-#app {
-  background-color: white;
-}
-.van-icon-arrow-left {
-  float: left;
-  font-size: 24px;
-  line-height: 54px;
-}
-.van-search__content--square {
-  border: 1px solid #ccc;
-  width: 320px;
-}
-.search {
-  float: left;
-}
-.lc_active {
-  padding: 0 30px 0 15px;
-  color: #f12945;
-  line-height: 46px;
-  font-size: 14px;
-}
-.lc_unactive {
-  padding: 0 30px 0 15px;
-  line-height: 46px;
-  font-size: 14px;
-}
-::v-deep .van-dropdown-menu__bar {
-  div:nth-child(5) {
-    //  background-image: url(https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcdn.duitang.com%2Fuploads%2Fitem%2F201201%2F21%2F20120121221738_zyAvm.jpg&refer=http%3A%2F%2Fcdn.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637381188&t=84fa3d6603a9919bfdb9ddd9e8d93b0a);
-    .van-dropdown-menu__title--down::after {
-      // margin-top: -0.02667rem;
-      // -webkit-transform: rotate(135deg);
-      // transform: rotate(135deg);
-      //background: url(/icon/sort.icon/png);
-      // top: auto;
-      // display: block;
-      // width: 15.5px;
-      // height: 15.5px;
-      // background: url("/icon/sort_select_icon.png") no-repeat center;
-      // background-size: cover;
-      // right: -0.10667rem;
-      // margin-top: -0.13333rem;
-      // border: none;
-      // content: '333';
-      // transform:none;
-    }
-    .van-dropdown-menu__title::after {
-      // position: relative;
-      // // top: 50%;
-      top: -5px;
-      display: block;
-      width: 15.5px;
-      height: 15.5px;
-      background: url("/icon/sort_icon.png") no-repeat center;
-      background-size: cover;
-      right: -0.10667rem;
-      margin-top: -0.13333rem;
-      border: none;
-      content: "";
-      transform: none;
-      // border: 0.08rem solid;
-      // border-color: transparent transparent #dcdee0 #dcdee0;
-      // -webkit-transform: rotate(-45deg);
-      // transform: rotate(-45deg);
-      // opacity: 0.8;
-      // content: "";
-    }
-
-    .van-dropdown-menu__title--active::after {
-      // border-color: transparent transparent currentColor currentColor;
-      background: none;
-    }
-    .van-dropdown-menu__title--active {
-      // color: #484ea1;
-      position: relative;
-      // top: 50%;
-      top: 4px;
-      display: block;
-      width: 15.5px;
-      height: 15.5px;
-      background: url("/icon/sort_select_icon.png") no-repeat center;
-      background-size: cover;
-      right: -0.10667rem;
-      margin-top: -0.13333rem;
-      border: none;
-      content: "";
-      transform: none;
-    }
-  }
-}
-// ::v-deep .van-cell .van-cell__value .van-field__body {
-//   border: solid 1px #e2e2e2;
-//   border-radius: 2px;
-//   padding: 3px;
-// }
-.lc_divider {
-  position: relative;
-  display: block;
-  width: 20px;
-  height: 2px;
-  background: #000;
-}
-.lc_luciano {
-  ::v-deep .van-cell {
-    padding: 8.9px 8px 8.9px 8px;
-    .van-cell__value {
-      .van-field__body {
-        border: solid 1px #e2e2e2;
-        border-radius: 2px;
-        padding: 3px;
-      }
-    }
-  }
-}
+@import "house.scss";
 </style>
 
 
