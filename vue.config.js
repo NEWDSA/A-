@@ -51,6 +51,10 @@ module.exports = {
         target: 'http://10.1.31.83:22061',
         changeOrigin: true
       },
+      '/GetSystemBannerList':{
+        target:'http://10.68.2.9:8324/moaplusapi/System/GetSystemBannerList',
+        changeOrigin: true
+      },
       '/upload': {
         target: 'https://hqstatictest.centaline.com.cn:442/image/upload2',
         changeOrigin: true

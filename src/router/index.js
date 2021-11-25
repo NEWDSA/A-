@@ -32,7 +32,7 @@ export const constantRoutes = [
     path: '/',
     component: () => import('@/views/Home'),
     redirect: '/Home'
-    
+
   },
   {
     path: '/Modify',
@@ -70,16 +70,27 @@ export const constantRoutes = [
       showTab: true//如果需要显示就加上这个
     }
   },
+  // {
+  //   path: '/House',
+  //   name: 'House',
+  //   component: () => import('@/views/House/House'),
+  // },
   {
     path: '/More',
     component: () => import('@/views/More'),
   },
   {
     path: '/House',
+    name: 'House',
     component: () => import('@/views/House'),
     meta: {
       showTab: false//如果需要显示就加上这个
     }
+  },
+  {
+    path: '/Search',
+    name: 'Search',
+    component: () => import('@/views/Search')
   },
   {
     path: '/saveSearch',
@@ -94,49 +105,49 @@ export const constantRoutes = [
   // end 新增跟進
   //選擇提醒人
   {
-      path:'/SelectPerson',
-      name:'SelectPerson',
-      component:()=>import('@/views/SelectPerson'),
-      meta:{
-        title:'選擇提醒人'
-      }
+    path: '/SelectPerson',
+    name: 'SelectPerson',
+    component: () => import('@/views/SelectPerson'),
+    meta: {
+      title: '選擇提醒人'
+    }
   },
   // end 選擇提醒人
   // 更多跟進
   {
-    path:'/MoreFollow',
-    name:'MoreFollow',
-    meta:{
-      title:'更多跟進人'
+    path: '/MoreFollow',
+    name: 'MoreFollow',
+    meta: {
+      title: '更多跟進人'
     },
-    component:()=>import('@/views/MoreFollow')
+    component: () => import('@/views/MoreFollow')
   },
   // end 更多跟進
   // 新增客户
   {
-    path:'/AddCustomer',
-    name:'AddCustomer',
-    component:()=>import('@/views/AddCustomer')
+    path: '/AddCustomer',
+    name: 'AddCustomer',
+    component: () => import('@/views/AddCustomer')
   },
   // end 新增客户
   //带看记录
   {
-    path:'/LookRecord',
-    name:'LookRecord',
-    component:()=>import('@/views/LookRecord')
+    path: '/LookRecord',
+    name: 'LookRecord',
+    component: () => import('@/views/LookRecord')
   },
   // end 带看记录
   // 客戶詳情
   {
-    path:'/CustomerDetail',
-    name:'CustomerDetail',
-    component:()=>import('@/views/CustomerDetail')
+    path: '/CustomerDetail',
+    name: 'CustomerDetail',
+    component: () => import('@/views/CustomerDetail')
   },
   // 錄入帶看
   {
-    path:'/AddLook',
-    name:'AddLook',
-    component:()=>import('@/views/AddLook')
+    path: '/AddLook',
+    name: 'AddLook',
+    component: () => import('@/views/AddLook')
   },
 
 ]

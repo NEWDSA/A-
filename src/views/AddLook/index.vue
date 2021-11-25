@@ -30,7 +30,7 @@
         style="width: 100%; display: flex; margin-left: 10px; margin-top: 10px"
       >
         <span class="lc_taksee">帶看類型</span>
-        <div class="lc_radio_group">
+        <!-- <div class="lc_radio_group">
           <van-radio-group direction="horizontal" v-model="type">
             <van-radio name="20">
               看售
@@ -73,7 +73,7 @@
               </template>
             </van-radio>
           </van-radio-group>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -86,6 +86,7 @@
       <div style="display: flex; align-items: center">
         <span style="white-space: nowrap; margin-left: 10px">帶看時間</span>
         <van-field
+          v-model="take_time_data"
           type="text"
           placeholder="請選擇"
           right-icon="arrow-down"
@@ -899,7 +900,7 @@ export default {
     cancelPicker_take_see() {
       this.take_time = false;
     },
-    confirmPicker_take_see(e) {
+    confirmPicker_take_see(val) {
       let year = val.getFullYear();
       let month = val.getMonth() + 1;
       let day = val.getDate();

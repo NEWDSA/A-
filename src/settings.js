@@ -5,6 +5,7 @@ module.exports = {
   // 本地调试，测试账号
   DebugUser:{'StaffNo':'2101215','IsBusiness': 'N','Verify': false},
 
+  visitorId: "",
   // 部署环境虚拟目录地址，本地则没有
   //baseURL: '/ColdCall/',
 

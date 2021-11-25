@@ -1,13 +1,14 @@
 <template>
   <div class="container">
-    <van-swipe class="my-swipe"  indicator-color="white">
-      <van-swipe-item>
-        <img style="width: 100%" src="img/banner_pic.png" alt="" />
-      </van-swipe-item>
-      <van-swipe-item>
-        <img style="width: 100%" src="img/banner_pic.png" alt="" />
+    <!-- 轮播图 -->
+    <van-swipe class="my-swipe" indicator-color="white">
+      <van-swipe-item v-for="(item,index) in Banner" :key="index">
+        <div style="width: 100%; height: 0; padding-bottom: 56.25%">
+          <img style="width: 100%; height: 200px" :src="item.url" alt="" />
+        </div>
       </van-swipe-item>
     </van-swipe>
+    <!-- end 轮播图 -->
     <div class="lc_gap">
       <div class="gap1"></div>
       <div style="border: none !important" class="van-grid van-hairline--top">
@@ -102,7 +103,12 @@
             ><span class="van-grid-item__text">成交報告</span>
           </div>
         </div>
-        <div data-v-fae5bece="" class="van-grid-item" style="flex-basis: 25%" @click="more">
+        <div
+          data-v-fae5bece=""
+          class="van-grid-item"
+          style="flex-basis: 25%"
+          @click="more"
+        >
           <div
             class="
               van-grid-item__content van-grid-item__content--center
@@ -123,7 +129,12 @@
         <nav class="bg1">
           <div class="container">
             <div class="main_title">錄帶看</div>
-            <div class="oth_container">記錄帶看客戶</div>
+            <div class="oth_container">
+              記錄帶看客戶<img
+                src="icon/arrow_one_icon.png"
+                class="right_icon"
+              />
+            </div>
           </div>
         </nav>
         <div style="flex: 0.02"></div>
@@ -131,7 +142,10 @@
           <div class="container">
             <div class="main_title">錄客戶</div>
 
-            <div class="oth_title">新增客戶信息</div>
+            <div class="oth_title">
+              新增客戶信息
+              <img src="icon/arrow_two_icon.png" class="right_icon" />
+            </div>
           </div>
         </nav>
       </div>
@@ -166,6 +180,7 @@
 </template>
 <script>
 import router from "@/router";
+import aplus from "@/api/A+/index"; //轮播图接口
 export default {
   name: "Home",
   data() {
@@ -222,7 +237,11 @@ export default {
           priceCute: "50",
         },
       ],
+      Banner: [],
     };
+  },
+  mounted() {
+    this.getBanner();
   },
   methods: {
     more() {
@@ -231,10 +250,18 @@ export default {
     house() {
       this.$router.push("House?from=home");
     },
+    async getBanner() {
+      aplus.apis.getBanner().then((res) => {
+        console.log(res);
+        this.Banner = res.HomeImgPath;
+        console.log(this.Banner);
+
+        //轮播图
+      });
+    },
   },
 };
 </script>
-
 <style scoped lang="scss">
 // html,body{
 //   width: 100%;
@@ -243,6 +270,7 @@ export default {
 .container {
   position: relative;
   width: 100%;
+  height: calc(100% - 50px);
   // height: 100%;
   .my-swipe .van-swipe-item {
     height: 212px;
@@ -252,9 +280,12 @@ export default {
     text-align: center;
   }
   .lc_gap {
+    position: relative;
     background-color: white;
     border-radius: 15px;
-    position: relative;
+
+    height: calc(100vh - 253px);
+    overflow-y: scroll;
     top: -35px;
     .gap1 {
       height: 13px;
@@ -278,40 +309,69 @@ export default {
       .bg1 {
         background-color: green;
         flex: 1;
-        background: url(/icon/bg_one_pic.png) center center/100% 100%;
+        background: url(/icon/bg_one_pic.png);
+        height: 54px;
+        background-size: cover;
+        display: flex;
         .container {
           padding: 11px;
+          height: auto;
           .main_title {
+            position: relative;
             font-weight: bold;
             color: #4b6fc1;
             font-size: 14px;
             padding-left: 5px;
+            top: -4px;
+            margin: 0;
           }
           .oth_container {
+            position: relative;
             color: #788ab5;
             font-size: 12px;
-            padding-top: 8px;
+            display: flex;
+            align-items: center;
+            top: -5px;
             padding-left: 5px;
+            .right_icon {
+              width: 11px;
+              height: 7px;
+              margin-left: 5px;
+            }
           }
         }
       }
       .bg2 {
         background-color: #f8cfcf;
         flex: 1;
-        background: url(/icon/bg_two_pic.png) no-repeat center center/100% 100%;
+        background: url(/icon/bg_two_pic.png);
+        height: 54px;
+        background-size: cover;
+        display: flex;
         .container {
           padding: 11px;
+          height: auto;
           .main_title {
+            position: relative;
             font-weight: bold;
             color: #8b3335;
             font-size: 14px;
             padding-left: 5px;
+            top: -4px;
+            margin: 0;
           }
           .oth_title {
+            position: relative;
             color: #b68485;
             font-size: 12px;
-            padding-top: 8px;
+            // padding-top: 8px;
+            top: -5px;
             padding-left: 5px;
+            .right_icon {
+              width: 11px;
+              height: 7px;
+              margin-left: 5px;
+            }
           }
         }
       }
@@ -324,8 +384,11 @@ export default {
       }
     }
     .lc_grid {
+      position: relative;
       display: flex;
       justify-content: space-around;
+
+      // height: calc(100vh - 100px);
       .lc_item1 {
         flex: 45%;
         margin: 0 8px;
@@ -462,5 +525,15 @@ body {
   left: 0;
   z-index: 999;
   overflow: scroll;
+}
+.van-grid-item__text {
+  font-size: 13px;
+  font-weight: bold;
+}
+::v-deep.van-icon__image {
+  width: 60px;
+  height: auto;
+  // height: 1em;
+  // object-fit: contain;
 }
 </style>

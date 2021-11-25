@@ -16,7 +16,10 @@ import permission from '@/directive/permission/index.js' // 权限判断指令
 import vant from 'vant' // 引入Vant
 import 'vant/lib/index.css';
 import './assets/css/iconfont.css';
-import { PullRefresh } from 'vant';
+import {
+  PullRefresh
+} from 'vant';
+
 
 /**
  * If you don't want to use mock-server
@@ -27,19 +30,26 @@ import { PullRefresh } from 'vant';
  * please remove it before going online ! ! !
  */
 if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
+  const {
+    mockXHR
+  } = require('../mock')
   mockXHR()
 }
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+Vue.use(ElementUI, {
+  locale
+})
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 
 
 
 Vue.use(vant);
-import { Swipe, SwipeItem } from 'vant';
+import {
+  Swipe,
+  SwipeItem
+} from 'vant';
 
 Vue.use(Swipe);
 Vue.use(SwipeItem);

@@ -86,5 +86,6 @@ export default {
     margin: 0 16px;
     justify-content: space-between;
     display: flex;
+    font-size: 16px;
 }
 </style>

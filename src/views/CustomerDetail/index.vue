@@ -42,7 +42,6 @@
                 <img
                   style="width: 40px"
                   src="/icon/nonmember_woman_picture.png"
-                  :key="lc_index"
                 />
               </template>
               <template v-else-if="item.Gender == '先生' && customer.IsVip">
@@ -112,19 +111,19 @@
           <span v-if="item.HouseAreaUnit == '坪'">坪</span> -->
       </div>
 
-      <div :key="index" class="lc_content">
+      <div class="lc_content">
         <span class="lc_trans"> 朝向 </span>
         {{ customer.Parameter.HouseDirection }}
       </div>
       <!-- 樓層 -->
-      <div :key="index" class="lc_content">
+      <div class="lc_content">
         <span class="lc_trans"> 樓層 </span>
         {{ customer.Parameter.HouseFloor }}
         <!-- <span v-if="item.HouseFloorUnit == '層'">層</span>
           <span v-if="item.HouseFloorUnit == '樓'">樓</span> -->
       </div>
       <!-- 裝修情況 -->
-      <div :key="index" class="lc_content">
+      <div class="lc_content">
         <span class="lc_trans"> 裝修 </span>
         {{ customer.Parameter.DecorationSituation }}
         <!-- <span v-if="item.HouseDecoration == '精裝'">精裝</span>
@@ -133,20 +132,16 @@
           <span v-if="item.HouseDecoration == '無裝'">無裝</span> -->
       </div>
       <!-- 購房原因 -->
-      <div :key="index" class="lc_content">
+      <div class="lc_content">
         <span class="lc_trans"> 購房原因 </span>
-        {{ customer.Parameter.BuyReason }}
+        {{ customer.Parameter.BuyReason || "" }}
         <!-- <span v-if="item.BuyHouseReason == '購買'">購買</span>
           <span v-if="item.BuyHouseReason == '租賃'">租賃</span>
           <span v-if="item.BuyHouseReason == '轉讓'">轉讓</span>
           <span v-if="item.BuyHouseReason == '其他'">其他</span> -->
       </div>
       <!-- 來源 -->
-      <div
-        :key="index"
-        class="lc_content"
-        v-if="customer.ParameterInquirySource"
-      >
+      <div class="lc_content" v-if="customer.ParameterInquirySource">
         <span class="lc_trans">來源</span>
         {{ customer.ParameterInquirySource }}
         <!-- <span v-if="item.Source == '網路'">網路</span>
@@ -198,7 +193,7 @@
     </van-tabs>
     <!-- 新增跟進、錄入帶看 -->
     <div class="lc_follow">
-      <img src="/icon/float_follow-up_icon.png"  />
+      <img src="/icon/float_follow-up_icon.png" />
       <img src="/icon/float_seeing-look_icon.png" @click="onClickLookRecord" />
     </div>
   </div>
@@ -210,7 +205,17 @@ import aplush from "@/api/A+";
 export default {
   data() {
     return {
-      customer: {},
+      customer: {
+        Parameter: {
+          HouseType: "",
+          Area: "",
+          HouseDirection: "",
+          HouseFloor: "",
+          DecorationSituation: "",
+          BuyReason: "",
+          Source: "",
+        },
+      },
       //   客戶跟進
       CustomFollowUp: [],
       //   客戶帶看記錄
@@ -233,7 +238,7 @@ export default {
     this.getCustomerTakeLook();
   },
   methods: {
-    getCustomer() {
+    async getCustomer() {
       //獲取客戶詳情
 
       aplush.apis
@@ -243,6 +248,7 @@ export default {
         .then((res) => {
           console.log(res);
           this.customer = res;
+          console.log(this.customer);
         });
     },
     onClickLeft() {
