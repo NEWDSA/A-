@@ -827,28 +827,6 @@ export default {
           });
         });
     },
-    //上滑加載列表 no use
-    onLoadList() {
-      if (this.finishedList) return;
-      ++this.pageIndex;
-      aplush.apis
-        .Listinglist({
-          PageIndex: this.pageIndex,
-          PageSize: 20,
-          PropType: 1,
-          EstateSelectType: 4,
-        })
-        .then((res) => {
-          // 判斷數據是否已經加載完畢
-          // end 判斷數據是否已經加載完畢
-          if (res.PropertysModel == []) {
-            this.finishedList = 0;
-            this.pullLoading = this.listLoading = false;
-          }
-          this.HouseList += res.PropertysModel;
-        });
-    },
-    // end 下滑加載列表
     // end 下拉刷新
     // 保存搜索
     saveSearch() {
