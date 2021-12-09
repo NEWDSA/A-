@@ -119,7 +119,7 @@
     </div>
     <div class="lc_foll_contianer">
       <template v-for="(item, index) in temp_follow">
-        <span @click="remove_follow(index)" class="lc_foll_person" :key="index"
+        <span @click="remove_follow(index)" class="lc_foll_person"
           >{{ item }}<van-icon size="14" class="lc_remove" name="cross"
         /></span>
       </template>
@@ -412,7 +412,6 @@
             <template v-for="(item, index) in temp_contact">
               <div
                 class="lc_contact_add_container"
-                :key="index"
                 @click="popup_contact_event(item)"
               >
                 <span class="lc_title"
@@ -442,7 +441,6 @@
             <template v-for="(item, index) in temp_department">
               <div
                 class="lc_contact_add_container"
-                :key="index"
                 @click="popup_contact_event(item)"
               >
                 <span class="lc_title"
@@ -592,7 +590,6 @@ export default {
       lc_house_type: "", //房型
       take_time: false, //帶看時間布爾
       take_time_data: "", //帶看時間
-
     };
   },
   mounted() {},
@@ -606,30 +603,22 @@ export default {
         .AddLookRecord({
           HouseType: this.lc_radio,
           SeePropertyType: this.type,
-          SrouceKeyId: "",  //樓盤id
+          SrouceKeyId: "", //樓盤id
           ReserveTime: this.take_time_data,
           InquiryKeyId: "", //
           FollowTypeKeyId: "", //跟進類型Id
           FollowTypeCode: "", //跟進類型Code
-          Content:this.lc_feedback,
-          ContentNext:this.lc_next_plan,
-          AttachmentName:"",//附件名稱
-          AttachmentPath:""//附件路徑
+          Content: this.lc_feedback,
+          ContentNext: this.lc_next_plan,
+          AttachmentName: "", //附件名稱
+          AttachmentPath: "", //附件路徑
         })
         .then((res) => {
           if (res.data.StatusCode == 200) {
             this.$toast.success(res.data.Message);
-            // this.$router.push({
-            //   path: "/addLook/select",
-            //   query: {
-            //     type: this.type,
-            //     date: this.date,
-            //   },
-            // });
           } else {
             this.$toast.fail(res.data.Message);
           }
-          //  console.log(res);
         });
     },
     confirmPicker(val) {
@@ -1104,7 +1093,7 @@ export default {
     margin-left: 10px;
     font-size: 14px;
     // ::v-deep .van-cell {
-      
+
     // }
     .lc_title {
       position: relative;

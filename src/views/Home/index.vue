@@ -1,13 +1,15 @@
 <template>
   <div class="container">
-    <!-- 轮播图 -->
-    <van-swipe class="my-swipe" indicator-color="white">
-      <van-swipe-item v-for="(item,index) in Banner" :key="index">
-        <div style="width: 100%; height: 0; padding-bottom: 56.25%">
-          <img style="width: 100%; height: 200px" :src="item.url" alt="" />
-        </div>
-      </van-swipe-item>
-    </van-swipe>
+    <van-skeleton title :row="3" :loading="loading">
+      <!-- 轮播图 -->
+      <van-swipe class="my-swipe" indicator-color="#f12945">
+        <van-swipe-item v-for="(item, index) in Banner" :key="index">
+          <div style="width: 100%; height: 0; padding-bottom: 56.25%">
+            <img style="width: 100%; height: 200px" :src="item.url" alt="" />
+          </div>
+        </van-swipe-item>
+      </van-swipe>
+    </van-skeleton>
     <!-- end 轮播图 -->
     <div class="lc_gap">
       <div class="gap1"></div>
@@ -154,23 +156,33 @@
       <div class="main_title">
         <span>降價房源</span>
       </div>
+      <!-- 房、室、廳、衛 -->
       <!-- end 房源標題 -->
       <div data-v-fae5bece="" class="lc_grid van-grid van-hairline--top">
-        <template v-for="(item, index) in houseDetail">
-          <div :key="index" data-v-fae5bece="" class="van-grid-item lc_item1">
-            <div class="lc_content">
-              <div data-v-fae5bece="">{{ item.title }}</div>
-            </div>
-            <div class="lc_content2">
-              <div class="lc_mix">{{ item.unit }} | {{ item.are }}呎</div>
-              <div class="lc_price">{{ item.price }}萬</div>
-              <div class="lc_cute">
-                <span class="word">降</span
-                ><span class="money">{{ item.priceCute }}</span
-                ><span class="word">萬</span>
-                <img class="left" src="icon/right_icon.png" />
+        <template v-for="(item, index) in ReduceHouse">
+          <div style="flex-basis: 50%">
+            <div data-v-fae5bece="" class="van-grid-item lc_item1">
+              <div class="lc_content">
+                <div data-v-fae5bece="">
+                  {{ item.EstateName }}{{ item.BuildingName }}
+                </div>
               </div>
-              <!-- <van-button type="danger" >{{item.priceCute}}</van-button> -->
+              <div class="lc_content2">
+                <div class="lc_mix">
+                  {{ item.CountF }}-{{ item.CountT }}- {{ item.CountW }}-{{
+                    item.CountY
+                  }}
+
+                  |呎
+                </div>
+                <div class="lc_price">{{ item.SalePrice }}萬</div>
+                <div class="lc_cute">
+                  <span class="word">降</span
+                  ><span class="money">{{ item.ReducePrice }}</span
+                  ><span class="word">萬</span>
+                  <img class="left" src="icon/right_icon.png" />
+                </div>
+              </div>
             </div>
           </div>
         </template>
@@ -207,6 +219,8 @@ export default {
         active: "icon/mine_selected_icon.png",
         inactive: "icon/mine_unselected_icon.png",
       },
+      // 降價房源
+      ReduceHouse: [],
       houseDetail: [
         {
           title: "君悅灣(第六座)君匯 7A",
@@ -238,10 +252,12 @@ export default {
         },
       ],
       Banner: [],
+      loading: true,
     };
   },
   mounted() {
     this.getBanner();
+    this.getHouse_Down();
   },
   methods: {
     more() {
@@ -252,21 +268,25 @@ export default {
     },
     async getBanner() {
       aplus.apis.getBanner().then((res) => {
-        console.log(res);
         this.Banner = res.HomeImgPath;
-        console.log(this.Banner);
-
-        //轮播图
+        this.loading = false;
       });
+    },
+    // 降價房源
+    async getHouse_Down() {
+      aplus.apis
+        .getPriceDown({
+          GetCount: 9,
+        })
+        .then((res) => {
+          this.ReduceHouse = res.Result;
+          // this.houseDetail = await res.HouseList;
+        });
     },
   },
 };
 </script>
 <style scoped lang="scss">
-// html,body{
-//   width: 100%;
-//   height: 100%;
-// }
 .container {
   position: relative;
   width: 100%;
@@ -364,7 +384,6 @@ export default {
             position: relative;
             color: #b68485;
             font-size: 12px;
-            // padding-top: 8px;
             top: -5px;
             padding-left: 5px;
             .right_icon {
@@ -378,7 +397,12 @@ export default {
     }
     .main_title {
       font-size: 20px;
+      font-family: PingFangSC-Medium;
       margin: 13px 15px;
+      font-weight: bold;
+      font-stretch: normal;
+      color: #333333;
+
       span {
         color: #333333;
       }
@@ -386,9 +410,8 @@ export default {
     .lc_grid {
       position: relative;
       display: flex;
-      justify-content: space-around;
-
-      // height: calc(100vh - 100px);
+      flex-wrap: wrap;
+      // justify-content: space-around;
       .lc_item1 {
         flex: 45%;
         margin: 0 8px;
@@ -413,19 +436,14 @@ export default {
         }
         .lc_content2 {
           position: relative;
-          margin-top: 9.5px;
           color: #333333;
           font-size: 14px;
           text-align: center;
-
-          // background: url(/icon/card_lc.png);
-          // background: url(/icon/card_bg_pic.png);
-          //設置背景圖片
           .lc_mix {
-            margin-top: 9.5px;
+            font-size: 14px;
           }
           .lc_price {
-            margin-top: 9.5px;
+            font-size: 14px;
           }
           .lc_cute {
             position: relative;
@@ -474,12 +492,9 @@ export default {
       .van-grid-item {
         position: relative;
         box-sizing: border-box;
-        // border-radius: 10px;
-        // border: solid 1px #f9e3c5;
-
         background-image: url(/icon/card_bg_pic.png);
-        background-size: cover;
-        height: 134px;
+        // background-size: cover;
+        background-size: 100% 100%;
         margin-bottom: 10px;
       }
       .van-grid-item__content {
@@ -508,15 +523,14 @@ export default {
   display: flex;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
+  .van-swipe__indicator {
+    background-color: #ffffff;
+    opacity: 1;
+  }
 }
 body {
   background: #ebeced;
-  // overflow: hidden;
 }
-// .my-swipe {
-//   height: 212px;
-// }
-
 /* 滚动条无法滚动问题修复 */
 .van-tabs__content {
   width: 100%;
@@ -527,13 +541,21 @@ body {
   overflow: scroll;
 }
 .van-grid-item__text {
+  position: relative;
+  top: -10px;
   font-size: 13px;
   font-weight: bold;
 }
 ::v-deep.van-icon__image {
   width: 60px;
   height: auto;
-  // height: 1em;
-  // object-fit: contain;
+}
+
+::v-deep .van-swipe__indicator.van-swipe__indicator--active {
+  opacity: 1;
+  width: 12px !important;
+  height: 5px;
+  // background-color: #f12945;
+  border-radius: 5px;
 }
 </style>

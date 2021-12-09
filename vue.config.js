@@ -33,6 +33,8 @@ module.exports = {
   devServer: {
     port: port,
     open: true,
+    inline: true,
+    hot: true,
     overlay: {
       warnings: false,
       errors: true

@@ -8,7 +8,7 @@
       :placeholder="true"
     ></van-nav-bar>
     <template v-for="index of 3">
-      <div class="lc_card" :key="index">
+      <div class="lc_card">
         <div class="lc_items"><span>交易類型:</span>租售</div>
         <div class="lc_items"><span>標籤:</span>經理推薦</div>
         <div class="lc_items1"><span>房型:</span>兩居</div>

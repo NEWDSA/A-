@@ -1,13 +1,11 @@
 <template>
   <div class="house_d">
-
-      <div class="fixed">
+    <div class="fixed">
       <img src="/icon/float_follow-up_icon.png" alt="" />
     </div>
-    <van-nav-bar title="客戶詳情" left-arrow  @click-left="onClickLeft">
+    <van-nav-bar title="客戶詳情" left-arrow @click-left="onClickLeft">
       <template #right>
         <van-button
-        
           plain
           type="info"
           size="mini"
@@ -75,14 +73,12 @@
         <div>業務員</div>
         <div>跟進時間</div>
       </aside>
-      
-    <footer v-for="item,index in 6" :key="index">
+
+      <footer v-for="(item, index) in 6" :key="index">
         <div>人暫時不在珠海，繼續跟進</div>
-        <div style="color:#de4135">曾德明
- </div>
-        <div>2021-07-24 </div>
-    </footer>
-      
+        <div style="color: #de4135">曾德明</div>
+        <div>2021-07-24</div>
+      </footer>
 
       <div style="height: 50px"></div>
     </div>
@@ -127,37 +123,36 @@ export default {
           value: "老客戶-客轉介紹",
         },
       ],
-    };  
+    };
   },
-  methods:{
-      onClickLeft(){
-          console.log(1)
-          this.$router.go(-1);
-      }
-  }
+  methods: {
+    onClickLeft() {
+      console.log(1);
+      this.$router.go(-1);
+    },
+  },
 };
 </script>
 
 
 <style scoped lang="scss">
 .house_d {
-    background-color: #fff;
+  background-color: #fff;
 }
 .fixed img:nth-child(1) {
-  
   right: 25px;
   position: fixed;
-  width: 60px;  bottom: 250px;
+  width: 60px;
+  bottom: 250px;
 }
 .fixed img:nth-child(2) {
-     right: 22px;
-    position: fixed;
-    width: 60px;
-    bottom: 198px;
+  right: 22px;
+  position: fixed;
+  width: 60px;
+  bottom: 198px;
 }
 .fixed img:nth-child(3) {
-
-    bottom: 185px;
+  bottom: 185px;
   right: 0;
   position: fixed;
   width: 60px;
@@ -168,7 +163,6 @@ export default {
   line-height: 15px;
   margin: auto;
   background-color: #fff;
-
 
   .command {
     margin: 39px 0 20px 0;
@@ -257,19 +251,19 @@ article {
 }
 
 aside {
-    background-color: #f0eeee;
+  background-color: #f0eeee;
   justify-content: space-around;
   display: flex;
   height: 30px;
-    line-height: 30px;
+  line-height: 30px;
   margin: 16px auto;
 
   nav {
-      display: flex;
+    display: flex;
 
-      div {
-          flex: 1;
-      }
+    div {
+      flex: 1;
+    }
   }
 }
 
@@ -279,10 +273,10 @@ footer {
   height: 42px;
 
   div {
-          max-width: 130px;
-justify-content: center;
-      display: flex;
-      flex: 1;
+    max-width: 130px;
+    justify-content: center;
+    display: flex;
+    flex: 1;
   }
 }
 .van-icon {

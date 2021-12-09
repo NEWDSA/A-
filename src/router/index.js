@@ -4,7 +4,6 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 /* Layout */
-import Layout from '@/layout'
 
 /**
  * path:'/'                       url路径
@@ -149,6 +148,18 @@ export const constantRoutes = [
     name: 'AddLook',
     component: () => import('@/views/AddLook')
   },
+  // 新增現場相
+  {
+    path: '/Scene',
+    name: 'Scene',
+    component: () => import('@/views/Scene')
+  },
+  //編輯現場相
+  {
+    path: '/EditScene',
+    name: 'EditScene',
+    component: () => import('@/views/Scene/edit')
+  }
 
 ]
 

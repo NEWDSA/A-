@@ -1,19 +1,13 @@
 <template>
   <div class="container">
-    <!-- navbar 導航 -->
     <van-nav-bar
       class="lc_bar"
       title="選擇提醒人"
       left-arrow
       @click-left="onClickLeft"
     />
-    <!-- end navbar 導航 -->
-    <!-- 搜索 -->
-    <van-search v-model="value" placeholder="请输入搜索关键词" />
-    <!-- end 搜索 -->
-    <!-- 选择跟进人区域 -->
 
-    <!-- end 选择跟进人区域 -->
+    <van-search v-model="value" placeholder="请输入搜索关键词" />
   </div>
 </template>
 
@@ -27,7 +21,7 @@ export default {
   methods: {
     //   返回上一页
     onClickLeft() {
-       this.$router.go(-1);
+      this.$router.go(-1);
     },
     //  end 返回上一页
   },

@@ -8,9 +8,6 @@ export default {
   apis: {
     // 搜索智能提示
     searchSuggest(params) {
-      // url: 'api/Property/find-estate-auto',
-      // method: 'post',
-      // data:params
       return lc_request({
         url: 'api/Property/find-estate-auto',
         method: 'post',
@@ -19,9 +16,7 @@ export default {
     },
     // 首页轮播
     getBanner() {
-
       return lc_request({
-        // url: '/moaplusapi/System/GetSystemBannerList',
         url: '/GetSystemBannerList',
         method: 'get',
         headers: {
@@ -29,6 +24,14 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8'
         },
 
+      })
+    },
+    //降價房源
+    getPriceDown(params) {
+      return lc_request({
+        url: '/api/System/get-reduce-price-property',
+        method: 'post',
+        data: params
       })
     },
     //获取房源列表
@@ -55,6 +58,14 @@ export default {
         params: params
       })
     },
+    // 獲取更多房源狀態篩選
+    ListingStatusMore(params) {
+      return lc_request({
+        url: '/api/Property/get-property-conditions',
+        method: 'get',
+        params: params
+      })
+    },
     //獲取系統類型
     SystemType(Type) {
       return lc_request({
@@ -75,6 +86,62 @@ export default {
           IsDetails: params.IsDetails,
           PropertyKeyId: params.PropertyKeyId
         }
+      })
+    },
+    // 獲取房源現場相
+    ListingPhoto(params) {
+      return lc_request({
+        url: '/api/Property/property-real-survey-obtain-photos',
+        method: 'get',
+        params: params
+      })
+    },
+    // 添加收藏
+    AddCollection(params) {
+      return lc_request({
+        url: '/api/Property/favorite-property',
+        method: 'post',
+        data: params
+      })
+    },
+    // 獲取房源業主
+    ListingOwner(params) {
+      return lc_request({
+        url: '/api/Property/trustors',
+        method: 'get',
+        params: params
+      })
+    },
+    // 獲取鑰匙
+    ListingKey(params) {
+      return lc_request({
+        url: '/api/Property/get_key',
+        method: 'post',
+        data: params
+      })
+    },
+    // 獲取鑰匙箱
+    ListingKeyBox(params) {
+      return lc_request({
+        url: '/api/Property/get_property_keybox',
+        method: 'get',
+        params: params
+      })
+    },
+    // 放盤紙
+    ListingPaper(params) {
+      return lc_request({
+        url: '/api/Property/get_only_trust',
+        method: 'post',
+        data: params
+      })
+    },
+    //添加放盤紙
+    AddPaper(params) {
+      return lc_request({
+        url: '/api/Property/add_only_trust',
+        method: 'post',
+        data: params
       })
     },
     //客戶管理
@@ -168,7 +235,7 @@ export default {
     // 添加收藏
     AddCollection(params) {
       return lc_request({
-        url: '/api/Customer/add-collection',
+        url: '/api/Property/favorite-property',
         method: 'post',
         data: params
       })

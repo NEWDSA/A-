@@ -1,25 +1,21 @@
-import Vue from 'vue'
-
-import 'normalize.css/normalize.css' // A modern alternative to CSS resets
+import Vue from 'vue' // A modern alternative to CSS resets
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
 import 'amfe-flexible'
-import '@/styles/index.scss' // global css
-
 import App from './App'
 import store from './store'
 import router from './router'
-import '@/icons' // icon
 import '@/permission' // permission control
-import permission from '@/directive/permission/index.js' // 权限判断指令
 import vant from 'vant' // 引入Vant
 import 'vant/lib/index.css';
 import './assets/css/iconfont.css';
 import {
+  Toast
+} from 'vant';
+import {
   PullRefresh
 } from 'vant';
-
 
 /**
  * If you don't want to use mock-server
@@ -44,17 +40,18 @@ Vue.use(ElementUI, {
 // Vue.use(ElementUI)
 
 
-
+Vue.use(Toast);
 Vue.use(vant);
 import {
   Swipe,
   SwipeItem
 } from 'vant';
+//按需引入
 
 Vue.use(Swipe);
 Vue.use(SwipeItem);
 // 全局注册权限控制Permission指令
-Vue.directive('permission', permission)
+// Vue.directive('permission', permission)
 // 全局引入jquery
 Vue.config.productionTip = false
 //Vue.prototype.$arrow = true

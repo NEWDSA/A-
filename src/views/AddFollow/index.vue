@@ -99,29 +99,7 @@
         </div>
       </div>
     </div>
-    <!-- <div class="lc_notice">
-      <span class="lc_remind">提醒Ta</span>
-      <div class="lc_title" v-for="(item, index) in NoticeList" :key="index">
-      
-        <div class="lc_header">
-          <van-badge>
-            <div class="child" />
-            <template #content>
-              <span @click="removeNotice(item)">X</span>
-            </template>
-            <van-image
-              width="50px"
-              height="50px"
-              fit="cover"
-              :src="item.icon"
-            />
-          </van-badge>
-        </div>
-        <span>{{ item.Name }} {{ item.Department }}</span>
-     
-      </div>
-    </div> -->
-    <div class="make-copy select-person">
+    <!-- <div class="make-copy select-person">
       <h3 class="title vuex-1px-t">提醒Ta</h3>
       <flexbox class="select-images-list" wrap="wrap" align="flex-start">
         <flexbox-item v-for="(item, index) in NoticeList" :key="index">
@@ -133,12 +111,11 @@
         </flexbox-item>
         <flexbox-item class="select-img" @click.native="selectPerson" ></flexbox-item>
       </flexbox>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import { Flexbox, FlexboxItem } from "vux";
 export default {
   data() {
     return {
@@ -191,17 +168,12 @@ export default {
       // end 新增提醒人
     };
   },
-  components: {
-    Flexbox,
-    FlexboxItem,
-  },
   methods: {
     //移除提醒人
     removeNotice(item) {
       console.log("移除內容");
       console.log(item);
       let lc_items = item;
-      // this.removeNotice.splice(this.removeNotice.findIndex(item=>item===lc_items),1);
       this.NoticeList.splice(
         this.NoticeList.findIndex((item) => item === lc_items),
         1

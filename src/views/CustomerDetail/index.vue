@@ -21,7 +21,7 @@
         >
           <div style="width: 50%">
             <div
-              style="width: fit-content; maring-left: 10px; margin-top: 10px"
+              style="width: fit-content; margin-left: 10px; margin-top: 10px"
             >
               <template
                 v-if="
@@ -119,36 +119,21 @@
       <div class="lc_content">
         <span class="lc_trans"> 樓層 </span>
         {{ customer.Parameter.HouseFloor }}
-        <!-- <span v-if="item.HouseFloorUnit == '層'">層</span>
-          <span v-if="item.HouseFloorUnit == '樓'">樓</span> -->
       </div>
       <!-- 裝修情況 -->
       <div class="lc_content">
         <span class="lc_trans"> 裝修 </span>
         {{ customer.Parameter.DecorationSituation }}
-        <!-- <span v-if="item.HouseDecoration == '精裝'">精裝</span>
-          <span v-if="item.HouseDecoration == '普裝'">普裝</span>
-          <span v-if="item.HouseDecoration == '簡裝'">簡裝</span>
-          <span v-if="item.HouseDecoration == '無裝'">無裝</span> -->
       </div>
       <!-- 購房原因 -->
       <div class="lc_content">
         <span class="lc_trans"> 購房原因 </span>
         {{ customer.Parameter.BuyReason || "" }}
-        <!-- <span v-if="item.BuyHouseReason == '購買'">購買</span>
-          <span v-if="item.BuyHouseReason == '租賃'">租賃</span>
-          <span v-if="item.BuyHouseReason == '轉讓'">轉讓</span>
-          <span v-if="item.BuyHouseReason == '其他'">其他</span> -->
       </div>
       <!-- 來源 -->
       <div class="lc_content" v-if="customer.ParameterInquirySource">
         <span class="lc_trans">來源</span>
         {{ customer.ParameterInquirySource }}
-        <!-- <span v-if="item.Source == '網路'">網路</span>
-          <span v-if="item.Source == '電話'">電話</span>
-          <span v-if="item.Source == '展覽'">展覽</span>
-          <span v-if="item.Source == '媒體'">媒體</span>
-          <span v-if="item.Source == '其他'">其他</span> -->
       </div>
     </div>
     <!-- 跟進記錄 、帶看記錄 -->
@@ -289,9 +274,6 @@ export default {
     onClickLookRecord() {
       this.$router.push({
         path: "/AddLook",
-        // query: {
-        //   id: this.$route.query.id,
-        // },
       });
     },
   },

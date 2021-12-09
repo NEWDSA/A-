@@ -142,7 +142,6 @@
           <template v-for="(item, index) in TransType.Items">
             <div
               :class="TransIndex === index ? 'lc_type_active' : 'lc_type'"
-              :key="index"
               @click="e_tranType(index)"
             >
               {{ item.ItemName }}
@@ -212,7 +211,6 @@
           <template v-for="(item, index) in Floor.Items">
             <div
               style="display: flex; justify-content: center"
-              :key="index"
               @click="e_Floor(index)"
             >
               <div :class="FloorIndex === index ? 'lc_type_active' : 'lc_type'">
@@ -254,7 +252,7 @@
 <script>
 import { Toast } from "vant";
 import aplush from "@/api/A+";
-import api from '@/api';
+import api from "@/api";
 export default {
   data() {
     return {
@@ -379,10 +377,9 @@ export default {
           this.PageIndex++;
 
           this.loading = false;
-          this.pullLoading= false;
-         if(lc_temp.length < this.PageSize){
+          this.pullLoading = false;
+          if (lc_temp.length < this.PageSize) {
             this.finished = true;
-            
           }
         });
     },
@@ -488,7 +485,6 @@ export default {
       console.log("lc go page");
       // 跳轉到帶看頁面
       this.$router.push("LookRecord");
-
     },
     // end 添加帶看
   },

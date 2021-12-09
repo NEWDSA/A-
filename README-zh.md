@@ -32,6 +32,7 @@
 
 ## Build Setup
 
+
 ```bash
 # 克隆项目
 git clone https://github.com/PanJiaChen/vue-admin-template.git
@@ -51,6 +52,42 @@ npm run dev
 
 浏览器访问 [http://localhost:9528](http://localhost:9528)
 
+## 引入外部字體
+```bash
+@font-face {
+    font-family: 'myFont'; 
+    src: url('/assets/font/PingFangSC-Light.ttf'); //你的资源目录
+    font-weight: normal;
+    font-style: normal;
+  }
+
+html,body { font-family: myFont, sans-serif; }
+```
+## 引入外部css
+```
+import '@/xx/xx.scss'
+```
+## 修改 Vant 源码相关
+```
+选择 node_modules-> vant-> es
+```
+## Vant 已修改组件
+```bash
+TreeSelect 分类选择
+需改源代码路径：
+TreeSelect/es/tree/index.js
+
+
+```
+## 关于 vant node_modules bem()
+```
+bem()方法用于挂载 vant 组件
+```
+## 前端 开源框架修改方法
+```
+下载 安装 patch-package --save-dev
+
+```
 ## 发布
 
 ```bash
@@ -60,6 +97,7 @@ npm run build:stage
 # 构建生产环境
 npm run build:prod
 ```
+
 
 ## 其它
 

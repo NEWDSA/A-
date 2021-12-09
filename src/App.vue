@@ -46,7 +46,7 @@
   </div>
 </template>
 
-<script src="//wurfl.io/wurfl.js" crossorigin></script>
+<!-- <script src="//wurfl.io/wurfl.js" crossorigin></script> -->
 <script>
 import Cookies from "js-cookie";
 import watermark from "./utils/watermark";
@@ -102,9 +102,6 @@ export default {
 
   mounted() {
     watermark.set("IT Luciano 彭量 4176 ");
-
-    // var a =   JSON.parse(Cookies.get('ddd'));
-    // console.log(a);
   },
   methods: {
     more() {
@@ -113,14 +110,16 @@ export default {
   },
 };
 </script>
-<style lang="less">
-@import "~vux/src/styles/reset.less";
-</style>
 <style scoped lang="scss">
 @font-face {
   font-family: "PingFangSC-Regular, sans-serif";
   src: url("/assets/PingFang-SC-Regular.ttf");
 }
+@font-face {
+  font-family: "PingFangSC-Medium, sans-serif";
+  src: url("/assets/PingFang-SC-Medium.ttf");
+}
+
 html,
 body,
 #app {
@@ -130,26 +129,16 @@ body,
   font-weight: normal;
   font-stretch: normal;
 }
-// #app {
-//   width: 100%;
-//   height: 100%;
-// }
-// .lc{
-//   width: 100%;
-//   height: calc(100% - 50px);
-// }
+::-webkit-scrollbar {
+  display: none;
+  width: 0px;
+  
+}
 ::v-deep .van-pull-refresh {
   width: 100%;
   height: calc(100vh - 200px);
   overflow-y: scroll;
 }
-.lc_bar {
-  // position: relative;
-  // height: 30px;
-}
-/* #app {
-  background-color: #fff;
-} */
 
 .van-tabbar {
   height: 70px;

@@ -118,6 +118,5 @@ export default {
       margin-left: 15.5px;
     }
   }
-  // padding: 0;
 }
 </style>

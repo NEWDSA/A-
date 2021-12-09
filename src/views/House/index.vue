@@ -49,59 +49,12 @@
           height="70vw"
           :items="item"
           :main-active-index.sync="lc_price_activeId"
+          :isShow="false"
           :active-id.sync="lc_price_acitve"
           @click-nav="price_left_click"
           @click-item="price_click"
+          class="lc_tree-select"
         >
-          <template #content>
-            <template v-if="lc_price_left === 0">
-              <div v-for="(item, index) in item[0].children" :key="index">
-                <span
-                  @click="lc_item_click(item)"
-                  :class="
-                    index.toString() === lc_price_acitve
-                      ? 'lc_active'
-                      : 'lc_unactive'
-                  "
-                  >{{ item.text }}</span
-                >
-              </div>
-              <div class="lc_luciano">
-                <van-row type="flex" justify="center" align="center">
-                  <van-col span="11">
-                    <van-field
-                      class="lc_input_price"
-                      :disabled="price_disabled"
-                      v-model="price_low"
-                      type="number"
-                      placeholder="最低價格"
-                    />
-                  </van-col>
-                  <van-col span="1">
-                    <span class="lc_divider"></span>
-                  </van-col>
-                  <van-col span="11">
-                    <van-field
-                      :disabled="price_disabled"
-                      v-model="price_max"
-                      type="number"
-                      placeholder="最高價格"
-                      class="lc_input_price"
-                    />
-                  </van-col>
-                </van-row>
-              </div>
-            </template>
-            <template v-else>
-              <div v-for="(item, index) in item[1].children" :key="index">
-                <span
-                  @click="lc_item_click2(item)"
-                  :class="index === activeId2 ? 'lc_active' : 'lc_unactive'"
-                  >{{ item.text }}</span
-                >
-              </div>
-            </template>
-          </template>
         </van-tree-select>
         <div class="btn">
           <van-button type="warning" class="btn_reset">重置</van-button>
@@ -292,15 +245,14 @@
 <script>
 import { Toast } from "vant";
 import aplush from "@/api/A+";
+import axios from "axios";
 export default {
-  created() {
-    console.log(this.$route.meta.showTab);
-  },
   mounted() {
     // 獲取房源列表
     this.lc_House_List();
     this.ck_house_status();
     this.Custom_Type();
+    this.lc_area_data();
   },
   watch: {
     lcactiveId(val, old) {
@@ -329,7 +281,8 @@ export default {
       lct_area_str: "",
       lc_price: [],
       lc_price_activeId: 0,
-      lc_price_acitve: "",
+      lc_price_acitve: [],
+
       active: 0,
       pageIndex: 1,
       listLoading: false, //上滑列表加載（每一次上滑的時候)
@@ -429,13 +382,13 @@ export default {
               // 名称
               text: "不限",
               // id，作为匹配选中状态的标识符
-              id: 0,
+              id: 4,
             },
             {
               text: "500萬以下",
               startPrice: 0,
               endPrice: 500,
-              id: 1,
+              id: 5,
             },
             {
               // 名称
@@ -443,13 +396,13 @@ export default {
               startPrice: 500,
               endPrice: 1000,
               // id，作为匹配选中状态的标识符
-              id: 2,
+              id: 6,
             },
             {
-              text: "1000-2000萬",
+              text: "1000-20004萬",
               startPrice: 1000,
               endPrice: 2000,
-              id: 3,
+              id: 7,
             },
           ],
         },
@@ -530,260 +483,256 @@ export default {
           children: [],
         },
       ],
-      items: [
-        {
-          text: "澳門",
-          Id: "ee549454-4917-414a-b9da-df150d4534d2",
-          children: [
-            {
-              keyId: "33e629bd-d54a-46e6-8ab2-2f4452130806",
-              id: 0,
-              text: "青洲區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "9aee3ce3-1dd6-400b-af10-a5b292c6b21b",
-              id: 1,
-              text: "台山區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "0911cf23-557b-4054-b635-51d95cce7897",
-              id: 2,
-              text: "黑沙環及祐漢區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "7e6f6916-4685-4c1f-8093-3d92fbc27898",
-              id: 3,
-              text: "黑沙環新填海區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "caec3deb-299e-4864-b6d3-9138e385f5cf",
-              id: 4,
-              text: "望廈及水塘區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "9c4c23ec-68ed-40e7-8f1e-cd6ca41b70d0",
-              id: 5,
-              text: "筷子基區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "077490e0-f8bd-49c0-ac0d-9dcb6d1a5aca",
-              id: 6,
-              text: "林茂塘區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "6a053c3c-bd9b-4d1a-ab76-5295cb6f411e",
-              id: 7,
-              text: "高士德及雅廉訪區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "1af2bdd9-aaaf-4c16-a262-28855241fe30",
-              id: 8,
-              text: "新橋區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "60a1ea8e-10eb-4394-bb21-5e00103bf5b2",
-              id: 9,
-              text: "沙梨頭及大三巴區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "dd8f9c0e-3387-4a1f-bb82-51a09062df3a",
-              id: 10,
-              text: "荷蘭園區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "e61f7fd7-370a-4d06-b510-0576f56351a2",
-              id: 11,
-              text: "東望洋區(松山區)",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "e670c892-f37b-4fea-9c23-1531d6965f41",
-              id: 12,
-              text: "新口岸區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "ab5c10a3-7b8b-4f46-89d2-5da31396c6bf",
-              id: 13,
-              text: "外港及南灣湖新填海區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "a4efa499-8400-4b3f-98bf-8040c17a839d",
-              id: 14,
-              text: "中區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "23a2722a-cbca-41cc-a645-52b236c9806d",
-              id: 15,
-              text: "下環區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-            {
-              keyId: "ff0e8455-bcdc-4bfe-809e-7fe9ff97b184",
-              id: 16,
-              text: "南西灣及主教山區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-              IsSelect: false,
-            },
-          ],
-        },
+      items: [],
+      // items: [
+      //   {
+      //     text: "澳門",
+      //     Id: "ee549454-4917-414a-b9da-df150d4534d2",
+      //     children: [
+      //       {
+      //         keyId: "33e629bd-d54a-46e6-8ab2-2f4452130806",
+      //         id: 0,
+      //         text: "青洲區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "9aee3ce3-1dd6-400b-af10-a5b292c6b21b",
+      //         id: 1,
+      //         text: "台山區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "0911cf23-557b-4054-b635-51d95cce7897",
+      //         id: 2,
+      //         text: "黑沙環及祐漢區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "7e6f6916-4685-4c1f-8093-3d92fbc27898",
+      //         id: 3,
+      //         text: "黑沙環新填海區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "caec3deb-299e-4864-b6d3-9138e385f5cf",
+      //         id: 4,
+      //         text: "望廈及水塘區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "9c4c23ec-68ed-40e7-8f1e-cd6ca41b70d0",
+      //         id: 5,
+      //         text: "筷子基區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "077490e0-f8bd-49c0-ac0d-9dcb6d1a5aca",
+      //         id: 6,
+      //         text: "林茂塘區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "6a053c3c-bd9b-4d1a-ab76-5295cb6f411e",
+      //         id: 7,
+      //         text: "高士德及雅廉訪區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "1af2bdd9-aaaf-4c16-a262-28855241fe30",
+      //         id: 8,
+      //         text: "新橋區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "60a1ea8e-10eb-4394-bb21-5e00103bf5b2",
+      //         id: 9,
+      //         text: "沙梨頭及大三巴區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "dd8f9c0e-3387-4a1f-bb82-51a09062df3a",
+      //         id: 10,
+      //         text: "荷蘭園區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "e61f7fd7-370a-4d06-b510-0576f56351a2",
+      //         id: 11,
+      //         text: "東望洋區(松山區)",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "e670c892-f37b-4fea-9c23-1531d6965f41",
+      //         id: 12,
+      //         text: "新口岸區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "ab5c10a3-7b8b-4f46-89d2-5da31396c6bf",
+      //         id: 13,
+      //         text: "外港及南灣湖新填海區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "a4efa499-8400-4b3f-98bf-8040c17a839d",
+      //         id: 14,
+      //         text: "中區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "23a2722a-cbca-41cc-a645-52b236c9806d",
+      //         id: 15,
+      //         text: "下環區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "ff0e8455-bcdc-4bfe-809e-7fe9ff97b184",
+      //         id: 16,
+      //         text: "南西灣及主教山區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
+      //         IsSelect: false,
+      //       },
+      //     ],
+      //   },
 
-        {
-          text: "氹仔",
-          keyId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
-          children: [
-            {
-              keyId: "6ae1cc29-0755-41c4-b330-81f442963726",
-              id: 0,
-              text: "海洋及小潭山區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
-              IsSelect: false,
-            },
-            {
-              keyId: "7abb001a-e35a-4de8-a071-3946a2d60b6a",
-              id: 1,
-              text: "氹仔中心區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
-              IsSelect: false,
-            },
-            {
-              keyId: "9eb8b44c-5855-4925-869e-35df52b9769d",
-              id: 2,
-              text: "大學及北安灣區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
-              IsSelect: false,
-            },
-            {
-              keyId: "68155529-6b5d-48e5-aeca-2cc4cc1199da",
-              id: 3,
-              text: "北安及大潭山區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
-              IsSelect: false,
-            },
-            {
-              keyId: "3c68d0a4-b83d-4e0a-91b6-55208ddb2995",
-              id: 4,
-              text: "氹仔舊城及馬場區",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
-              IsSelect: false,
-            },
-          ],
-        },
-        {
-          text: "路環",
-          KeyId: "d0091123-dca0-445d-877c-6c1ba803ca3b",
-          children: [
-            {
-              keyId: "dcc7d085-0fdb-47a8-8208-d146a815993f",
-              id: 0,
-              text: "路環",
-              Level: 2,
-              IsMacau: false,
-              ParentId: "d0091123-dca0-445d-877c-6c1ba803ca3b",
-              IsSelect: false,
-            },
-          ],
-        },
-      ],
-
+      //   {
+      //     text: "氹仔",
+      //     keyId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
+      //     children: [
+      //       {
+      //         keyId: "6ae1cc29-0755-41c4-b330-81f442963726",
+      //         id: 0,
+      //         text: "海洋及小潭山區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "7abb001a-e35a-4de8-a071-3946a2d60b6a",
+      //         id: 1,
+      //         text: "氹仔中心區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "9eb8b44c-5855-4925-869e-35df52b9769d",
+      //         id: 2,
+      //         text: "大學及北安灣區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "68155529-6b5d-48e5-aeca-2cc4cc1199da",
+      //         id: 3,
+      //         text: "北安及大潭山區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
+      //         IsSelect: false,
+      //       },
+      //       {
+      //         keyId: "3c68d0a4-b83d-4e0a-91b6-55208ddb2995",
+      //         id: 4,
+      //         text: "氹仔舊城及馬場區",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
+      //         IsSelect: false,
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     text: "路環",
+      //     KeyId: "d0091123-dca0-445d-877c-6c1ba803ca3b",
+      //     children: [
+      //       {
+      //         keyId: "dcc7d085-0fdb-47a8-8208-d146a815993f",
+      //         id: 0,
+      //         text: "路環",
+      //         Level: 2,
+      //         IsMacau: false,
+      //         ParentId: "d0091123-dca0-445d-877c-6c1ba803ca3b",
+      //         IsSelect: false,
+      //       },
+      //     ],
+      //   },
+      // ],
       value: 0,
       values: this.$route.query.word,
       switch1: false,
       switch2: false,
       content_r: "",
       content_l: "",
-      option: [
-        { text: "全部商品", value: 0 },
-        { text: "新款商品", value: 1 },
-        { text: "活动商品", value: 2 },
-      ],
       phone: "",
       price_low: "",
       price_max: "",
       lc_districtKey: "",
       price_disabled: false,
       click_count: 0,
+      click_count2: 0,
       HouseStatus: [],
     };
   },
   methods: {
     // search 區域
     onSearch(word) {
-      console.log("打印搜索關鍵字");
-      console.log(word);
+      // console.log("打印搜索關鍵字");
+      // console.log(word);
       this.$router.push({
         path: "/Search",
         query: {
@@ -802,7 +751,7 @@ export default {
     },
     //下拉刷新
     onPullRefresh() {
-      console.log("下拉刷新列表");
+      // console.log("下拉刷新列表");
       ++this.pageIndex;
       aplush.apis
         .Listinglist({
@@ -835,8 +784,8 @@ export default {
     // end 保存搜索
     // 跳轉房源詳情
     detail(keyId) {
-      console.log("打印內容");
-      console.log(keyId);
+      // console.log("打印內容");
+      // console.log(keyId);
       let lc_keyId = keyId;
       this.$router.push({ path: "house_d", query: { KeyId: lc_keyId } });
     },
@@ -875,13 +824,13 @@ export default {
           SalePriceFrom:
             this.lc_price_select.startPrice == ""
               ? this.price_low
-              : this.lc_price_select.startPrice, //出價格開始
+              : this.lc_price_select.startPrice,
           SalePriceTo:
             this.lc_price_select.endPrice == ""
               ? this.price_max
-              : this.lc_price_select.endPrice, //出價格結束
-          RentPriceFrom: "", //租價開始
-          RentPriceTo: "", //租價結束
+              : this.lc_price_select.endPrice,
+          RentPriceFrom: "",
+          RentPriceTo: "",
         })
         .then((res) => {
           let _temp = res.PropertysModel;
@@ -910,14 +859,13 @@ export default {
         });
     },
     lc_item_click(item) {
-      console.log(item);
       this.click_count++;
       this.click_count == 1
         ? (this.lc_price_acitve = item.id.toString())
         : (this.lc_price_acitve = this.lc_price_acitve);
-      this.click_count == 1
-        ? (this.lc_price_acitve = item.id.toString())
-        : this.lc_price_acitve;
+      // this.click_count == 1
+      //   ? (this.lc_price_acitve = item.id.toString())
+      //   : this.lc_price_acitve;
       this.lc_price_select.startPrice = item.startPrice;
       this.lc_price_select.endPrice = item.endPrice;
       if (this.click_count == 2) {
@@ -939,7 +887,27 @@ export default {
         : (this.price_disabled = true);
     },
     lc_item_click2(item) {
-      this.activeId2 = item.id;
+      // console.log(item);
+      this.click_count2++;
+      // console.log(this.click_count2);
+      this.click_count2 == 1
+        ? (this.lc_price_acitve = item.id)
+        : (this.lc_price_acitve = this.lc_price_acitve);
+      this.lc_price_select.startPrice = item.startPrice;
+      this.lc_price_select.endPrice = item.endPrice;
+      if (this.click_count2 == 2) {
+        if (this.lc_price_acitve == item.id) {
+          this.click_count2 = 0;
+          this.this.lc_price_acitve = "";
+          this.lc_price_select.startPrice = "";
+          this.lc_price_select.endPrice = "";
+        } else {
+          this.click_count2 = 0;
+          this.lc_price_acitve = item.id;
+          this.lc_price_select.startPrice = item.startPrice;
+          this.lc_price_select.endPrice = item.endPrice;
+        }
+      }
     },
     area_left_click(left_click) {
       this.lc_area_left = left_click;
@@ -949,7 +917,9 @@ export default {
     price_left_click(left_click) {
       this.lc_price_left = left_click;
     },
-    price_click() {},
+    price_click() {
+      console.log(this.lc_price_select);
+    },
     area_confrim_click() {
       this.$refs.lc_item.toggle();
       this.lc_districtKey = this.lct_area.join(",");
@@ -976,23 +946,22 @@ export default {
     },
     // 房源列表
     lc_House_List() {
-      aplush.apis
-        .Listinglist({
-          PageIndex: this.pageIndex,
-          PageSize: 20,
-          PropType: 1,
-          EstateSelectType: 4,
-        })
-        .then((res) => {
-          this.HouseList = res.PropertysModel;
-        });
+      // aplush.apis
+      //   .Listinglist({
+      //     PageIndex: this.pageIndex,
+      //     PageSize: 20,
+      //     PropType: 1,
+      //     EstateSelectType: 4,
+      //   })
+      //   .then((res) => {
+      //     this.HouseList = res.PropertysModel;
+      //   });
+      this.baseData();
     },
     // 房源狀態
     ck_house_status() {
       // 房源狀態篩選
       aplush.apis.ListingStatus().then((res) => {
-        console.log("房源狀態");
-        console.log(res);
         this.HouseStatus = res.propertyStatus;
       });
     },
@@ -1002,9 +971,32 @@ export default {
         Type: 41,
       };
       aplush.apis.SystemType(type).then((res) => {
-        console.log("客戶類型");
-        console.log(res);
+        // console.log("客戶類型");
+        // console.log(res);
         this.lc_CustomType = res.Result;
+      });
+    },
+    //區域數據
+    lc_area_data() {
+      aplush.apis.ListingStatusMore().then((res) => {
+        var lc_Districts = res.Districts;
+        lc_Districts.forEach((item) => {
+          item.text=item.Name,
+          item.KeyId=item.KeyId,
+          item.children=[]
+        });
+        var lc_Regions = res.Regions;
+        lc_Districts.map((item,index) => {
+          lc_Regions.filter((i,index) => {
+            if (i.ParentId == item.KeyId) {
+              item.children.push({
+                text: i.Name,
+                KeyId: i.KeyId,
+              });
+            }
+          });
+        });
+        this.items = lc_Districts;
       });
     },
   },
@@ -1013,6 +1005,36 @@ export default {
 
 <style lang="scss" scoped>
 @import "house.scss";
+// ::v-deep .van-field__control {
+//   width: 86px;
+//   height: 30px;
+//   background-color: #ffffff;
+//   border-radius: 2px;
+//   border: solid 0.5px #e2e2e2;
+// }
+::v-deep .van-cell {
+  padding: 0;
+}
+// ::v-deep .van-cell__value {
+//   width: 83px;
+//   height: 30px;
+//   background-color: #ffffff;
+//   border-radius: 2px;
+//   border: solid 0.5px #e2e2e2;
+// }
+.lc_tree-select ::v-deep .van-cell__value {
+  width: 83px;
+  height: 30px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-radius: 2px;
+  border: solid 0.5px #e2e2e2;
+  margin-left: 20px;
+  margin-right: 10px;
+}
+::v-deep van-tree-select__content-text-hide {
+  display: none;
+}
 </style>
 
 
