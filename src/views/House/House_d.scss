@@ -313,6 +313,12 @@
       }
     }
   }
+
+  .lc_van_scroll {
+    position: relative;
+    overflow-y: scroll;
+    height: 400px;
+  }
 }
 
 .nav_follow {
@@ -401,9 +407,6 @@
   width: 0;
 }
 
-// .lc_tabs {
-//   width: 0px;
-// }
 .lc_btn1 {
   height: 34px;
   background-color: #e0efff;
@@ -526,7 +529,8 @@
 }
 
 ::v-deep .van-cell-group {
-  width: 100%;
+  width: 90%;
+  // width: 100%;
   padding-left: 20px;
   padding-right: 20px;
 }
@@ -550,13 +554,10 @@
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
-  background: #DDDDDD;
 
-  // box-sizing: border-box;
-  // border: 1px solid pink;
   .lc_title {
     font-size: 14px;
-    text-align: center;
+    text-align: left;
     font-weight: bold;
 
   }
@@ -577,6 +578,39 @@
       position: relative;
       display: flex;
     }
+
+    .lc_box {
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+
+      .lc_upload {
+        position: relative;
+        width: 50px;
+        height: 50px;
+        background: url("/icon/select-img.png") no-repeat;
+        background-size: cover;
+      }
+
+      .lc_house {
+        position: relative;
+        margin-left: 10px;
+        font-size: 14px;
+        width: 100%;
+        color: #cccccc;
+      }
+    }
+  }
+   
+
+}
+.lc_search_person{
+  .van-cell{
+    padding: 0;
+
   }
 
 }

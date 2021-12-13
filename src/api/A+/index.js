@@ -120,12 +120,28 @@ export default {
         data: params
       })
     },
+    //新增鑰匙
+    AddKey(params) {
+      return lc_request({
+        url: '/api/Property/add_key',
+        method: 'post',
+        data: params
+      })
+    },
     // 獲取鑰匙箱
     ListingKeyBox(params) {
       return lc_request({
         url: '/api/Property/get_property_keybox',
         method: 'get',
         params: params
+      })
+    },
+    //獲取鑰匙編號
+    ListingKeyNumber(params) {
+      return lc_request({
+        url: '/api/Property/get_property_keynumber',
+        method: 'post',
+        data: params
       })
     },
     // 放盤紙
@@ -240,7 +256,6 @@ export default {
         data: params
       })
     },
-
     // 上傳文件至服務器接口
     UploadFile(params) {
       return lc_request({

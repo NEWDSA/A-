@@ -60,7 +60,7 @@ export const constantRoutes = [
   {
     path: '/House_d',
     name: 'house_d',
-    component: () => import('@/views/House/House_d'),
+    component: () => import('@/views/House/House_d.vue'),
   },
   {
     path: '/House?from=home',

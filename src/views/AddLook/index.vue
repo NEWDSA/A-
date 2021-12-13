@@ -30,50 +30,6 @@
         style="width: 100%; display: flex; margin-left: 10px; margin-top: 10px"
       >
         <span class="lc_taksee">帶看類型</span>
-        <!-- <div class="lc_radio_group">
-          <van-radio-group direction="horizontal" v-model="type">
-            <van-radio name="20">
-              看售
-              <template #icon="props">
-                <template v-if="props.checked">
-                  <van-icon
-                    class-prefix="my-icon"
-                    name="radio-checked"
-                    color="#d91616"
-                    size="15.5"
-                  />
-                </template>
-                <template v-else>
-                  <van-icon
-                    class-prefix="my-icon"
-                    size="15.5"
-                    name="radio-unchecked"
-                  />
-                </template>
-              </template>
-            </van-radio>
-            <van-radio name="10">
-              看租
-              <template #icon="props">
-                <template v-if="props.checked">
-                  <van-icon
-                    class-prefix="my-icon"
-                    name="radio-checked"
-                    color="#d91616"
-                    size="15.5"
-                  />
-                </template>
-                <template v-else>
-                  <van-icon
-                    class-prefix="my-icon"
-                    size="15.5"
-                    name="radio-unchecked"
-                  />
-                </template>
-              </template>
-            </van-radio>
-          </van-radio-group>
-        </div> -->
       </div>
     </div>
 
@@ -639,6 +595,8 @@ export default {
       if (minute >= 0 && minute <= 9) {
         minute = `0${minute}`;
       }
+      // 適配蘋果
+      
       this.lc_data = `${year}-${month}-${day} ${hour}:${minute}`;
 
       this.notice_time = false;
@@ -734,9 +692,6 @@ export default {
           if (lc_temp.length > this.PageSize) {
             this.finished = true;
           }
-          //   lc_temp.forEach((item) => {
-          //     this.CustomList.push(item);
-          //   });
         });
     },
     toogle(index) {
@@ -854,8 +809,6 @@ export default {
           this.take_pullLoading = false;
 
           this.take_finished = true;
-
-          // this.lc_Take_look = res.TakeSeeLists;
         });
     },
     AddFollow(e) {
@@ -890,6 +843,7 @@ export default {
       this.take_time = false;
     },
     confirmPicker_take_see(val) {
+      // TODO:添加適配iphone日期格式
       let year = val.getFullYear();
       let month = val.getMonth() + 1;
       let day = val.getDate();
