@@ -4,7 +4,24 @@
     <div class="navs">
       <img @click="back" src="/icon/nav_back_transparent_icon.png" alt="" />
       <!-- 更多 -->
-      <img @click="more_i" src="/icon/nav_more_transparent_icon.png" alt="" />
+      <!--彈出內容、現場相、-->
+      <van-popover
+        class="lc_popover_more"
+        v-model="showPopover"
+        trigger="click"
+        placement="bottom-end"
+        :actions="actions"
+        @select="onSelect"
+      >
+        <template #reference>
+          <img
+            style="margin: 0px"
+            @click="more_i"
+            src="/icon/nav_more_transparent_icon.png"
+            alt=""
+          />
+        </template>
+      </van-popover>
       <!-- 點讚 -->
       <img
         v-if="bool_good"
@@ -22,62 +39,15 @@
       <img
         v-if="bool_collect"
         @click="collect_i"
-        src="/icon/nav_collect_transparent_icon.png"
+        src="/icon/nav_collected_transparent_icon.png"
         alt=""
       />
       <img
         v-else
         @click="collect_i"
-        src="/icon/nav_collected_transparent_icon.png"
+        src="/icon/nav_collect_transparent_icon.png"
         alt=""
       />
-
-      <div
-        v-if="showPopover"
-        class="van-popup van-popover van-popover--light"
-        data-popper-placement="left-start"
-        style="
-          position: absolute;
-          left: 215px;
-          top: 50px;
-          margin: 0px;
-          z-index: 2001;
-        "
-      >
-        <div class="van-popover__arrow"></div>
-        <div role="menu" class="van-popover__content">
-          <div role="menuitem" class="van-popover__action">
-            <div class="van-popover__action-text van-hairline--bottom">
-              新增現場相/查冊
-            </div>
-          </div>
-          <div role="menuitem" class="van-popover__action">
-            <div class="van-popover__action-text van-hairline--bottom">
-              新增放盤紙
-            </div>
-          </div>
-          <div role="menuitem" class="van-popover__action">
-            <div class="van-popover__action-text van-hairline--bottom">
-              新增鑰匙
-            </div>
-          </div>
-          <div role="menuitem" class="van-popover__action">
-            <div class="van-popover__action-text van-hairline--bottom">
-              編輯房源
-            </div>
-          </div>
-          <div role="menuitem" class="van-popover__action">
-            <div class="van-popover__action-text van-hairline--bottom">
-              中原成交
-            </div>
-          </div>
-          <div role="menuitem" class="van-popover__action">
-            <div class="van-popover__action-text van-hairline--bottom">
-              發佈房源
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
     <!-- end 顶部导航 -->
     <!-- 轮播图 -->
@@ -98,46 +68,91 @@
       <van-swipe-item v-if="House_detail.Photos">
         <img height="500px" src="img/noImg@2x.png" alt="" />
       </van-swipe-item>
-
+      <van-swipe-item v-else>
+        <img width="100%;" src="img/noImg@2x.png" alt="" />
+      </van-swipe-item>
       <template #indicator>
         <div class="custom-indicator">{{ current + 1 }}/4</div>
       </template>
     </van-swipe>
     <!-- end 轮播图 -->
 
-    <!-- 房源標籤 -->
-    <div class="house_tag">
-      <div>
-        <van-button type="default" size="small" class="tag_btn">業</van-button>
-        <van-button type="default" size="small" class="tag_btn1">匙</van-button>
-        <van-button type="default" size="small" class="tag_btn2">獨</van-button>
+    <!-- 房源基本資料 -->
+    <div class="property_info">
+      <!-- 房源標籤 -->
+      <div class="house_tag">
+        <div>
+          <van-button
+            v-if="House_detail.HouseType"
+            type="default"
+            size="small"
+            class="tag_btn3"
+          >
+            業
+          </van-button>
+          <van-button
+            v-if="House_detail.HasOnlyTrust"
+            type="default"
+            size="small"
+            class="tag_btn2"
+          >
+            獨
+          </van-button>
+          <van-button
+            v-if="House_detail.PropertyKeyType != '1'"
+            type="default"
+            size="small"
+            class="tag_btn2"
+          >
+            匙
+          </van-button>
+          <van-button type="default" size="small" class="tag_btn2">
+            {{
+              House_detail.TrustType === "1"
+                ? "售"
+                : House_detail.TrustType === "2"
+                ? "租"
+                : "租售"
+            }}
+          </van-button>
+        </div>
+      </div>
+      <div class="content">
+        <span>{{ House_detail.AllHouseInfo }}</span>
+        <div class="price">
+          <div v-if="House_detail.SalePrice">{{ House_detail.SalePrice }}</div>
+          <div v-if="House_detail.SaleUnitPrice">
+            {{ House_detail.SaleUnitPrice }}
+          </div>
+          <div v-if="House_detail.RentPrice">{{ House_detail.RentPrice }}</div>
+          <div v-if="House_detail.RentUnitPrice">
+            {{ House_detail.RentUnitPrice }}
+          </div>
+          <div v-if="House_detail.RoomType">{{ House_detail.RoomType }}</div>
+        </div>
+        <div class="price">
+          <nav v-if="House_detail.SalePrice">售價</nav>
+          <nav v-if="House_detail.SaleUnitPrice">售均價</nav>
+          <nav v-if="House_detail.RentPrice">租價</nav>
+          <nav v-if="House_detail.RentUnitPrice">租均價</nav>
+          <nav v-if="House_detail.RoomType">房型</nav>
+        </div>
+        <div class="price" v-if="House_detail.Orientation">
+          <article style="flex: 1">
+            朝向:
+            <span>{{ House_detail.Orientation }}</span>
+          </article>
+        </div>
+        <div class="price" v-if="House_detail.Floor">
+          <article style="flex: 1">
+            樓層:
+            <span>{{ House_detail.Floor }}</span>
+          </article>
+        </div>
       </div>
     </div>
-    <!-- end 房源標籤 -->
+
     <div class="content">
-      <span>泉裕豪庭 5A</span>
-      <div class="price">
-        <div>1,288 萬</div>
-        <div>17,500 元/月</div>
-        <div>4-2-3-2</div>
-      </div>
-
-      <div class="price">
-        <nav>售價</nav>
-        <nav>租價</nav>
-        <nav>房型</nav>
-      </div>
-
-      <div class="price">
-        <article style="flex: 1">朝向：<span>東北</span></article>
-        <!-- <article style="flex:0.9"></article> -->
-        <article style="flex: 1">建築面積：<span>1,979 呎</span></article>
-      </div>
-
-      <div class="price">
-        <aside>裝修情況：<span>地下車位</span></aside>
-        <aside>房屋形狀：<span>暫無</span></aside>
-      </div>
       <!-- 業主信息 -->
       <van-collapse
         v-model="activeName"
@@ -349,7 +364,7 @@
             >
           </template>
 
-          <div class="collapse" v-for="(item, index) in KeyList_mock">
+          <div class="collapse" v-for="(item, index) in KeyList">
             <div style="width: 100%" @click="AddKeyShow = true">
               <span class="lc_btn_add">添加</span>
             </div>
@@ -377,6 +392,12 @@
               <span class="first">鑰匙箱名稱:</span>
               <span>{{ item.KeyBoxName }}</span>
             </div>
+          </div>
+          <div class="collapse" v-if="KeyList.length == 0">
+            <div style="width: 100%" @click="AddKeyShow = true">
+              <span class="lc_btn_add">添加</span>
+            </div>
+            <div class="no_data">暫無數據</div>
           </div>
         </van-tab>
       </van-tabs>
@@ -409,7 +430,6 @@
           </div>
         </van-step>
       </van-steps>
-      <!-- end 房源跟进 -->
     </div>
     <!-- 聯繫人 -->
     <div class="lc_contact">
@@ -434,7 +454,6 @@
         >
       </div>
     </div>
-    <!-- end 聯繫人 -->
     <van-dialog
       id="lc_dialog"
       v-model="show"
@@ -504,14 +523,20 @@
             <van-field
               v-model="PaperTime"
               type="text"
+              readonly
+              right-icon="arrow-down"
               label="放盤時間起"
               placeholder="請輸入放盤開始時間"
+              @click-right-icon="listing_start"
             />
             <van-field
               v-model="PaperEndTime"
               type="text"
               label="放盤日期止"
+              readonly
+              right-icon="arrow-down"
               placeholder="請輸入放盤日期止"
+              @click-right-icon="listing_end"
             />
             <van-radio-group v-model="PaperStatus">
               <van-cell title="售" clickable @click="PaperStatus = '1'">
@@ -531,33 +556,124 @@
               </van-cell>
             </van-radio-group>
             <van-radio-group v-model="exclusive">
-              <van-cell title="是否獨家" @click="exclusive = '1'">
+              <van-cell title="是否獨家">
                 <template #right-icon>
                   <van-radio name="1" />
                 </template>
               </van-cell>
-              <van-cell title="可否出售廣告" @click="exclusive = '2'">
+            </van-radio-group>
+            <van-radio-group v-model="ads">
+              <van-cell title="可否出售廣告">
                 <template #right-icon>
-                  <van-radio name="2" />
+                  <van-radio name="1" />
                 </template>
               </van-cell>
             </van-radio-group>
-
+            <!-- <van-radio-group v-model="ads">
+              <van-cell title="可否出售廣告">
+                <template #right-icon>
+                  <van-radio name="1" />
+                </template>
+              </van-cell>
+            </van-radio-group>
+            <van-checkbox-group @change="dujia" v-model="exclusive">
+              <van-cell title="是否獨家">
+                <template #right-icon>
+                  <van-checkbox name="1" />
+                </template>
+              </van-cell>
+              <van-cell title="可否出售廣告">
+                <template #right-icon>
+                  <van-checkbox name="2" />
+                </template>
+              </van-cell>
+            </van-checkbox-group> -->
+            <div v-show="exclusive">
+              <!-- 獨家日期起 -->
+              <van-field
+                v-model="exclusive_start"
+                type="text"
+                label="獨家日期起"
+                readonly
+                right-icon="arrow-down"
+                placeholder="請輸入獨家日期起"
+                @click-right-icon="exclusive_start_listing"
+              />
+              <!-- 獨家日期止 -->
+              <van-field
+                v-model="exclusive_end"
+                type="text"
+                label="獨家日期止"
+                readonly
+                right-icon="arrow-down"
+                placeholder="請輸入獨家日期止"
+                @click-right-icon="exclusive_end_listing"
+              />
+              <!-- 獨家類型 -->
+              <van-radio-group v-model="exclusive_type">
+                <van-cell title="上線獨家">
+                  <template #right-icon>
+                    <van-radio name="1" />
+                  </template>
+                </van-cell>
+                <van-cell title="未上線獨家">
+                  <template #right-icon>
+                    <van-radio name="2" />
+                  </template>
+                </van-cell>
+              </van-radio-group>
+            </div>
             <van-field
               v-model="PaperNo"
               label="放盤紙編號"
               placeholder="請輸入放盤紙編號"
             ></van-field>
-            <van-field
-              v-model="Saeles_Start"
-              label="售價範圍開始"
-              placeholder="請輸入售價"
-            ></van-field>
-            <van-field
-              v-model="Saeles_End"
-              label="售價範圍結束"
-              placeholder="請輸入售價"
-            ></van-field>
+            <template v-if="PaperStatus=='1'">
+              <van-field
+                v-model="Saeles_Start"
+                label="售價範圍開始"
+                placeholder="請輸入售價"
+              ></van-field>
+              <van-field
+                v-model="Saeles_End"
+                label="售價範圍結束"
+                placeholder="請輸入售價"
+              ></van-field>
+            </template>
+            <template v-if="PaperStatus=='2'">
+              <van-field
+                v-model="Rent_Start"
+                label="租金範圍開始"
+                placeholder="請輸入租金"
+              ></van-field>
+              <van-field
+                v-model="Rent_End"
+                label="租金範圍結束"
+                placeholder="請輸入租金"
+              ></van-field>
+            </template>
+            <template v-if="PaperStatus=='3'">
+              <van-field
+                v-model="Saeles_Start"
+                label="售價範圍開始"
+                placeholder="請輸入售價"
+              ></van-field>
+              <van-field
+                v-model="Saeles_End"
+                label="售價範圍結束"
+                placeholder="請輸入售價"
+              ></van-field>
+              <van-field
+                v-model="Rent_Start"
+                label="租金範圍開始"
+                placeholder="請輸入租金"
+              ></van-field>
+              <van-field
+                v-model="Rent_End"
+                label="租金範圍結束"
+                placeholder="請輸入租金"
+              ></van-field>
+            </template>
             <div class="lc_other_paper">
               <div
                 style="
@@ -596,9 +712,20 @@
               placeholder="請輸入簽署人"
             ></van-field>
             <!-- 添加聯繫人 -->
-            <van-button icon="contact" round type="primary" block>
+            <van-button
+              @click="add_contact"
+              icon="contact"
+              round
+              type="primary"
+              block
+            >
               添加聯繫人
             </van-button>
+            <template v-for="(item, index) in ContactList">
+              <div class="lc_add_contact" @click="remove_contact(item)">
+                {{ item }}
+              </div>
+            </template>
             <div style="height: 30px"></div>
             <van-button
               style="width: 100%"
@@ -614,7 +741,6 @@
       </div>
     </van-popup>
     <!-- 添加鑰匙 -->
-    <!-- //TODO:添加鑰匙接口、獲取鑰匙 -->
     <van-popup
       position="center"
       round
@@ -659,7 +785,7 @@
               label="鑰匙數量"
               placeholder="請選擇鑰匙數量"
               right-icon="arrow-down"
-              @click-right-icon="KeyBoxKeyCountShow = true"
+              @click-right-icon="Ke_CollectTime"
             />
             <van-field
               v-model="KeyBoxNo"
@@ -691,6 +817,7 @@
             <!-- 存放地 -->
             <van-cell>
               <van-radio-group v-model="KeyBoxLocation" direction="horizontal">
+                <span class="storage_palce">存放地</span>
                 <van-radio name="1" @click="KeyBoxLocation = '1'">
                   中原
                 </van-radio>
@@ -699,7 +826,13 @@
                 </van-radio>
               </van-radio-group>
             </van-cell>
-
+            <!--聯繫電話-->
+            <van-field
+              v-model="Phone"
+              type="number"
+              label="聯繫電話"
+              placeholder="請輸入聯繫電話"
+            />
             <van-field
               v-model="remark"
               rows="2"
@@ -748,7 +881,7 @@
       <van-datetime-picker
         v-model="KeyBoxReceivedTime"
         type="date"
-        title="收匙時間"
+        :title="title"
         placeholder="請選擇收匙時間"
         @confirm="Time_Select"
       />
@@ -795,26 +928,52 @@
           </div>
         </form>
       </van-sticky>
-      <div class="lc_van_scroll">
-        <van-radio-group
-          style="width: 95%"
-          v-model="SearchPerson"
-          @change="KeyReceiver_change"
-        >
-          <van-cell-group>
-            <van-cell
-              v-for="(item, index) in PeopleInfo.UserDepartmentDatas"
-              :title="item.ResultName"
-              :key="index"
-              @click="toogle_follow(index)"
-            >
-              <template #right-icon>
-                <van-radio :name="index" ref="checkboxes" />
-              </template>
-            </van-cell>
-          </van-cell-group>
-        </van-radio-group>
-      </div>
+      <!-- 多選 -->
+      <template v-show="contact_Type">
+        <div class="lc_van_scroll">
+          <van-checkbox-group
+            v-model="SearchPersonList"
+            @change="KeyReceiver_change"
+          >
+            <van-cell-group>
+              <van-cell
+                v-for="(item, index) in PeopleInfo.UserDepartmentDatas"
+                :key="index"
+                :title="item.ResultName"
+                @click="contact_Select(index)"
+              >
+                <template #right-icon>
+                  <van-checkbox :name="item.ResultName" ref="checkboxes" />
+                </template>
+              </van-cell>
+            </van-cell-group>
+          </van-checkbox-group>
+        </div>
+      </template>
+
+      <!-- 單選 -->
+      <template v-show="lc_recevier">
+        <div style="border: 1px solid pink" class="lc_van_scroll">
+          <van-radio-group
+            style="width: 95%"
+            v-model="SearchPerson"
+            @change="KeyReceiver_change"
+          >
+            <van-cell-group>
+              <van-cell
+                v-for="(item, index) in PeopleInfo.UserDepartmentDatas"
+                :title="item.ResultName"
+                :key="index"
+                @click="KeyReceiver_Select(index)"
+              >
+                <template #right-icon>
+                  <van-radio :name="index" ref="radiochecks" />
+                </template>
+              </van-cell>
+            </van-cell-group>
+          </van-radio-group>
+        </div>
+      </template>
     </van-popup>
     <!-- 鑰匙位置彈窗 -->
     <van-popup

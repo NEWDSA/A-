@@ -2,10 +2,14 @@
  * @Author: luciano 
  * @Date: 2021-12-10 15:22:09 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-13 17:48:21
+ * @Last Modified time: 2021-12-16 14:19:36
  * 楼盘管理详情
  */
+import Cookies from 'js-cookie'
 import aplush from "@/api/A+"; // 獲取樓詳情
+import {
+  title
+} from "@/settings";
 import formattime from "@/utils/format_time";
 import {
   Toast
@@ -31,6 +35,12 @@ export default {
     this.M_live_Pohto();
     //獲取系統類型
     this.base_system();
+    let userinfo = JSON.parse(Cookies.get('userInfo'));
+    console.log(userinfo);
+    this.signature = userinfo.StaffNo;
+
+    //  TODO:缺少通过员工工号查询员工姓名接口
+
   },
   data() {
     return {
@@ -60,7 +70,10 @@ export default {
       ],
       // 通过 actions 属性来定义菜单选项
       actions: [{
-          text: "新增現場相/查冊"
+          text: "新增現場相"
+        },
+        {
+          text: "新增查冊"
         },
         {
           text: "新增放盤紙"
@@ -81,11 +94,12 @@ export default {
       //
       bool_collect: true,
       bool_good: true,
-      current: 0,
       list: [],
       loading: false,
       finished: false,
       House_detail: {},
+      current: 0,
+      title: "", //title 標題
       FollowUp: [], //房源跟进
       pageIndex: 1, //起始页
       pageSize: 3, //显示页数
@@ -115,7 +129,9 @@ export default {
       PaperEndTime: "", // 放盤結束時間
       //  銷售類型
       PaperStatus: "1",
-      exclusive: "1",
+      // exclusive: "1",
+      exclusive: "", //是否獨家
+      ads: "", //是否廣告
       // 放盤紙編號
       PaperNo: "",
       // 售價開始
@@ -127,17 +143,6 @@ export default {
       signature: "", // 簽署人
       KeyList: [], // 鑰匙
       AddKeyShow: false, //添加鑰匙
-      KeyList_mock: [{
-        DepartmentName: "IT部",
-        Receiver: "吴浩讯",
-        ReceivedTime: "2021-11-23",
-        KeyCount: 1,
-        PropKeyStatus: "钥匙箱",
-        StatusDescription: null,
-        Type: "中原",
-        KeyBoxName: "測試钥匙箱",
-      }, ], //鑰匙模擬數據
-
       KeyBoxName: "", //鑰匙箱
       KeyCount: "", //鑰匙數量
       KeyStatus: "", //鑰匙狀態
@@ -160,6 +165,7 @@ export default {
       KeyLocation: "", //鑰匙位置
       KeyReceiver: "", // 收匙人
       KeyBoxShow: false, //鑰匙箱
+      Phone: "", //聯繫電話
       KeyBoxList: [], //鑰匙箱,
       KeyBoxKeyCountList: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"], //鑰匙箱鑰匙數量
       KeyBoxReceivedTimeShow: false, //鑰匙箱接收時間
@@ -168,9 +174,25 @@ export default {
       KeyReceiverShow: false, //收鑰人
       SearchType: "1", //搜索類型
       SearchPerson: '0', //搜索人是否選中
+      SearchPersonList: [], //添加联系人
       PeopleInfo: [], //搜索人
+      KeyBoxKeyCount: "", //鑰匙箱鑰匙數量
       KeyLocation_radio: "", //鑰匙位置
       KeyBoxLocationShow: false, //鑰匙箱位置顯示
+      KeyReceiver_keyId: "", //收匙人keyId
+      KeyReceiver_Department_keyId: "", //收匙人部門keyId
+      exclusive_start: "", //獨家日期起
+      exclusive_end: "", //獨家日期訖
+      contact_Type: true, //搜索類型
+      lc_recevier: true, //收匙人
+      // 新增联系人多选
+      ContactList: [],
+      exclusive_type: "", //獨家類型
+      Rent_Start: "", // 租金開始
+      Rent_End: "",// 租金結束
+      lc_AttachmentPath: "", // 附件路徑
+
+      
     };
   },
   filters: {
@@ -179,6 +201,9 @@ export default {
   methods: {
     back() {
       this.$router.push("/House");
+    },
+    dujia(e) {
+      console.log(e);
     },
     // 系統類型
     base_system() {
@@ -213,23 +238,32 @@ export default {
       this.current = index;
     },
     collect_i() {
-      let keyId = this.$route.query.KeyId;
-      console.log(keyId);
       this.bool_collect = !this.bool_collect;
-      // this.House_detail.KeyId
-      console.log("打印选中楼盘");
-      console.log();
+      if (this.bool_collect) {
+      
       aplush.apis
         .AddCollection({
           KeyId: this.$route.query.KeyId,
         })
         .then((res) => {
           if (res.Flag) {
-            this.$toast("收藏成功");
+
+            this.$toast("添加收藏成功");
           } else {
-            this.$toast("收藏失败");
+            this.$toast("添加收藏失败");
+          }
+        });}
+      else {
+        aplush.apis.CancelCollection({
+          KeyId: this.$route.query.KeyId,
+        }).then((res) => {
+          if (res.Flag) {
+            this.$toast("取消收藏成功");
+          } else {
+            this.$toast("取消收藏失败");
           }
         });
+      }
     },
     good_i() {
       this.bool_good = !this.bool_good;
@@ -242,9 +276,38 @@ export default {
     // 收藏
     more_i() {
       this.showPopover = !this.showPopover;
+      this.$nextTick(() => {
+        this.showPopover = !this.showPopover;
+      });
+      console.log(this.showPopover);
     },
     onSelect(action) {
-      Toast(action.text);
+      switch (action.text) {
+
+        case "新增現場相":
+          this.Add_Scene();
+          break;
+        case "新增查冊":
+          this.Add_Register();
+          break;
+        case "新增放盤紙":
+          this.AddPaperShow = true;
+          break;
+        case "新增鑰匙":
+          this.AddKeyShow = true;
+          break;
+        case "編輯房源":
+          this.Edit_House();
+          break;
+        case "中原成交":
+          this.Add_Deal();
+          break;
+        case "發佈房源":
+          this.Publish_House();
+          break;
+        default:
+          break;
+      }
     },
     // 新增跟進
     addFollow() {
@@ -294,11 +357,13 @@ export default {
     Get_House_Detail(keyId) {
       aplush.apis.ListingDetail(keyId).then((res) => {
         this.House_detail = res;
+        this.bool_collect=this.House_detail.IsFavorite
         console.log("打印房源详情");
         console.log(this.House_detail);
       });
     },
     getOwner() {
+
       this.Get_Owner_Detail();
     },
     // 獲取業主信息
@@ -336,7 +401,7 @@ export default {
           keyId: keyId,
         })
         .then((res) => {
-          this.KeyList = res.PropKeys ?? this.KeyList_mock;
+          this.KeyList = res.PropKeys;
         });
     },
     lc_vant_click(name, title) {
@@ -412,8 +477,62 @@ export default {
       this.Scene_keyId = this.other_select;
       this.Pic_base();
     },
+    //添加聯繫人
+    add_contact() {
+      this.SearchType = 1;
+      this.lc_Type = "添加聯繫人";
+      this.contact_Type = true;
+      this.lc_recevier = false;
+
+      // this.$set(this.lc_Type,)
+      // this.$nextTick(()=>{
+      //   this.lc_Type="添加聯繫人";
+      // })
+      // this.$nextTick(()=>{
+      //   this.Type="添加聯繫人";
+      // })
+      this.KeyReceiverShow = true;
+      // this.SearchPerson=[];
+      this.SearchPersonList = [];
+      this.Base_Key_Person(this.lc_Type);
+      console.log("this.Type");
+      console.log(this.Type);
+    },
     // 添加放盤紙
-    AddPaper() {},
+    btn_AAddPaper() {
+
+    },
+    AddPaper() {
+      aplush.apis.AddPaper({
+        PropertyKeyId: this.$route.query.KeyId, // 房源ID
+        TrustBookNo: this.PaperNo, //放盤紙編號
+        CanAdvertising: this.ads, //是否可廣告
+        PersonKeyId: '2010195', //放盤人KeyID
+        PersonName: "Luciano", //放盤人姓名
+        DepartmentKeyId: "2010195", //放盤人部門KeyID
+        DepartmentName: "IT", //放盤人部門名稱
+        TrustType: this.PaperStatus, //放盤紙類型 1-售 2-租 3-租售
+        EffectiveDate: this.PaperTime, //放盤紙生效日期
+        ExpirationDate: this.PaperEndTime, //放盤紙結束日期
+        IsOnlyTrust: this.exclusive, //是否獨家
+        OnlyTrustEffectiveDate: this.exclusive_start, //獨家生效日期
+        OnlyTrustExpirationDate: this.exclusive_end, //獨家結束日期
+        SalePriceStart: this.Saeles_Start, //售價起
+        SalePriceEnd: this.Saeles_End, //售價止
+        RentPriceStart: this.Rent_Start, //租價起  
+        RentPriceEnd:this.Rent_End, //租價至
+        Attachments:'', //附件集合
+        AttachmentName: "", //附件名稱
+        AttachmentPath: this.lc_AttachmentPath, //附件路徑
+        ContactPersons: this.ContactList, //聯繫人集合
+        UserKeyId: "2010195", //操作人KeyID
+        DeptKeyId: "2010195", //操作人部門KeyID
+      }).then(res => {
+
+      })
+      console.log("添加放盤紙");
+
+    },
     // 上傳文件至服務器
     afterRead(file) {
       //改為文件流形式
@@ -422,7 +541,7 @@ export default {
       fd.append("fileType", "file");
       console.log(file.name);
       aplush.apis.UploadFile(fd).then((res) => {
-        console.log(res);
+        this.lc_AttachmentPath=res;
       });
     },
     // 鑰匙箱點擊事件
@@ -467,16 +586,32 @@ export default {
       // 格式化時間
       if (val) {
         this.lc_KeyBoxReceivedTime = formattime.format_time(val);
+        switch (this.title) {
+          case "放盤時間起":
+            this.PaperTime = this.lc_KeyBoxReceivedTime;
+            break;
+          case "放盤時間止":
+            this.PaperEndTime = this.lc_KeyBoxReceivedTime;
+            break;
+          case "獨家日期起":
+            this.exclusive_start = this.lc_KeyBoxReceivedTime;
+            break;
+          case "獨家日期止":
+            this.exclusive_end = this.lc_KeyBoxReceivedTime;
+            break;
+          default:
+            break;
+        }
+
+        // this.title === "放盤時間起" ? this.PaperTime = this.lc_KeyBoxReceivedTime : this.title === "放盤時間止" ? this.PaperEndTime = this.lc_KeyBoxReceivedTime : "";
       }
       this.KeyBoxReceivedTimeShow = false;
     },
     // 鑰匙數量選中事件
     Key_Box_Key_Count_Select(item) {
-      console.log("item 事件");
       console.log(item);
       this.KeyBoxKeyCount = item;
       this.KeyBoxKeyCountShow = false;
-      // this.Get_KeyBox_Id();
     },
     // 獲取鑰匙箱編號
     Get_KeyBox_Id() {
@@ -495,33 +630,39 @@ export default {
         });
     },
     // 新增鑰匙
+    // todo: 新增鑰匙
     Add_Key() {
-      let obj = {
+      aplush.apis.AddKey({
         PropertyKeyID: this.$route.query.KeyId,
-        KeyCount: this.KeyCount,
+        KeyCount: this.KeyBoxKeyCount,
         IsPswLock: this.KeyBoxTrue,
-        KeyDate: this.KeyBoxReceivedTime,
+        KeyDate: formattime.format_time(this.KeyBoxReceivedTime),
         KeyLocation: this.KeyLocation,
-        KeyPersonKeyId: this.ddd, //收匙人keyId
-        KeyPersonName: this.KeyReceiver,
-        KeyPersonDepartmentKeyId: this.KeyReceiverDepartment, //鑰匙箱接收人部门
+        KeyPersonKeyId: this.KeyReceiver_keyId, //收匙人keyId
+        KeyPersonName: this.KeyReceiver, //收匙人
+        KeyPersonDepartmentKeyId: this.KeyReceiver_Department_keyId, //收匙人部門keyId
         IsCentaline: this.KeyBoxLocation, //存放地点
-
-
-      }
-      aplush.apis.AddKey().then((res) => {
+        PropertyKeyBoxKeyId: this.KeyBoxSelectKeyId, //鑰匙箱
+        PropertyKeyNo: this.KeyBoxNo, //鑰匙箱編號
+        ReceiptNo: this.KeyRecepitNo, //匙收據編號
+        Mobile: this.Phone, //聯繫電話
+        Remark: this.remark //備註
+      }).then((res) => {
+        console.log('AddKey');
         console.log(res);
-        this.KeyBox_select.KeyId = res.Result.KeyId;
-        // this.Get_KeyBox_Id();
+        res.Flag === true ? Toast("新增鑰匙成功") : Toast(res.ErrorMsg);
       });
     },
     //獲取收匙人
-    Base_Key_Person() {
+    Base_Key_Person(type) {
       aplush.apis.SelectPerson({
         AutoCompleteType: this.SearchType,
         KeyWords: this.SearchType === 1 ? this.KeyReceiver : this.KeyLocation
+
       }).then((res) => {
         this.PeopleInfo = res;
+        console.log('this.PeopleInfo');
+        console.log(this.PeopleInfo);
       }).catch((err) => {
 
         console.log("出現錯誤");
@@ -530,10 +671,22 @@ export default {
     },
     //獲取收匙人
     Get_KeyReceiver() {
-      this.SearchType=1;
-      this.KeyReceiverShow = true
-      this.Base_Key_Person();
+      this.SearchType = 1;
+      this.KeyReceiverShow = true;
+      this.contact_Type = false;
+      this.lc_recevier = true, //收匙人
+        // this.SearchType="收匙人";
+        this.Base_Key_Person(this.SearchType);
 
+    },
+    // 添加聯繫人
+    Add_Key_Person() {
+      this.SearchType = 1;
+      this.KeyReceiverShow = true;
+      this.contact_Type = true;
+      this.lc_recevier = false;
+      // this.SearchType="添加聯繫人";
+      this.Base_Key_Person(this.SearchType);
     },
     //放弃搜索
     Cancel_Search() {
@@ -541,20 +694,56 @@ export default {
     },
     // 收匙人選中事件
     KeyReceiver_change(e) {
-      this.KeyReceiver = e;
+      console.log('打印e')
+      console.log(e);
+
+      //改為多選
+      this.lc_Type === "添加聯繫人" ? this.KeyReceiver = "" : this.KeyReceiver = e;
       this.PeopleInfo.UserDepartmentDatas.forEach((item, index) => {
-        if (index == e) {
-          this.KeyReceiver = item.ResultName;
+        if (this.lc_Type != '添加聯繫人') {
+          if (index == e) {
+            this.KeyReceiver = item.ResultName;
+          }
+        } else {
+          this.ContactList = e;
+          console.log('this.ContactList');
+          console.log(this.ContactList);
         }
+        // if (index == e) {
+        //   this.lc_Type==="添加聯繫人" ? this.ContactList.push(item.ResultName):this.KeyReceiver = item.ResultName;
+        //   this.KeyReceiver=item.ResultName;
+        // }
+        // console.log('打印item')
+        // console.log(this.ContactList);
       });
+      //移除選中
+
     },
-    toogle_follow(index) {
+    // 聯繫人多選
+    contact_Select(index) {
       this.$refs.checkboxes[index].toggle();
+
+    },
+    //移除聯繫人
+    remove_contact(item) {
+      let lc_items = item;
+      this.ContactList.splice(
+        this.ContactList.findIndex((item) => item === lc_items),
+        1
+      );
+    },
+
+    //收匙人
+    KeyReceiver_Select(index) {
+      this.KeyReceiver_keyId = this.PeopleInfo.UserDepartmentDatas[index].ResultKeyId; //收匙人keyId
+      this.KeyReceiver_Department_keyId = this.PeopleInfo.UserDepartmentDatas[index].DepartmentKeyId, //收匙人部門keyId
+        this.$refs.radiochecks[index].toggle();
     },
     //選取鑰匙箱位置
     KeyBoxLocation_change() {
       this.KeyBoxLocationShow = true;
       this.SearchType = 2;
+      // this.SearchType="鑰匙箱位置";
       this.Base_Key_Person();
 
     },
@@ -573,7 +762,8 @@ export default {
     // 獲取鑰匙箱位置
     Get_KeyBox_Location() {
       this.SearchType = 2;
-      this.Base_Key_Person();
+      // this.SearchType="鑰匙箱位置";
+      this.Base_Key_Person(type);
     },
     // 放棄獲取鑰匙箱位置
     Cancel_Get_KeyBox_Location() {
@@ -583,6 +773,57 @@ export default {
     // 鑰匙箱位置選中事件
     toogle_keybox(index) {
       this.$refs.radio_keybox[index].toggle();
+    },
+
+    // 收匙時間
+    Ke_CollectTime() {
+      this.title = "收匙時間"
+      this.KeyBoxReceivedTimeShow = true;
+    },
+    //放盤時間起
+    listing_start() {
+      this.title = "放盤時間起"
+      this.KeyBoxReceivedTimeShow = true;
+    },
+    //放盤時間止
+    listing_end() {
+      this.title = "放盤時間止"
+      this.KeyBoxReceivedTimeShow = true;
+    },
+    //獨家日期起
+    exclusive_start_listing() {
+      this.title = "獨家日期起"
+      this.KeyBoxReceivedTimeShow = true;
+    },
+    //獨家日期止
+    exclusive_end_listing() {
+      this.title = "獨家日期止"
+      this.KeyBoxReceivedTimeShow = true;
+    },
+    //新增現場相
+    Add_Scene() {
+      // TODO:新增現場相,暫時缺少接口
+      Toast('新增現場相');
+    },
+    // 新增查冊
+    Add_Register() {
+      //TODO:新增查冊,暫時缺少接口
+      Toast('新增查冊')
+    },
+    //編輯房源
+    Edit_House() {
+      //TODO:編輯房源接口暫缺
+      Toast('編輯房源接口暫缺')
+    },
+    // 中原成交
+    Add_Deal() {
+      // todo:中原成交接口暫缺
+      Toast('中原成交');
+    },
+    //發佈房源
+    Publish_House() {
+      // TODO:發佈房源接口暫缺
+      Toast('發佈房源')
     }
 
 

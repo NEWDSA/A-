@@ -7,6 +7,13 @@
     z-index: 200;
     position: absolute;
 
+    ::v-deep .van-popover__wrapper {
+      float: right;
+      margin: 10px 10px 0 10px;
+    }
+
+
+
     img:nth-child(1) {
       width: 31px;
       height: 31px;
@@ -89,8 +96,8 @@
       }
 
       .tag_btn2 {
-        width: 30px;
-        height: 25px;
+        // width: 30px;
+        // height: 25px;
         background-color: #f3e9fc;
         margin-left: 6px;
         color: #b77af0;
@@ -389,6 +396,12 @@
   padding-bottom: 20px;
   padding-left: 0;
   padding-right: 0;
+
+  .storage_palce {
+    font-size: 16px;
+    color: #646566;
+    margin-right: 30px;
+  }
 }
 
 ::v-deep .van-cell__title {
@@ -604,13 +617,30 @@
       }
     }
   }
-   
+
 
 }
-.lc_search_person{
-  .van-cell{
+
+.lc_search_person {
+  .van-cell {
     padding: 0;
 
   }
 
 }
+.lc_add_contact{
+  display: inline-block;
+  padding: 10px;
+  margin: 10px;
+  box-sizing: border-box;
+  border: 1px solid #cccccc;
+  &::after{
+    position: relative;
+    top: -10px;
+    right: -8px;
+    content: 'x';
+    color:#ed0c19;
+  }
+}
+
+
