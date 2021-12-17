@@ -3,7 +3,7 @@
  * 添加客户
  * @Date: 2021-12-17 16:03:15 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-17 16:04:31
+ * @Last Modified time: 2021-12-17 18:14:22
  */
 import aplush from "@/api/A+";
 import pinyin from "js-pinyin";
@@ -166,7 +166,9 @@ export default {
         });
     },
     onConfirm(value, index) {
-      //   Toast(`当前值：${value}, 当前索引：${index}`);
+      console.log(value.text);
+      this.scustomer_status = false;// 關閉
+      // this.username = value;
     },
     onChange(picker, value, index) {
       //   Toast(`当前值：${value}, 当前索引：${index}`);
@@ -226,5 +228,8 @@ export default {
     customerLeft() {
       this.contact_show = false;
     },
+    onInput(){
+      
+    }
   },
 };
