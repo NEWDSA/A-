@@ -42,9 +42,19 @@ export const constantRoutes = [
     component: () => import('@/views/Message/Message'),
   },
   {
-    path: '/Customer',
+    path: '/Customer', 
     component: () => import('@/views/Customer'),
   },
+
+  {
+    path: '/AddCustomer', //添加客戶
+    component: () => import('@/views/Customer/add'),
+  },
+  {
+    path: '/CustomerDetail', //客戶详情
+    component: () => import('@/views/Customer/detail'),
+  },
+
   {
     path: '/Home',
     component: () => import('@/views/Home'),
@@ -58,25 +68,9 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
   },
   {
-    path: '/House_d',
-    name: 'house_d',
-    component: () => import('@/views/House/House_d.vue'),
-  },
-  {
-    path: '/House?from=home',
-    component: () => import('@/views/Home'),
-    meta: {
-      showTab: true//如果需要显示就加上这个
-    }
-  },
-  // {
-  //   path: '/House',
-  //   name: 'House',
-  //   component: () => import('@/views/House/House'),
-  // },
-  {
-    path: '/More',
-    component: () => import('@/views/More'),
+    path: '/details',
+    name: 'details',
+    component: () => import('@/views/House/details'),
   },
   {
     path: '/House',
@@ -85,6 +79,17 @@ export const constantRoutes = [
     meta: {
       showTab: false//如果需要显示就加上这个
     }
+  },
+  {
+    path: '/House?from=home',
+    component: () => import('@/views/Home'),
+    meta: {
+      showTab: true//如果需要显示就加上这个
+    }
+  },
+  {
+    path: '/More',
+    component: () => import('@/views/More'),
   },
   {
     path: '/Search',
@@ -101,7 +106,6 @@ export const constantRoutes = [
     name: 'AddFollow',
     component: () => import('@/views/AddFollow')
   },
-  // end 新增跟進
   //選擇提醒人
   {
     path: '/SelectPerson',
@@ -111,7 +115,6 @@ export const constantRoutes = [
       title: '選擇提醒人'
     }
   },
-  // end 選擇提醒人
   // 更多跟進
   {
     path: '/MoreFollow',
@@ -121,26 +124,11 @@ export const constantRoutes = [
     },
     component: () => import('@/views/MoreFollow')
   },
-  // end 更多跟進
-  // 新增客户
-  {
-    path: '/AddCustomer',
-    name: 'AddCustomer',
-    component: () => import('@/views/AddCustomer')
-  },
-  // end 新增客户
   //带看记录
   {
     path: '/LookRecord',
     name: 'LookRecord',
     component: () => import('@/views/LookRecord')
-  },
-  // end 带看记录
-  // 客戶詳情
-  {
-    path: '/CustomerDetail',
-    name: 'CustomerDetail',
-    component: () => import('@/views/CustomerDetail')
   },
   // 錄入帶看
   {
@@ -162,7 +150,6 @@ export const constantRoutes = [
   }
 
 ]
-
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),

@@ -2,7 +2,6 @@
   <div id="cus">
     <div class="fixed">
       <img src="/icon/new-customers_icon.png" @click="AddCustomer()" alt="" />
-
       <img src="/icon/poll_float_icon.png" alt="" />
       <img src="/icon/look_icon.png" @click="AddLook()" alt="" />
     </div>
@@ -30,7 +29,7 @@
       </div>
     </div>
 
-    <article class="lc_article">
+    <article class="lc_article" v-if="CustomList.length>0">
       <section>
         <template v-for="(item, index) in Custom_Status.Items">
           <div
@@ -112,11 +111,11 @@
               </template>
             </aside>
             <aside style="font-size: 14px">
-              <div>所屬人：</div>
+              <div>所屬人:</div>
               <div>{{ item.RegPerson }}</div>
             </aside>
             <aside style="font-size: 14px">
-              <div>最後跟進：</div>
+              <div>最後跟進:</div>
               <div>{{ item.LastFollowDate }}</div>
             </aside>
             <aside style="font-size: 14px">
@@ -199,13 +198,14 @@
             v-model="depart_name"
             class="lc_department"
             placeholder="請輸入部門名稱"
-            @input="e_depart_name"
+            @input="e_depart_name(depart_name,2)"
           />
 
           <input
             type="text"
             v-model="sales_man"
             class="lc_sales_man"
+            @change="e_depart_name(sales_man,1)"
             placeholder=" 請輸入業務員姓名"
           />
         </div>
@@ -255,18 +255,60 @@
       </div>
     </van-popup>
     <!-- end 内容筛选弹出层 -->
+
     <!-- 智能提示彈出層 -->
     <van-popup
-      v-model="show_tips"
       position="bottom"
       :style="{ height: '70%', overflow: 'hidden' }"
-      round
+      v-model="show_tips"
+      closeable
+      @click-close-icon="close_item"
+
     >
       <van-sticky>
-        <!-- 搜索 -->
-        <van-field type="search" v-model="search_content" placeholder="搜索" />
+        <form action="/">
+          <div
+            style="
+              position: relative;
+              top: 40px;
+              margin-bottom: 30px;
+              z-index: 3333;
+            "
+          >
+            <van-cell-group>
+              <van-search
+                class="lc_search_person"
+                v-model="search_content"
+                show-action
+                placeholder="请输入搜索关键词"
+                @search="Get_KeyReceiver(search_content,1)"
+                @cancel="Cancel_Search"
+              />
+            </van-cell-group>
+          </div>
+        </form>
       </van-sticky>
-
+      <!-- 單選 -->
+      <div  class="lc_van_scroll">
+        <van-radio-group
+          style="width: 95%"
+          v-model="SearchPerson"
+          @change="KeyReceiver_change"
+        >
+          <van-cell-group>
+            <van-cell
+              v-for="(item, index) in suggest.UserDepartmentDatas"
+              :title="item.ResultName"
+              :key="index"
+              @click="KeyReceiver_Select(index)"
+            >
+              <template #right-icon>
+                <van-radio :name="index" ref="radiochecks" />
+              </template>
+            </van-cell>
+          </van-cell-group>
+        </van-radio-group>
+      </div>
     </van-popup>
   </div>
 </template>

@@ -8,7 +8,6 @@
         @click-right="onClickRight"
       />
     </van-sticky>
-
     <!-- form表單 -->
     <van-form @submit="onSubmit">
       <div class="lc_title">主體信息</div>
@@ -28,7 +27,6 @@
           />
         </van-col>
       </van-row>
-      <!-- end 客戶狀態 -->
       <!-- 客戶類型 -->
       <van-row type="flex">
         <van-col>
@@ -44,8 +42,6 @@
           />
         </van-col>
       </van-row>
-
-      <!-- end 客戶類型 -->
       <!-- 姓名 -->
       <div style="display: flex">
         <van-field
@@ -83,36 +79,6 @@
           </template>
         </van-field>
       </div>
-
-      <!-- <van-field
-        v-model="username"
-        name="客戶類型"
-        label="客戶類型"
-        placeholder="用户名"
-      /> -->
-      <!-- end 姓名 -->
-      <!-- 手提電話1 -->
-      <!-- <van-row type="flex" justify="center" align="center">
-        <van-col span="12">
-          <van-field
-            v-model="username"
-            name="手提電話1"
-            label="手提電話1"
-            placeholder="請選擇"
-            label-width="70"
-            right-icon="arrow-down"
-          />
-        </van-col>
-        <van-col span="6">
-          <van-field v-model="username" />
-        </van-col>
-        <van-col span="6">
-          <van-icon name="add" color="#de4135" />
-        </van-col>
-      </van-row> -->
-
-      <!-- end 手提電話1 -->
-      <!-- 座機電話1 -->
       <van-row>
         <van-col span="12">
           <van-field
@@ -128,7 +94,6 @@
           <van-field v-model="username" type="text" />
         </van-col>
       </van-row>
-      <!-- end 座機電話1 -->
       <!-- 手提電話2 -->
       <van-row type="flex" justify="center" align="center">
         <van-col span="12">
@@ -153,8 +118,6 @@
           />
         </van-col>
       </van-row>
-
-      <!-- end 手提電話2 -->
       <!-- 座機電話2 -->
       <van-row>
         <van-col span="12">
@@ -171,7 +134,6 @@
           <van-field v-model="username" placeholder="" />
         </van-col>
       </van-row>
-      <!-- end 座機電話2 -->
       <!-- 生日 -->
       <van-row>
         <van-col span="24">
@@ -184,8 +146,6 @@
           />
         </van-col>
       </van-row>
-
-      <!-- end 生日 -->
       <!-- 微信 -->
       <van-row>
         <van-col span="24">
@@ -198,7 +158,6 @@
           />
         </van-col>
       </van-row>
-      <!-- end 微信 -->
       <!-- QQ -->
       <van-row>
         <van-col span="24">
@@ -211,8 +170,6 @@
           />
         </van-col>
       </van-row>
-
-      <!-- end QQ -->
       <!-- 備註 -->
       <van-row>
         <van-col span="24">
@@ -227,8 +184,6 @@
           />
         </van-col>
       </van-row>
-
-      <!-- end 備註 -->
       <!-- 客戶需求 -->
       <van-row type="flex" justify="center" align="center">
         <van-col span="24">
@@ -267,7 +222,6 @@
           <span style="font-size: 12px">萬</span>
         </van-col>
       </van-row>
-      <!-- end 心裡購價 -->
       <!-- 心裡租價 -->
       <van-row type="flex" justify="center" align="center">
         <van-col span="12">
@@ -288,7 +242,6 @@
           <span style="font-size: 12px">元</span>
         </van-col>
       </van-row>
-      <!-- end 心裡租價 -->
       <!-- 房型 -->
       <van-row>
         <van-col span="24">
@@ -302,8 +255,6 @@
           />
         </van-col>
       </van-row>
-
-      <!-- end 房型 -->
       <!-- 面積 -->
       <van-row type="flex" justify="center" align="center">
         <van-col span="12">
@@ -322,10 +273,6 @@
           <span style="font-size: 12px">㎡</span>
         </van-col>
       </van-row>
-
-      <!-- <div class="lc_divier"></div> -->
-
-      <!-- end 面積 -->
       <!-- 朝向 -->
       <van-row>
         <van-col span="24">
@@ -338,8 +285,6 @@
           />
         </van-col>
       </van-row>
-
-      <!-- end 朝向 -->
       <!-- 樓層 -->
       <van-row>
         <van-col span="24">
@@ -353,8 +298,6 @@
           />
         </van-col>
       </van-row>
-
-      <!-- end 樓層 -->
       <!-- 裝修情況 -->
       <van-row>
         <van-col span="24">
@@ -367,8 +310,6 @@
           />
         </van-col>
       </van-row>
-
-      <!-- end 裝修情況 -->
       <!-- 購房原因 -->
       <van-row>
         <van-col span="24">
@@ -501,290 +442,9 @@
 </template>
 
 <script>
-import aplush from "@/api/A+";
-import pinyin from "js-pinyin";
-pinyin.setOptions({ checkPolyphone: false, charCase: 0 });
-export default {
-  data() {
-    return {
-      username: "",
-      username2: "",
-      password: "",
-      scustomer_status: false,
-      radio: 1,
-      message: "222",
-      CustomColumn: [],
-      CustomType: [],
-      CustomType_Title: "",
-      CustomerList: {
-        SysParameter: {
-          ParameterName: "",
-        },
-      },
-      Custom: [],
-      Custom_type_show: false,
-      PageIndex: 1,
-      PageSize: 100,
-      ContactList: [], //联系人列表
-      FirstPin: [
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G",
-        "H",
-        "J",
-        "K",
-        "L",
-        "M",
-        "N",
-        "P",
-        "Q",
-        "R",
-        "S",
-        "T",
-        "W",
-        "X",
-        "Y",
-        "Z",
-      ],
-      search_custom: "", //搜索客戶
-      contact_show: false, //是否顯示聯繫人
-    };
-  },
-  mounted() {
-    //   客戶狀態
-    aplush.apis
-      .SystemType({
-        Type: "52",
-      })
-      .then((res) => {
-        this.CustomerList = res.Result;
-        this.CustomerList.Items.forEach((item) => {
-          this.CustomColumn.push({
-            text: item.ItemName,
-            ItemNo: item.ItemNo,
-            ItemValue: item.ItemValue,
-            FlagDefault: item.FlagDefault,
-            ItemStatus: item.ItemStatus,
-            AssociatedItemKeyIds: item.AssociatedItemKeyIds,
-            Seq: item.Seq,
-            CanDelete: item.CanDelete,
-            Style: item.Style,
-            KeyId: item.KeyId,
-          });
-        });
-      });
-    // end 客戶狀態
-    // 客户类型
-    aplush.apis
-      .SystemType({
-        Type: "41",
-      })
-      .then((res) => {
-        var CustomType_temp = res.Result;
-        CustomType_temp.Items.forEach((item) => {
-          this.CustomType.push({
-            text: item.ItemName,
-            ItemNo: item.ItemNo,
-            ItemValue: item.ItemValue,
-            FlagDefault: item.FlagDefault,
-            ItemStatus: item.ItemStatus,
-            AssociatedItemKeyIds: item.AssociatedItemKeyIds,
-            Seq: item.Seq,
-            CanDelete: item.CanDelete,
-            Style: item.Style,
-            KeyId: item.KeyId,
-          });
-        });
-      });
-    // end 客户类型
-    //選擇客戶列表
-    aplush.apis
-      .CustomList({
-        PageIndex: this.PageIndex,
-        PageSize: this.PageSize,
-        NavigationCategory: "8",
-        InquiryCategory: "2",
-        PrivateInquiryRange: "4",
-        CustomerName: "",
-        InquiryTradeTypeKeyId: "",
-        HouseTypeKeyIds: "",
-        SalePriceFrom: "",
-        SalePriceTo: "",
-        RentPriceFrom: "",
-        RentPriceTo: "",
-      })
-      .then((res) => {
-        let CityName = {};
-        CityName = res.Inquirys;
-        let firstName = {};
-        //let Contacts = "請求得到的數據";
-        // 循環26個字母的數組
-        this.FirstPin.forEach((item) => {
-          firstName[item] = [];
-          CityName.forEach((el) => {
-            let first = pinyin.getFullChars(el.CustomerName).substring(0, 1);
-            if (first == item) {
-              firstName[item].push(el.CustomerName);
-            }
-          });
-
-          this.ContactList = firstName;
-          // end 對比開頭字母是否對應
-        });
-        // end 循環26個字母的數組
-      });
-    // end 選擇客戶列表
-  },
-  methods: {
-    onClickLeft() {
-      this.$router.go(-1);
-    },
-    onClickRight() {},
-    // 提交表單信息
-    onSubmit(values) {
-      console.log("submit", values);
-    },
-    // end 提交表單信息
-    lc_Type() {
-      aplush.apis
-        .SystemType({
-          Type: "52",
-        })
-        .then((res) => {
-          this.CustomerList = res.Result;
-
-          console.log(this.CustomColumn);
-          //   Vue.set(this.CustomerList.SysParameter,ParameterName,res.Result.SysParameter.ParameterName)
-        });
-    },
-    onConfirm(value, index) {
-      //   Toast(`当前值：${value}, 当前索引：${index}`);
-    },
-    onChange(picker, value, index) {
-      //   Toast(`当前值：${value}, 当前索引：${index}`);
-    },
-    onCancel() {
-      this.scustomer_status = false;
-      //   Toast("取消");
-    },
-    type_cancel() {
-      this.Custom_type_show = false;
-    },
-    type_confirm() {},
-    AddCustomer() {},
-    // 搜索客戶
-    lc_search_custom() {
-      aplush.apis
-        .CustomList({
-          PageIndex: this.PageIndex,
-          PageSize: this.PageSize,
-          NavigationCategory: "8",
-          InquiryCategory: "2",
-          PrivateInquiryRange: "4",
-          CustomerName: this.search_custom,
-          InquiryTradeTypeKeyId: "",
-          HouseTypeKeyIds: "",
-          SalePriceFrom: "",
-          SalePriceTo: "",
-          RentPriceFrom: "",
-          RentPriceTo: "",
-        })
-        .then((res) => {
-          let CityName = {};
-          CityName = res.Inquirys;
-          let firstName = {};
-          this.FirstPin.forEach((item) => {
-            firstName[item] = [];
-            CityName.forEach((el) => {
-              let first = pinyin.getFullChars(el.CustomerName).substring(0, 1);
-              if (first == item) {
-                firstName[item].push(el.CustomerName);
-              }
-            });
-
-            this.ContactList = firstName;
-            // end 對比開頭字母是否對應
-          });
-        });
-    },
-    // end 搜索客戶
-    // 選中聯繫人
-    click_customer(item) {
-      console.log("選中的聯繫人");
-      this.username2 = item;
-      console.log(item);
-    },
-    // end 選中聯繫人
-    customerLeft() {
-      this.contact_show = false;
-    },
-  },
-};
+  export {default} from "./add";
 </script>
 
 <style lang="scss" scoped>
-.contianer {
-  width: 100%;
-  height: 100%;
-  ::v-deep .van-nav-bar .van-icon {
-    color: #666666;
-  }
-  .lc_title {
-    position: relative;
-    font-size: 16px;
-    margin-left: 10px;
-    padding-left: 26px;
-    &::before {
-      position: absolute;
-      display: block;
-      top: 4px;
-      left: 16px;
-      content: "";
-      width: 4px;
-      height: 16px;
-      background-color: red;
-    }
-  }
-  ::v-deep .van-cell {
-    margin-left: 10px;
-  }
-  ::v-deep .van-cell--required {
-    width: fit-content;
-    margin-left: 10px;
-    &::before {
-      content: "";
-    }
-    .van-cell__title.van-field__label {
-      //  width: fit-content;
-      //  margin:0 10px;
-      //   margin-right: -10px;
-      span {
-        &::after {
-          position: relative;
-          top: 3px;
-          right: -5px;
-          color: #ee0a24;
-          font-size: 14px;
-          content: "*";
-        }
-      }
-    }
-  }
-  ::v-deep .van-cell {
-    padding: 10px;
-  }
-  ::v-deep .van-cell .van-cell__value {
-    box-sizing: border-box;
-    border: solid 1px #cccccc;
-    border-radius: 4px;
-
-    &::after {
-      border-bottom: none;
-    }
-  }
-}
+@import "add.scss";
 </style>

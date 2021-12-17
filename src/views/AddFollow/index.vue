@@ -99,19 +99,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="make-copy select-person">
-      <h3 class="title vuex-1px-t">提醒Ta</h3>
-      <flexbox class="select-images-list" wrap="wrap" align="flex-start">
-        <flexbox-item v-for="(item, index) in NoticeList" :key="index">
-          <i class="remove-icon" v-if="item.removeSwitch !== false" @click="removeNotice(item)"></i>
-          <div class="img-box">
-            <img style="width: 40px; height: 40px" :src="item.icon" />
-          </div>
-          <p class="name">{{ item.Name }}</p>
-        </flexbox-item>
-        <flexbox-item class="select-img" @click.native="selectPerson" ></flexbox-item>
-      </flexbox>
-    </div> -->
   </div>
 </template>
 

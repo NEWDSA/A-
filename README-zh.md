@@ -88,6 +88,13 @@ bem()方法用于挂载 vant 组件
 下载 安装 patch-package --save-dev
 
 ```
+## 项目目录结构
+```
+--public
+ --src
+  --views
+    --Customer
+    
 ## 发布
 
 ```bash

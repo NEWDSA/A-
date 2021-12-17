@@ -1,0 +1,23 @@
+/*
+ * @Author: luciano 
+ *  搜索
+ * @Date: 2021-12-17 16:23:38 
+ * @Last Modified by: luciano
+ * @Last Modified time: 2021-12-17 16:24:40
+ */
+ .container {
+    width: 100%;
+    height: 100%;
+    .van-pull-refresh {
+      position: relative;
+      top: 20px;
+      height: 100%;
+    }
+  
+    .lc_content {
+      font-size: 14px;
+      .lc_title {
+        margin-left: 15.5px;
+      }
+    }
+  }

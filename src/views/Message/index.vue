@@ -13,7 +13,5 @@
 
 
 <style scoped>
- #message {
-    background-color: #fff;
- }
+@import './index.scss'
 </style>
