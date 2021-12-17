@@ -313,7 +313,7 @@
   </div>
 </template>
 <script>
-export { default } from "././index";
+export { default } from "./index";
 </script>
 <style scoped lang="scss">
 @import "index.scss";

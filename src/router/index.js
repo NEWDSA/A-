@@ -39,20 +39,20 @@ export const constantRoutes = [
   },
   {
     path: '/Message',
-    component: () => import('@/views/Message/Message'),
+    component: () => import('@/views/Message'),
   },
   {
     path: '/Customer', 
-    component: () => import('@/views/Customer'),
+    component: () => import('@/views/Customer/index.vue'),
   },
 
   {
     path: '/AddCustomer', //添加客戶
-    component: () => import('@/views/Customer/add'),
+    component: () => import('@/views/Customer/add.vue'),
   },
   {
     path: '/CustomerDetail', //客戶详情
-    component: () => import('@/views/Customer/detail'),
+    component: () => import('@/views/Customer/details.vue'),
   },
 
   {
@@ -122,7 +122,7 @@ export const constantRoutes = [
     meta: {
       title: '更多跟進人'
     },
-    component: () => import('@/views/MoreFollow')
+    component: () => import('@/views/More/follow')
   },
   //带看记录
   {

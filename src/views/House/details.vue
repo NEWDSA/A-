@@ -1010,7 +1010,7 @@
 </template>
 
 <script>
-export { default } from "././House_d";
+export { default } from "./details";
 </script>
 <style  lang="scss" scoped>
 @import "house_d.scss";

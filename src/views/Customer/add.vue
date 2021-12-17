@@ -442,9 +442,9 @@
 </template>
 
 <script>
-  export {default} from "./add";
+  export { default } from "./add.js";
 </script>
 
 <style lang="scss" scoped>
-@import "add.scss";
+@import "./add.scss";
 </style>
