@@ -11,8 +11,9 @@
         display: flex;
         align-items: center;
         margin: auto;
-        width: 95%;
+        width: 100%;
         justify-content: end;
+        background-color: #fff;
       "
     >
       <div style="height: auto; flex: 8">
@@ -25,17 +26,20 @@
         />
       </div>
       <div style="flex: 1" @click="lc_filter">
-        <img src="/icon/screen_icon.png" alt="" style="width: 20px" />
+        <img class="lc_search" src="/icon/screen_icon.png" alt="" />
       </div>
     </div>
 
-    <article class="lc_article" style="margin-top: 18px; font-size: 14px">
+    <article class="lc_article">
       <section>
-        <div>30天租房到期</div>
-        <div>渠道來電客</div>
-        <div>轉介客</div>
-        <div>滿二年</div>
-        <div>唯一</div>
+        <template v-for="(item, index) in Custom_Status.Items">
+          <div
+            :class="item.isSelected ? 'div_active' : 'div_unactive'"
+            @click="Customer_status(item.KeyId)"
+          >
+            {{ item.ItemName }}
+          </div>
+        </template>
       </section>
     </article>
     <van-pull-refresh
@@ -49,6 +53,8 @@
         finished-text="沒有更多了"
         @load="onLoad"
       >
+        <!-- 沒有數據描述 -->
+        <van-empty v-if="CustomList.length === 0" description="沒有相關數據" />
         <nav v-for="(item, index) in CustomList" :key="index">
           <div class="fx">
             <div class="avater">
@@ -69,11 +75,11 @@
               <button>{{ item.InquiryStatus }}</button>
             </div>
             <div style="background-color: #f7f7f7; border-radius: 1px">
-              <div class="daikan" style="font-size: 13px">
+              <div class="daikan">
                 <span>{{ item.TakeSeeCount }}</span>
                 <div>帶看</div>
               </div>
-              <div class="chengjiao" style="font-size: 13px">
+              <div class="chengjiao">
                 <span>{{ item.ReserveCount }}</span>
                 <div>成交</div>
               </div>
@@ -186,13 +192,14 @@
           </div>
         </div>
         <!-- end 房型 -->
-        <div class="lc_title">房源歸屬</div>
+        <div class="lc_title">客源歸屬</div>
         <div style="display: flex">
           <input
             type="text"
             v-model="depart_name"
             class="lc_department"
             placeholder="請輸入部門名稱"
+            @input="e_depart_name"
           />
 
           <input
@@ -227,6 +234,7 @@
           width: 100%;
           display: flex;
           justify-content: center;
+          bottom: -0.14rem;
         "
       >
         <div style="width: 50%; display: flex; justify-content: center">
@@ -247,512 +255,24 @@
       </div>
     </van-popup>
     <!-- end 内容筛选弹出层 -->
+    <!-- 智能提示彈出層 -->
+    <van-popup
+      v-model="show_tips"
+      position="bottom"
+      :style="{ height: '70%', overflow: 'hidden' }"
+      round
+    >
+      <van-sticky>
+        <!-- 搜索 -->
+        <van-field type="search" v-model="search_content" placeholder="搜索" />
+      </van-sticky>
+
+    </van-popup>
   </div>
 </template>
 <script>
-import { Toast } from "vant";
-import aplush from "@/api/A+";
-import api from "@/api";
-export default {
-  data() {
-    return {
-      PageIndex: 1,
-      PageSize: 20,
-      CustomList: [],
-      listLoading: false, //上滑列表加載（每一次上滑的時候)
-      finishedList: false, //上滑列表加載完了所有數據（沒有更多了)
-      pullLoading: false, //下拉刷新加載動畫
-      loading: false,
-      finished: false,
-      refreshing: false,
-      lc_sccustom: "",
-      show_filter: false, //过滤内容
-      depart_name: "", //部門名稱
-      sales_man: "", //業務員
-      TransType: {}, //交易类型
-      TransIndex: "",
-      TransKeyId: "",
-      RentMind: "", //心裡租價
-      BuyMind: "", // 心裡購價
-      DepartName: "", // 部門名稱
-      SalesName: "", // 業務員
-      Floor: {}, //楼层
-      FloorIndex: "", //選中的房型
-      FloorKeyId: "",
-      RoomType: {}, //房型
-      RoomIndex: "",
-      RoomKeyId: "",
-      start_mindRent: "",
-      end_mindRent: "",
-      start_mindBuy: "",
-      end_mindBuy: "",
-      TransKeyId: "", //交易类型的KeyId
-      RoomKeyId: "", //房型keyId
-    };
-  },
-  watch: {
-    show_filter(newd, old) {},
-  },
-
-  async mounted() {
-    console.log(this.RoomType);
-    aplush.apis
-      .SystemType({
-        Type: "25",
-      })
-      .then((res) => {
-        console.log("打印交易類型");
-        console.log(res.Result);
-        this.RoomType = res.Result;
-      });
-    // end 房型
-    // 請求樓層
-    aplush.apis
-      .SystemType({
-        Type: "26",
-      })
-      .then((res) => {
-        console.log("打印交易類型");
-        console.log(res.Result);
-        this.Floor = res.Result;
-        console.log(this.Floor.Items);
-      });
-    // end 請求樓層
-
-    // 請求交易類型
-    aplush.apis
-      .SystemType({
-        Type: "45",
-      })
-      .then((res) => {
-        console.log("請求交易類型");
-        console.log(this.TransType);
-        this.TransType = res.Result;
-      });
-    // end 請求交易類型
-  },
-  methods: {
-    back() {
-      this.$router.push("/Mine");
-    },
-    onClickLeft() {
-      Toast("返回");
-    },
-    onClickRight() {
-      Toast("按钮");
-    },
-    tap(index) {
-      this.$router.push("/Custom_d");
-    },
-    // 下拉刷新
-    onRefresh() {
-      this.finished = false;
-      this.loading = true;
-      this.onLoad();
-    },
-    // end 下拉刷新
-    // 上滑加載列表
-    onLoad() {
-      // if (this.finishedList) return;
-      aplush.apis
-        .CustomList({
-          PageIndex: this.PageIndex,
-          PageSize: this.PageSize,
-          NavigationCategory: 8,
-          InquiryCategory: 2,
-          PrivateInquiryRange: 4,
-          CustomerName: this.lc_sccustom,
-          InquiryTradeTypeKeyId: "",
-          HouseTypeKeyIds: "",
-          SalePriceFrom: "",
-          SalePriceTo: "",
-          RentPriceFrom: "",
-          RentPriceTo: "",
-        })
-        .then((res) => {
-          let lc_temp = res.Inquirys;
-          lc_temp.forEach((item) => {
-            this.CustomList.push(item);
-          });
-          this.PageIndex++;
-
-          this.loading = false;
-          this.pullLoading = false;
-          if (lc_temp.length < this.PageSize) {
-            this.finished = true;
-          }
-        });
-    },
-    // end 上滑加載列表
-    // 搜索
-    onSearch(val) {
-      this.PageIndex = 1;
-      aplush.apis
-        .CustomList({
-          PageIndex: this.PageIndex,
-          PageSize: this.PageSize,
-          NavigationCategory: 8,
-          InquiryCategory: 2,
-          PrivateInquiryRange: 4,
-          CustomerName: this.lc_sccustom,
-          InquiryTradeTypeKeyId: "",
-          HouseTypeKeyIds: "",
-          SalePriceFrom: "",
-          SalePriceTo: "",
-          RentPriceFrom: "",
-          RentPriceTo: "",
-        })
-        .then((res) => {
-          this.CustomList = res.Inquirys;
-        });
-    },
-    //end 搜索
-    // 过滤
-    lc_filter() {
-      // 請求房型
-      this.show_filter = true;
-    },
-
-    // end 过滤
-    // 客戶過濾查詢
-    Custom_filter() {
-      aplush.apis
-        .CustomList({
-          PageIndex: this.PageIndex,
-          PageSize: this.PageSize,
-          NavigationCategory: 8,
-          InquiryCategory: 2,
-          PrivateInquiryRange: 4,
-          CustomerName: this.lc_sccustom,
-          InquiryTradeTypeKeyId: this.TransKeyId, //交易类型
-          HouseTypeKeyIds: this.RoomKeyId, //房型
-          SalePriceFrom: this.start_mindBuy,
-          SalePriceTo: this.end_mindBuy,
-          RentPriceFrom: this.start_mindRent,
-          RentPriceTo: this.end_mindRent,
-        })
-        .then((res) => {
-          console.log("打印最终结果");
-          console.log(res);
-          // 查看是否有结果
-          this.CustomList = res.Inquirys;
-          this.show_filter = false;
-          // end 查看是否有结果
-        });
-    },
-    // end 客戶過濾查詢
-    // 獲取選中的交易類型
-    e_tranType(index) {
-      let lc_index = index;
-      this.TransType.Items.forEach((item, index) => {
-        if (lc_index === index) {
-          this.TransIndex = index;
-          this.TransKeyId = item.KeyId;
-        }
-      });
-    },
-    // end 獲取選中的交易類型
-    // 房型點擊事件
-    e_RoomType(index) {
-      let lc_Roomindex = index;
-      this.RoomType.Items.forEach((item, index) => {
-        if (lc_Roomindex === index) {
-          this.RoomIndex = index;
-          this.RoomKeyId = item.KeyId;
-        }
-      });
-    },
-    // end 房型點擊事件
-    // 获取选中的楼层
-    e_Floor(index) {
-      let lc_FloorIndex = index;
-      this.Floor.Items.forEach((item, index) => {
-        if (lc_FloorIndex === index) {
-          this.FloorIndex = index;
-          this.FloorKeyId = item.KeyId;
-        }
-      });
-    },
-    // end 获取选中的楼层
-    // 新增客户
-    AddCustomer() {
-      console.log("lc go page");
-      this.$router.push("AddCustomer");
-    },
-    // end 新增客户
-    // 添加帶看
-    AddLook() {
-      console.log("lc go page");
-      // 跳轉到帶看頁面
-      this.$router.push("LookRecord");
-    },
-    // end 添加帶看
-  },
-};
+export { default } from "././index";
 </script>
-
 <style scoped lang="scss">
-.fixed img:nth-child(1) {
-  right: 0;
-  position: fixed;
-  width: 60px;
-  bottom: 250px;
-  z-index: 3333;
-}
-.fixed img:nth-child(2) {
-  bottom: 120px;
-  right: 0;
-  position: fixed;
-  width: 60px;
-  z-index: 3333;
-}
-.fixed img:nth-child(3) {
-  bottom: 185px;
-  right: 0;
-  position: fixed;
-  width: 60px;
-  z-index: 3333;
-}
-.van-icon-search::before {
-  content: "\F0AF";
-  color: #ccc !important;
-}
-#cus {
-  background-color: #fff;
-}
-.avater {
-  img {
-    width: 65px;
-  }
-  button {
-    border-radius: 8px;
-    width: 42px;
-    height: 18px;
-    font-size: 9px;
-    position: relative;
-    top: -35px;
-    border: 0;
-    background-color: #fff;
-    box-shadow: 0px 0px 3px 1px rgba(110, 26, 26, 0.28);
-  }
-}
-article {
-  width: 343px;
-  margin: auto;
-  section {
-    width: 263px;
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-
-    div {
-      margin: 2px 0 2px 5px;
-      padding: 8px;
-      background-color: #fdf1db;
-      font-size: 14px;
-    }
-  }
-}
-nav {
-  margin: 18px auto;
-  width: 343px;
-  padding: 9px;
-  border-radius: 5px;
-  display: flex;
-  box-shadow: 0px 0px 12px 0.5px rgba(110, 26, 26, 0.18);
-
-  .daikan {
-    padding: 15px;
-  }
-
-  span {
-    color: #de4135;
-    font-weight: 700;
-  }
-
-  .fx:nth-child(1) {
-    text-align: center;
-    flex: 1;
-  }
-
-  .fx:nth-child(2) {
-    flex: 3.5;
-  }
-  .fx aside:nth-child(2) {
-    font-size: 15px;
-    color: #f12945;
-    font-weight: 700;
-  }
-  .fx aside:nth-child(3) div:nth-child(1) {
-    color: #999;
-  }
-  .fx aside:nth-child(4) div:nth-child(1) {
-    color: #999;
-  }
-
-  .fx aside {
-    align-items: center;
-    padding: 8px;
-    display: flex;
-
-    .btn_f {
-      // width: 46px;
-      width: auto;
-      background-color: #f12945;
-      margin: 0 5px;
-      border: 0;
-      span {
-        color: #fff !important;
-      }
-    }
-
-    .btn_s {
-      width: auto;
-      // width: 46px;
-      background-color: #fff;
-      border: solid 1px #313e60;
-      margin: 0 5px;
-      span {
-        color: #333 !important;
-      }
-    }
-  }
-
-  .fx aside:last-child {
-    padding-top: 22px;
-  }
-}
-
-.van-search {
-  height: 46px;
-}
-.lc_filter {
-  font-size: 14px;
-  position: relative;
-  text-align: center;
-  font-size: 14px;
-  margin-top: 17.5px;
-  margin-bottom: 17.5px;
-}
-.lc_title {
-  font-size: 14px;
-  margin-left: 17.5px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.lc_container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin-left: 20px;
-}
-.lc_divider {
-  width: 15.5px;
-  height: 2px;
-  background: #cccccc;
-  margin: 0 2px;
-}
-.lc_type_active {
-  width: fit-content;
-  background-color: #f5dbd9;
-  border-radius: 17.9px;
-  font-size: 12px;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  margin: 10px;
-  color: #de4135;
-}
-.lc_type {
-  background-color: #f4f4f4;
-  border-radius: 17.9px;
-  font-size: 12px;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  margin: 10px;
-  color: #666666;
-}
-.lc_input {
-  width: 100px;
-  // margin-left: 10px;
-  height: 29px;
-  border: none;
-  outline: none;
-  background: #dddddd;
-  border-radius: 17.9px;
-  color: #666666;
-  padding: 5px;
-  font-size: 16px;
-  text-align: center;
-}
-.lc_department {
-  display: inline-block;
-  width: 50%;
-  height: 29px;
-  border-radius: 20px;
-  outline: none;
-  border: none;
-  font-size: 14px;
-  margin: 10px 10px;
-  background-color: #f4f4f4;
-  padding: 10px;
-  color: #666666;
-}
-.lc_sales_man {
-  display: inline-block;
-  width: 50%;
-  height: 29px;
-  border-radius: 20px;
-  outline: none;
-  border: none;
-  font-size: 14px;
-  margin: 10px 10px;
-  background-color: #f4f4f4;
-  padding: 10px;
-  color: #666666;
-}
-.lc_h_layout {
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: 10px;
-}
-.lc_layout {
-  position: relative;
-  height: calc(100% - 120px);
-  overflow-y: scroll;
-}
-input::-webkit-input-placeholder {
-  // font-family: "\5FAE\8F6F\96C5\9ED1";
-  // font-weight: 400;
-  // font-style: normal;
-  // font-size: 12px;
-  // color: #000000;
-  // text-align: left;
-  margin-left: 20px;
-}
-input::-moz-placeholder {
-  /* Mozilla Firefox 19+ */
-
-  margin-left: 20px;
-}
-input:-moz-placeholder {
-  /* Mozilla Firefox 4 to 18 */
-
-  margin-left: 20px;
-}
-input:-ms-input-placeholder {
-  margin-left: 20px;
-}
-.lc_unit {
-  width: 70px;
-  font-size: 14px;
-}
-.lc_article {
-  margin-top: 18px;
-  font-size: 14px;
-  color: #666666;
-}
+@import "index.scss";
 </style>

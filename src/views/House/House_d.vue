@@ -569,25 +569,6 @@
                 </template>
               </van-cell>
             </van-radio-group>
-            <!-- <van-radio-group v-model="ads">
-              <van-cell title="可否出售廣告">
-                <template #right-icon>
-                  <van-radio name="1" />
-                </template>
-              </van-cell>
-            </van-radio-group>
-            <van-checkbox-group @change="dujia" v-model="exclusive">
-              <van-cell title="是否獨家">
-                <template #right-icon>
-                  <van-checkbox name="1" />
-                </template>
-              </van-cell>
-              <van-cell title="可否出售廣告">
-                <template #right-icon>
-                  <van-checkbox name="2" />
-                </template>
-              </van-cell>
-            </van-checkbox-group> -->
             <div v-show="exclusive">
               <!-- 獨家日期起 -->
               <van-field

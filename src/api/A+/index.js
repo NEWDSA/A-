@@ -1,3 +1,10 @@
+/* 數據請求接口
+ * @Author: luciano 
+ * @Date: 2021-12-17 11:19:15 
+ * @Last Modified by: luciano
+ * @Last Modified time: 2021-12-17 11:40:52
+ */
+
 import lc_request from '@/utils/request'
 import axios from 'axios'
 import {
@@ -104,6 +111,14 @@ export default {
         data: params
       })
     },
+    //取消收藏
+    CancelCollection(params) {
+      return lc_request({
+        url: '/api/Property/cancel-favorite-property',
+        method: 'post',
+        data: params
+      })
+    },
     // 獲取房源業主
     ListingOwner(params) {
       return lc_request({
@@ -123,7 +138,7 @@ export default {
     //新增鑰匙
     AddKey(params) {
       return lc_request({
-        url: '/api/Property/add_key',
+        url: '/api/Property/add_property_key',
         method: 'post',
         data: params
       })
