@@ -18,10 +18,10 @@
         </div>
       </div>
     </van-sticky>
-    <!-- end 搜索區域 -->
     <!-- 下拉框 -->
     <van-dropdown-menu class="lc_str">
-      <van-dropdown-item title="區域" ref="lc_item">
+      <!-- 區域設定 main-active-index左侧选中项的索引、active-id右側選中的id支持傳入數組[] -->
+      <van-dropdown-item @open="show_area" title="區域" ref="lc_item">
         <van-tree-select
           height="70vw"
           :items="items"
@@ -31,7 +31,8 @@
           @click-item="area_click"
         >
         </van-tree-select>
-        <div style="display: flow-root">
+        <!-- <div style="display: flow-root;width:100%;"> -->
+        <div class="sort_btn">
           <div class="btn">
             <van-button type="warning" class="btn_reset">重置</van-button>
             <van-button
@@ -42,8 +43,8 @@
             >
           </div>
         </div>
+        <!-- </div> -->
       </van-dropdown-item>
-
       <van-dropdown-item title="價格" ref="lc_item_price">
         <van-tree-select
           height="70vw"
@@ -56,17 +57,19 @@
           class="lc_tree-select"
         >
         </van-tree-select>
-        <div class="btn">
-          <van-button type="warning" class="btn_reset">重置</van-button>
-          <van-button
-            class="btn_confrim"
-            type="danger"
-            @click="price_confirm_click"
-            >確定</van-button
-          >
+        <div class="sort_btn">
+          <div class="btn">
+            <van-button type="warning" class="btn_reset">重置</van-button>
+            <van-button
+              class="btn_confrim"
+              type="danger"
+              @click="price_confirm_click"
+              >確定</van-button
+            >
+          </div>
         </div>
       </van-dropdown-item>
-      <van-dropdown-item title="標簽" ref="item">
+      <van-dropdown-item title="標簽" @open="show_tag" ref="item">
         <van-tree-select
           height="70vw"
           :items="item_t"
@@ -76,21 +79,23 @@
           @click-item="right_c"
         >
         </van-tree-select>
-        <div class="btn">
-          <van-button type="warning" class="btn_reset">重置</van-button>
-          <van-button type="danger" class="btn_confrim" @click="sure"
-            >確定</van-button
-          >
+        <div class="sort_btn">
+          <div class="btn">
+            <van-button type="warning" class="btn_reset">重置</van-button>
+            <van-button type="danger" class="btn_confrim" @click="sure"
+              >確定</van-button
+            >
+          </div>
         </div>
       </van-dropdown-item>
-      <van-dropdown-item title="更多" ref="item">
+      <van-dropdown-item @open="show_more" title="更多" ref="item">
         <van-tree-select
           height="100vw"
           :items="item_m"
           :main-active-index.sync="active"
           :active-id.sync="activeId"
-          @click-nav="left_c"
-          @click-item="right_c"
+          @click-nav="more_left_Click"
+          @click-item="more_right_Click"
         >
           <template #content>
             <div class="lc_drop_title">聯繫人類型</div>
@@ -103,7 +108,7 @@
             <div class="lc_field">
               <van-field
                 v-model="phone"
-                label="姓名/手機："
+                label="姓名/手機:"
                 placeholder="请输入"
                 size="mini"
               />
@@ -111,7 +116,7 @@
             <div class="lc_field lc_house">
               <van-field
                 v-model="PropertyID"
-                label="房源編號："
+                label="房源編號:"
                 placeholder="请输入"
                 size="mini"
               />
@@ -123,31 +128,48 @@
                 <span class="lc_stauts_container">{{ item.Name }}</span>
               </template>
             </div>
+            <!-- <span class="lc_status_txt">房型</span>
+            <div class="lc_status">
+              <template v-show="RoomType" v-for="(item, index) in RoomType">
+                <span class="lc_status_container">{{ item.ItemName }}</span>
+              </template>
+            </div> -->
           </template>
         </van-tree-select>
-        <div class="btn">
-          <van-button type="warning" class="btn_reset">重置</van-button>
-          <van-button type="danger" class="btn_confrim" @click="sure"
-            >確定</van-button
-          >
+        <div class="sort_btn">
+          <div class="btn">
+            <van-button type="warning" class="btn_reset">重置</van-button>
+            <van-button type="danger" class="btn_confrim" @click="sure"
+              >確定</van-button
+            >
+          </div>
         </div>
       </van-dropdown-item>
       <!-- 排序 -->
-      <van-dropdown-item class="lc_rr" title="" ref="item">
-        <van-tree-select
-          height="100vw"
-          :items="item_s"
-          :main-active-index.sync="active"
-          :active-id.sync="activeId"
-          @click-nav="left_c"
-          @click-item="right_c"
-        >
-        </van-tree-select>
-        <div class="btn">
-          <van-button type="warning" class="btn_reset">重置</van-button>
-          <van-button class="btn_confrim" type="danger" @click="sure"
-            >確定</van-button
-          >
+      <van-dropdown-item v-model="sortIndex" class="lc_rr" ref="sort_item">
+        <template #title>
+          <van-icon color="#666666" size="20" name="sort" />
+        </template>
+        <van-cell-group>
+          <template v-for="(item, index) in HouseSort">
+            <van-cell
+              :class="{ lc_active_in: sortIndex === index }"
+              :key="index"
+              @click="sort_event(index)"
+              :title="item.text"
+            >
+            </van-cell>
+          </template>
+        </van-cell-group>
+        <div class="sort_btn" v-show="HouseSort">
+          <div class="btn">
+            <van-button type="warning" class="btn_reset" @click="reset_sort"
+              >重置</van-button
+            >
+            <van-button class="btn_confrim" type="danger" @click="sort_click"
+              >確定</van-button
+            >
+          </div>
         </div>
       </van-dropdown-item>
     </van-dropdown-menu>
@@ -240,32 +262,18 @@
     </van-pull-refresh>
   </div>
 </template>
-
-
 <script>
 import { Toast } from "vant";
 import aplush from "@/api/A+";
 import axios from "axios";
+import api from "@/api";
 export default {
   mounted() {
     // 獲取房源列表
     this.lc_House_List();
     this.ck_house_status();
-    this.Custom_Type();
-    this.lc_area_data();
-  },
-  watch: {
-    lcactiveId(val, old) {
-      let lc_index = this.lc_area_left;
-      this.lct_area = [];
-      this.items[lc_index].children.forEach((item) => {
-        this.lcactiveId.forEach((item2) => {
-          if (item2 == item.id) {
-            this.lct_area.push(item.keyId);
-          }
-        });
-      });
-    },
+    this.house_sort();
+    this.house_type();
   },
   data() {
     return {
@@ -281,8 +289,7 @@ export default {
       lct_area_str: "",
       lc_price: [],
       lc_price_activeId: 0,
-      lc_price_acitve: [],
-
+      lc_price_acitve: "",
       active: 0,
       pageIndex: 1,
       listLoading: false, //上滑列表加載（每一次上滑的時候)
@@ -291,55 +298,22 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
-      lc_area_left: 0,
+      lc_area_left: [],
       lc_price_left: 0,
-      // 價格選中的值
+      // 售選中的價格
       lc_price_select: {
-        startPrice: 0,
-        endPrice: 0,
+        startPrice: "",
+        endPrice: "",
+      },
+      // 租選中的價格
+      lc_price_select_rent: {
+        startPrice: "",
+        endPrice: "",
       },
       // 房源編號
       PropertyID: "",
       // 客戶類型
       lc_CustomType: "",
-      item_s: [
-        {
-          text: "默認",
-          children: [],
-        },
-        {
-          text: "售價從高到低",
-          children: [],
-        },
-        {
-          text: "售價從低到高",
-          children: [],
-        },
-        {
-          text: "租價從高到低",
-          children: [],
-        },
-        {
-          text: "租價從低到高",
-          children: [],
-        },
-        {
-          text: "面積從大到小",
-          children: [],
-        },
-        {
-          text: "面積從小到大",
-          children: [],
-        },
-        {
-          text: "樓層從高到低",
-          children: [],
-        },
-        {
-          text: "樓層從低到高",
-          children: [],
-        },
-      ],
       item: [
         {
           text: "出售價(萬)",
@@ -407,44 +381,45 @@ export default {
           ],
         },
       ],
-      item_t: [
-        {
-          text: "不限",
-          children: [],
-        },
-        {
-          text: "獨家",
-          children: [],
-        },
-        {
-          text: "放盤紙",
-          children: [],
-        },
-        {
-          text: "鑰匙",
-          children: [],
-        },
-        {
-          text: "有圖",
-          children: [],
-        },
-        {
-          text: "有360視頻",
-          children: [],
-        },
-        {
-          text: "72小時内新增房源",
-          children: [],
-        },
-        {
-          text: "30天租約到期房",
-          children: [],
-        },
-        {
-          text: "豪宅盤",
-          children: [],
-        },
-      ],
+      item_t: [],
+      // item_t: [
+      //   {
+      //     text: "不限",
+      //     children: [],
+      //   },
+      //   {
+      //     text: "獨家",
+      //     children: [],
+      //   },
+      //   {
+      //     text: "放盤紙",
+      //     children: [],
+      //   },
+      //   {
+      //     text: "鑰匙",
+      //     children: [],
+      //   },
+      //   {
+      //     text: "有圖",
+      //     children: [],
+      //   },
+      //   {
+      //     text: "有360視頻",
+      //     children: [],
+      //   },
+      //   {
+      //     text: "72小時内新增房源",
+      //     children: [],
+      //   },
+      //   {
+      //     text: "30天租約到期房",
+      //     children: [],
+      //   },
+      //   {
+      //     text: "豪宅盤",
+      //     children: [],
+      //   },
+      // ],
       item_m: [
         {
           text: "聯係人類型",
@@ -484,234 +459,8 @@ export default {
         },
       ],
       items: [],
-      // items: [
-      //   {
-      //     text: "澳門",
-      //     Id: "ee549454-4917-414a-b9da-df150d4534d2",
-      //     children: [
-      //       {
-      //         keyId: "33e629bd-d54a-46e6-8ab2-2f4452130806",
-      //         id: 0,
-      //         text: "青洲區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "9aee3ce3-1dd6-400b-af10-a5b292c6b21b",
-      //         id: 1,
-      //         text: "台山區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "0911cf23-557b-4054-b635-51d95cce7897",
-      //         id: 2,
-      //         text: "黑沙環及祐漢區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "7e6f6916-4685-4c1f-8093-3d92fbc27898",
-      //         id: 3,
-      //         text: "黑沙環新填海區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "caec3deb-299e-4864-b6d3-9138e385f5cf",
-      //         id: 4,
-      //         text: "望廈及水塘區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "9c4c23ec-68ed-40e7-8f1e-cd6ca41b70d0",
-      //         id: 5,
-      //         text: "筷子基區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "077490e0-f8bd-49c0-ac0d-9dcb6d1a5aca",
-      //         id: 6,
-      //         text: "林茂塘區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "6a053c3c-bd9b-4d1a-ab76-5295cb6f411e",
-      //         id: 7,
-      //         text: "高士德及雅廉訪區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "1af2bdd9-aaaf-4c16-a262-28855241fe30",
-      //         id: 8,
-      //         text: "新橋區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "60a1ea8e-10eb-4394-bb21-5e00103bf5b2",
-      //         id: 9,
-      //         text: "沙梨頭及大三巴區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "dd8f9c0e-3387-4a1f-bb82-51a09062df3a",
-      //         id: 10,
-      //         text: "荷蘭園區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "e61f7fd7-370a-4d06-b510-0576f56351a2",
-      //         id: 11,
-      //         text: "東望洋區(松山區)",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "e670c892-f37b-4fea-9c23-1531d6965f41",
-      //         id: 12,
-      //         text: "新口岸區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "ab5c10a3-7b8b-4f46-89d2-5da31396c6bf",
-      //         id: 13,
-      //         text: "外港及南灣湖新填海區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "a4efa499-8400-4b3f-98bf-8040c17a839d",
-      //         id: 14,
-      //         text: "中區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "23a2722a-cbca-41cc-a645-52b236c9806d",
-      //         id: 15,
-      //         text: "下環區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "ff0e8455-bcdc-4bfe-809e-7fe9ff97b184",
-      //         id: 16,
-      //         text: "南西灣及主教山區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "ee549454-4917-414a-b9da-df150d4534d2",
-      //         IsSelect: false,
-      //       },
-      //     ],
-      //   },
+      // 房型
 
-      //   {
-      //     text: "氹仔",
-      //     keyId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
-      //     children: [
-      //       {
-      //         keyId: "6ae1cc29-0755-41c4-b330-81f442963726",
-      //         id: 0,
-      //         text: "海洋及小潭山區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "7abb001a-e35a-4de8-a071-3946a2d60b6a",
-      //         id: 1,
-      //         text: "氹仔中心區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "9eb8b44c-5855-4925-869e-35df52b9769d",
-      //         id: 2,
-      //         text: "大學及北安灣區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "68155529-6b5d-48e5-aeca-2cc4cc1199da",
-      //         id: 3,
-      //         text: "北安及大潭山區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
-      //         IsSelect: false,
-      //       },
-      //       {
-      //         keyId: "3c68d0a4-b83d-4e0a-91b6-55208ddb2995",
-      //         id: 4,
-      //         text: "氹仔舊城及馬場區",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "66864c48-f68b-4d39-8a7e-0d531b5cb6e3",
-      //         IsSelect: false,
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     text: "路環",
-      //     KeyId: "d0091123-dca0-445d-877c-6c1ba803ca3b",
-      //     children: [
-      //       {
-      //         keyId: "dcc7d085-0fdb-47a8-8208-d146a815993f",
-      //         id: 0,
-      //         text: "路環",
-      //         Level: 2,
-      //         IsMacau: false,
-      //         ParentId: "d0091123-dca0-445d-877c-6c1ba803ca3b",
-      //         IsSelect: false,
-      //       },
-      //     ],
-      //   },
-      // ],
       value: 0,
       values: this.$route.query.word,
       switch1: false,
@@ -726,6 +475,17 @@ export default {
       click_count: 0,
       click_count2: 0,
       HouseStatus: [],
+      //房源查詢類型
+      QueryType: "4",
+      HouseSort: [],
+      // 排序index
+      sortIndex: "0",
+      sort_name: "", //排序選中的值
+      RoomType: [
+        {
+          ItemName: "",
+        },
+      ], //房型
     };
   },
   methods: {
@@ -776,28 +536,80 @@ export default {
           });
         });
     },
-    // end 下拉刷新
     // 保存搜索
     saveSearch() {
       this.$router.push("/saveSearch");
     },
-    // end 保存搜索
     // 跳轉房源詳情
     detail(keyId) {
-      // console.log("打印內容");
-      // console.log(keyId);
       let lc_keyId = keyId;
-      this.$router.push({ path: "house_d", query: { KeyId: lc_keyId } });
+      this.$router.push({ path: "details", query: { KeyId: lc_keyId } });
     },
     // end 跳轉房源詳情
     sure() {
       console.log(this.items[this.active].children[this.activeId].text);
       console.log(this.activeId);
     },
+    // 排序確認
+
     left_c(e) {
       console.log(this.items[e]);
     },
+    // 點擊顯示區域
+    show_area() {
+      this.lc_area_data();
+    },
+    // 顯示標籤
+    show_tag() {
+      aplush.apis
+        .SystemType({
+          Type: "27",
+        })
+        .then((res) => {
+          // this.item_t=res.Result;
+          let _temp = res.Result.Items;
+          console.log("打印temp");
+          console.log(_temp);
+          _temp.forEach((item, index) => {
+            if (item.id == this.house_sort_id) {
+              this.item_t.push({
+                text: item.ItemName,
+                value: item.KeyId,
+              });
+            }
+          });
+          console.log(this.item_t);
+          // this.item_t=res;
+        });
+    },
+    // 更多左點擊
+    more_left_Click() {},
+    // 更多右點擊
+    more_right_Click() {},
+    // 標籤右側點擊
     right_c(e) {
+      console.log("標籤點擊事件");
+      console.log(e);
+    },
+    //標籤左側點擊
+    left_c(e) {
+      console.log("標籤左側點擊");
+      console.log(e);
+
+      this.baseData();
+    },
+    // 排序左侧点击
+    // left_click(e) {
+    //   this.active = e;
+    //   this.activeId = 0;
+    // },
+    //排序左側點擊
+    // Sort_let_Click(e) {
+    //   console.log(this.HouseSort[e]);
+    // },
+    // 排序右侧点击
+    Sort_right_Click(e) {
+      console.log("排序右侧点击");
       console.log(e);
     },
     onClickLeft() {
@@ -805,6 +617,31 @@ export default {
     },
     onClickRight() {
       Toast("按钮");
+    },
+    show_more() {
+      aplush.apis
+        .SystemType({
+          Type: "41",
+        })
+        .then((res) => {
+          this.lc_CustomType = res.Result;
+          aplush.apis
+            .SystemType({
+              Type: "25",
+            })
+            .then((res) => {
+            this.$nextTick(() => {
+                this.RoomType.push(res.Result.Items);
+              });
+              console.log("this.RoomType");
+              console.log(this.RoomType);
+            });
+        });
+      // aplush.apis.SystemType({
+
+      // }).then(res=>{
+
+      // })
     },
     back() {
       this.$router.push("/Home");
@@ -818,19 +655,14 @@ export default {
         .Listinglist({
           PageIndex: this.pageIndex,
           PageSize: 20,
-          PropType: 1,
-          EstateSelectType: 4,
-          AreaKeyIdStr: this.lc_districtKey,
-          SalePriceFrom:
-            this.lc_price_select.startPrice == ""
-              ? this.price_low
-              : this.lc_price_select.startPrice,
-          SalePriceTo:
-            this.lc_price_select.endPrice == ""
-              ? this.price_max
-              : this.lc_price_select.endPrice,
-          RentPriceFrom: "",
-          RentPriceTo: "",
+          PropType: 1, //查詢類型
+          EstateSelectType: this.QueryType, //房源查詢類型
+          AreaKeyIdStr: this.lc_districtKey, //區域選中的keyId
+          SalePriceFrom: this.lc_price_select.startPrice, //
+          SalePriceTo: this.lc_price_select.endPrice,
+          RentPriceFrom: this.lc_price_select_rent.startPrice,
+          RentPriceTo: this.lc_price_select_rent.endPrice,
+          SortField: this.sort_name, // 排序條件
         })
         .then((res) => {
           let _temp = res.PropertysModel;
@@ -863,9 +695,6 @@ export default {
       this.click_count == 1
         ? (this.lc_price_acitve = item.id.toString())
         : (this.lc_price_acitve = this.lc_price_acitve);
-      // this.click_count == 1
-      //   ? (this.lc_price_acitve = item.id.toString())
-      //   : this.lc_price_acitve;
       this.lc_price_select.startPrice = item.startPrice;
       this.lc_price_select.endPrice = item.endPrice;
       if (this.click_count == 2) {
@@ -887,9 +716,7 @@ export default {
         : (this.price_disabled = true);
     },
     lc_item_click2(item) {
-      // console.log(item);
       this.click_count2++;
-      // console.log(this.click_count2);
       this.click_count2 == 1
         ? (this.lc_price_acitve = item.id)
         : (this.lc_price_acitve = this.lc_price_acitve);
@@ -909,53 +736,86 @@ export default {
         }
       }
     },
+    // 區域左側選擇
     area_left_click(left_click) {
       this.lc_area_left = left_click;
+      console.log("this.lct_area_left");
+      console.log(left_click);
+      console.log(this.lct_area_left);
     },
     // 區域點擊
-    area_click(result_item) {},
+    area_click(result_item) {
+      //通過下標獲取keyId
+      console.log("打印選中的結果");
+      console.log(this.lcactiveId);
+    },
+    // 價格左側選擇
     price_left_click(left_click) {
+      console.log("價格左側點擊下標");
       this.lc_price_left = left_click;
+      console.log(left_click);
     },
-    price_click() {
+    // 价格點擊
+    price_click(e) {
+      console.log("價格點擊事件");
+      console.log(e);
       console.log(this.lc_price_select);
+      console.log(this.lc_price_acitve);
+      // this.baseData();
     },
+    // 區域確認選擇
     area_confrim_click() {
+      //清空數據
+      this.lct_area = [];
       this.$refs.lc_item.toggle();
-      this.lc_districtKey = this.lct_area.join(",");
-      aplush.apis
-        .Listinglist({
-          PageIndex: this.pageIndex,
-          PageSize: 20,
-          PropType: 1,
-          EstateSelectType: 4,
-          AreaKeyIdStr: this.lc_districtKey,
-        })
-        .then((res) => {
-          let _temp = res.PropertysModel;
-          this.HouseList = _temp;
+      this.QueryType = 2;
+      let lc_index = this.lc_area_left; //左側選中的
+      this.items.forEach((item, index) => {
+        item.children.forEach((item2) => {
+          this.lcactiveId.forEach((item3) => {
+            if (item3 == item2.id) {
+              this.lct_area.push(item2.KeyId);
+            }
+          });
         });
+      });
+
+      this.lct_area.length > 1
+        ? (this.lc_districtKey = this.lct_area.join(","))
+        : (this.lc_districtKey = this.lct_area.join(""));
+      this.baseData();
     },
     price_confirm_click() {
       this.$refs.lc_item_price.toggle();
+      this.QueryType = 2;
+      console.log("價格確認點擊", this.lc_price_activeId);
+      // 右側選中的
+      this.item.forEach((item, index) => {
+        item.children.forEach((item2) => {
+          if (this.lc_price_acitve == item2.id) {
+            this.lc_price_activeId == "0"
+              ? (this.lc_price_select.startPrice = item2.startPrice)
+              : "";
+            this.lc_price_activeId == "0"
+              ? (this.lc_price_select.endPrice = item2.endPrice)
+              : "";
+            this.lc_price_activeId == "1"
+              ? (this.lc_price_select_rent.startPrice = item2.startPrice)
+              : "";
+            this.lc_price_activeId == "1"
+              ? (this.lc_price_select_rent.endPrice = item2.endPrice)
+              : "";
+          }
+        });
+      });
       this.baseData();
     },
     price_confirm_click2() {
       this.$refs.lc_item_price.toggle();
-      this.baseData();
+      // this.baseData();
     },
     // 房源列表
     lc_House_List() {
-      // aplush.apis
-      //   .Listinglist({
-      //     PageIndex: this.pageIndex,
-      //     PageSize: 20,
-      //     PropType: 1,
-      //     EstateSelectType: 4,
-      //   })
-      //   .then((res) => {
-      //     this.HouseList = res.PropertysModel;
-      //   });
       this.baseData();
     },
     // 房源狀態
@@ -965,31 +825,67 @@ export default {
         this.HouseStatus = res.propertyStatus;
       });
     },
-    // 客戶類型
-    Custom_Type() {
-      let type = {
-        Type: 41,
-      };
-      aplush.apis.SystemType(type).then((res) => {
-        // console.log("客戶類型");
-        // console.log(res);
-        this.lc_CustomType = res.Result;
+    //房源列表排序
+    house_sort() {
+      aplush.apis.ListingSort().then((res) => {
+        let _temp = res;
+        _temp.forEach((item, index) => {
+          if (item.id == this.house_sort_id) {
+            this.HouseSort.push({
+              text: item.SortName,
+              value: index,
+              SortName: item.SortField,
+            });
+          }
+        });
       });
+    },
+    // 排序重置
+    reset_sort() {
+      this.sort_name = "";
+      this.sortIndex = "";
+    },
+    //房源排序選中
+    sort_event(index) {
+      this.sortIndex = index;
+      console.log("房源排序選中");
+      console.log(index);
+      this.sort_name = this.HouseSort[index].SortName;
+    },
+    //房型
+    house_type() {
+      aplush.apis
+        .SystemType({
+          Type: "25",
+        })
+        .then((res) => {
+          console.log("房型");
+          console.log(res);
+          this.RoomType = res;
+          console.log(this.RoomType);
+        });
+    },
+    // 排序方法查詢
+    sort_click() {
+      // 關閉 dropitems
+      this.$refs.sort_item.toggle();
+      this.baseData();
     },
     //區域數據
     lc_area_data() {
       aplush.apis.ListingStatusMore().then((res) => {
         var lc_Districts = res.Districts;
         lc_Districts.forEach((item) => {
-          item.text=item.Name,
-          item.KeyId=item.KeyId,
-          item.children=[]
+          (item.text = item.Name),
+            (item.KeyId = item.KeyId),
+            (item.children = []);
         });
         var lc_Regions = res.Regions;
-        lc_Districts.map((item,index) => {
-          lc_Regions.filter((i,index) => {
+        lc_Districts.map((item, index) => {
+          lc_Regions.filter((i, index) => {
             if (i.ParentId == item.KeyId) {
               item.children.push({
+                id: index,
                 text: i.Name,
                 KeyId: i.KeyId,
               });
@@ -997,6 +893,8 @@ export default {
           });
         });
         this.items = lc_Districts;
+        console.log("this.items");
+        console.log(this.items);
       });
     },
   },
@@ -1004,24 +902,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "house.scss";
-// ::v-deep .van-field__control {
-//   width: 86px;
-//   height: 30px;
-//   background-color: #ffffff;
-//   border-radius: 2px;
-//   border: solid 0.5px #e2e2e2;
-// }
+@import "index.scss";
 ::v-deep .van-cell {
   padding: 0;
 }
-// ::v-deep .van-cell__value {
-//   width: 83px;
-//   height: 30px;
-//   background-color: #ffffff;
-//   border-radius: 2px;
-//   border: solid 0.5px #e2e2e2;
-// }
+
 .lc_tree-select ::v-deep .van-cell__value {
   width: 83px;
   height: 30px;

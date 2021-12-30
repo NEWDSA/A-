@@ -3,7 +3,7 @@
     <router-view />
     <!-- 对路由进行判断 -->
     <div class="lc_bar">
-      <van-tabbar fixed route active-color="#ee0a24" v-show="show_bar">
+      <van-tabbar fixed safe-area-inset-bottom route active-color="#ee0a24" v-show="show_bar">
         <van-tabbar-item replace to="/Home">
           <template #icon="props">
             <img :src="props.active ? icon_home.active : icon_home.inactive" />
@@ -89,7 +89,7 @@ export default {
         to.path === "/House" ||
         to.path === "/Customer" ||
         to.path === "/Mine" ||
-        to.path === "Message"
+        to.path === "/Message"
       ) {
         this.show_bar = true;
       } else {

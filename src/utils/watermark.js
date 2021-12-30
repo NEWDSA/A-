@@ -14,7 +14,7 @@ let setWatermark = (str) => {
   let cans = can.getContext('2d')
   cans.rotate(-20 * Math.PI / 300)
   cans.font = '15px Vedana'
-  cans.fillStyle = 'rgba(0, 0, 0, 0.20)'
+  cans.fillStyle = 'rgba(0, 0, 0, 0.10)'
 //   cans.textAlign = 'left'
 //   cans.textBaseline = 'Middle'
   cans.fillText(str, can.width / 20, can.height)

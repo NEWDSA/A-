@@ -3,7 +3,7 @@
  * @Date: 2021-11-25 17:40:25 
  * @Last Modified by: luciano
  *  楼盘管理
- * @Last Modified time: 2021-11-25 18:13:01
+ * @Last Modified time: 2021-12-27 19:46:29
  */
 
 
@@ -204,25 +204,34 @@
   background-color: #f12945;
 }
 
-.btn {
-  display: flex;
-  justify-content: space-around;
-  margin: 13px;
+.sort_btn {
+  position: fixed;
+  height: 70px;
+  margin-top: -5px;
+  background: #ffffff;
+  width: 100%;
 
-  .btn_reset {
-    flex: 0.2;
-    height: 35px;
-    background-color: #fbeeee;
-    color: #f12945;
-    border-color: #f12945;
-  }
+  .btn {
+    display: flex;
+    justify-content: space-around;
+    margin: 13px;
 
-  .btn_confrim {
-    flex: 0.6;
-    height: 35px;
-    background-color: #f12945;
+    .btn_reset {
+      flex: 0.2;
+      height: 35px;
+      background-color: #fbeeee;
+      color: #f12945;
+      border-color: #f12945;
+    }
+
+    .btn_confrim {
+      flex: 0.6;
+      height: 35px;
+      background-color: #f12945;
+    }
   }
 }
+
 
 .van-icon-search {
   color: #999999;
@@ -284,12 +293,11 @@
     }
 
     .van-dropdown-menu__title::after {
-      // // top: 50%;
       top: -5px;
       display: block;
       width: 15.5px;
       height: 15.5px;
-      background: url("/icon/sort_icon.png") no-repeat center;
+      // background: url("/icon/sort_icon.png") no-repeat center;
       background-size: cover;
       right: -0.10667rem;
       margin-top: -0.13333rem;
@@ -338,5 +346,62 @@
         padding: 3px;
       }
     }
+  }
+}
+
+.lc_rr {
+  ::v-deep .van-tree-select__nav {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow-y: auto;
+    background-color: #ffffff;
+    // background-color: #f7f8fa;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  ::v-deep .van-cell__title,
+  .van-cell__value {
+    padding: 10px;
+  }
+
+  ::v-deep .van-cell-group {
+    height: 400px;
+  }
+
+  .van-sidebar-item--select {
+    color: #f12945 !important;
+  }
+
+  .van-sidebar-item--select::before {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: auto;
+    height: auto;
+    background-color: #ffffff;
+    transform: translateY(-50%);
+    content: "";
+
+  }
+
+  .van-sidebar-item {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    padding: 0.5333333rem 0.32rem;
+    overflow: hidden;
+    color: #323233;
+    font-size: 0.3733333rem;
+    line-height: 0.5333333rem;
+    background-color: #ffffff;
+    // background-color: #f7f8fa;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .lc_active_in {
+    color: #f12945;
   }
 }

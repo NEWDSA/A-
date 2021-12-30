@@ -17,6 +17,9 @@ import {
   PullRefresh
 } from 'vant';
 
+
+
+console.log(`%cSometime problems is not difficult like you imagine`,"color:red;font-size:20px;font-weight:bold;text-decoration:underline;cursor:pointer");
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

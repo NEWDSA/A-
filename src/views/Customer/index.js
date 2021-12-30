@@ -3,7 +3,7 @@
   客戶管理 操作
  * @Date: 2021-12-17 11:38:35 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-17 15:05:22
+ * @Last Modified time: 2021-12-27 09:28:41
  */
 import axios from "axios";
 import {
@@ -107,7 +107,9 @@ export default {
       Toast("按钮");
     },
     tap(index) {
-      this.$router.push("/Custom_d");
+      Toast("点击了" + index);
+      // this.$router.push("/Custom_d");
+      this.$router.push('CustomerDetail');
     },
     // 下拉刷新
     onRefresh() {

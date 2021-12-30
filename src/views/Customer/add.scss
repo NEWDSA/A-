@@ -2,64 +2,123 @@
  * @Author: luciano 
  客户管理
  * @Date: 2021-12-17 15:40:04 
- * @Last Modified by:   luciano 
- * @Last Modified time: 2021-12-17 15:40:04 
+ * @Last Modified by: luciano
+ * @Last Modified time: 2021-12-23 16:42:11
  */
 
 .contianer {
-    width: 100%;
-    height: 100%;
-    ::v-deep .van-nav-bar .van-icon {
-      color: #666666;
+  width: 100%;
+  height: 100%;
+
+  ::v-deep .van-nav-bar .van-icon {
+    color: #666666;
+  }
+
+  .lc_title {
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    // margin-left: 10px;
+    padding-left: 26px;
+
+    &::before {
+      position: absolute;
+      display: block;
+      top: 4px;
+      left: 16px;
+      content: "";
+      width: 4px;
+      height: 16px;
+      background-color: red;
     }
-    .lc_title {
-      position: relative;
-      font-size: 16px;
-      margin-left: 10px;
-      padding-left: 26px;
-      &::before {
-        position: absolute;
-        display: block;
-        top: 4px;
-        left: 16px;
-        content: "";
-        width: 4px;
-        height: 16px;
-        background-color: red;
-      }
+  }
+
+  ::v-deep .van-field__label {
+    width: 70px;
+    // margin-left: 3px;
+  }
+
+  ::v-deep .van-cell {
+    width: auto;
+    margin-left: 10px;
+  }
+
+  ::v-deep .van-cell--required {
+    width: fit-content;
+    margin-left: 10px;
+
+    &::before {
+      content: "";
     }
-    ::v-deep .van-cell {
-      margin-left: 10px;
-    }
-    ::v-deep .van-cell--required {
-      width: fit-content;
-      margin-left: 10px;
-      &::before {
-        content: "";
-      }
-      .van-cell__title.van-field__label {
-        span {
-          &::after {
-            position: relative;
-            top: 3px;
-            right: -5px;
-            color: #ee0a24;
-            font-size: 14px;
-            content: "*";
-          }
+
+    .van-cell__title.van-field__label {
+      span {
+        &::after {
+          position: relative;
+          top: 3px;
+          right: -5px;
+          color: #ee0a24;
+          font-size: 14px;
+          content: "*";
         }
       }
     }
-    ::v-deep .van-cell {
-      padding: 10px;
-    }
-    ::v-deep .van-cell .van-cell__value {
-      box-sizing: border-box;
-      border: solid 1px #cccccc;
-      border-radius: 4px;
-  
-      &::after {
-        border-bottom: none;
-      }
+  }
+
+  ::v-deep .van-cell {
+    padding: 10px;
+  }
+
+  ::v-deep .van-cell .van-cell__value {
+
+
+    &::after {
+      border-bottom: none;
     }
   }
+
+  ::v-deep .van-field__control {
+    padding-left: 10px;
+  }
+
+  .lc_subject_type {
+    position: relative;
+    display: block;
+    top: 30px;
+    font-size: 18px;
+    padding-left: 13px;
+    margin-bottom: 50px;
+    z-index: 333;
+    width: 100%;
+  }
+
+  .lc_tran_type {
+    position: relative;
+    font-size: 14px;
+    margin-left: 15px;
+    margin-right: 25px;
+    color: #646566;
+    text-align: left;
+    word-wrap: break-word;
+  }
+
+  // border設置
+  ::v-deep .van-field__body {
+    box-sizing: border-box;
+    border: solid 1px #cccccc;
+    border-radius: 4px;
+
+  }
+
+  .lc_gender {
+    width: 135px;
+    margin-left: -10px
+  }
+
+  .lc_phone {
+    margin-left: -10px;
+  }
+
+  .lc_prefix_phone {}
+}

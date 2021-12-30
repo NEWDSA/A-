@@ -1,55 +1,57 @@
 <template>
   <div class="container">
     <!-- 顶部导航 -->
-    <div class="navs">
-      <img @click="back" src="/icon/nav_back_transparent_icon.png" alt="" />
-      <!-- 更多 -->
-      <!--彈出內容、現場相、-->
-      <van-popover
-        class="lc_popover_more"
-        v-model="showPopover"
-        trigger="click"
-        placement="bottom-end"
-        :actions="actions"
-        @select="onSelect"
-      >
-        <template #reference>
-          <img
-            style="margin: 0px"
-            @click="more_i"
-            src="/icon/nav_more_transparent_icon.png"
-            alt=""
-          />
-        </template>
-      </van-popover>
-      <!-- 點讚 -->
-      <img
-        v-if="bool_good"
-        @click="good_i"
-        src="/icon/nav_good_transparent_icon.png"
-        alt=""
-      />
-      <img
-        v-else
-        @click="good_i"
-        src="/icon/nav_good_collected_icon.png"
-        alt=""
-      />
-      <!-- 收藏 -->
-      <img
-        v-if="bool_collect"
-        @click="collect_i"
-        src="/icon/nav_collected_transparent_icon.png"
-        alt=""
-      />
-      <img
-        v-else
-        @click="collect_i"
-        src="/icon/nav_collect_transparent_icon.png"
-        alt=""
-      />
-    </div>
-    <!-- end 顶部导航 -->
+    <van-sticky>
+      <div class="navs">
+        <img @click="back" src="/icon/nav_back_transparent_icon.png" alt="" />
+        <!-- 更多 -->
+        <!--彈出內容、現場相、-->
+        <van-popover
+          class="lc_popover_more"
+          v-model="showPopover"
+          trigger="click"
+          placement="bottom-end"
+          :actions="actions"
+          @select="onSelect"
+        >
+          <template #reference>
+            <img
+              style="margin: 0px"
+              @click="more_i"
+              src="/icon/nav_more_transparent_icon.png"
+              alt=""
+            />
+          </template>
+        </van-popover>
+        <!-- 點讚 -->
+        <img
+          v-if="bool_good"
+          @click="good_i"
+          src="/icon/nav_good_transparent_icon.png"
+          alt=""
+        />
+        <img
+          v-else
+          @click="good_i"
+          src="/icon/nav_good_collected_icon.png"
+          alt=""
+        />
+        <!-- 收藏 -->
+        <img
+          v-if="bool_collect"
+          @click="collect_i"
+          src="/icon/nav_collected_transparent_icon.png"
+          alt=""
+        />
+        <img
+          v-else
+          @click="collect_i"
+          src="/icon/nav_collect_transparent_icon.png"
+          alt=""
+        />
+      </div>
+      <!-- end 顶部导航 -->
+    </van-sticky>
     <!-- 轮播图 -->
     <van-swipe
       class="my-swipe"
@@ -609,7 +611,7 @@
               label="放盤紙編號"
               placeholder="請輸入放盤紙編號"
             ></van-field>
-            <template v-if="PaperStatus=='1'">
+            <template v-if="PaperStatus == '1'">
               <van-field
                 v-model="Saeles_Start"
                 label="售價範圍開始"
@@ -621,7 +623,7 @@
                 placeholder="請輸入售價"
               ></van-field>
             </template>
-            <template v-if="PaperStatus=='2'">
+            <template v-if="PaperStatus == '2'">
               <van-field
                 v-model="Rent_Start"
                 label="租金範圍開始"
@@ -633,7 +635,7 @@
                 placeholder="請輸入租金"
               ></van-field>
             </template>
-            <template v-if="PaperStatus=='3'">
+            <template v-if="PaperStatus == '3'">
               <van-field
                 v-model="Saeles_Start"
                 label="售價範圍開始"
@@ -1013,5 +1015,5 @@
 export { default } from "./details";
 </script>
 <style  lang="scss" scoped>
-@import "house_d.scss";
+@import "details.scss";
 </style>

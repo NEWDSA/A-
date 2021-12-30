@@ -140,7 +140,7 @@
       <van-divider />
       <div class="lc_layout">
         <!-- 交易類型 -->
-        <div class="lc_title" v-if="TransType.SysParameter.ParameterName">
+        <div class="lc_title" v-if="TransType.SysParameter">
           {{ TransType.SysParameter.ParameterName }}
         </div>
         <div style="display: flex; margin-left: 10px">
@@ -173,7 +173,7 @@
         </div>
         <!-- end 購價 -->
         <!-- 房型 -->
-        <div class="lc_title" v-if="RoomType.SysParameter.ParameterName">
+        <div class="lc_title" v-if="RoomType.SysParameter">
           {{ RoomType.SysParameter.ParameterName }}
         </div>
         <div class="lc_h_layout">
@@ -209,7 +209,7 @@
             placeholder=" 請輸入業務員姓名"
           />
         </div>
-        <div class="lc_title" v-if="Floor.SysParameter.ParameterName">
+        <div class="lc_title" v-if="Floor.SysParameter">
           {{ Floor.SysParameter.ParameterName }}
         </div>
         <div

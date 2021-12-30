@@ -8,7 +8,7 @@
       placeholder="请输入搜索内容"
       :autofocus="true"
     >
-      <template #action @click="bac">
+      <template  @click="back">
         <span>取消</span>
       </template>
     </van-search>

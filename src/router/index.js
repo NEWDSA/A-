@@ -39,7 +39,7 @@ export const constantRoutes = [
   },
   {
     path: '/Message',
-    component: () => import('@/views/Message'),
+    component: () => import('@/views/Message/index.vue'),
   },
   {
     path: '/Customer', 
@@ -70,7 +70,7 @@ export const constantRoutes = [
   {
     path: '/details',
     name: 'details',
-    component: () => import('@/views/House/details'),
+    component: () => import('@/views/House/details.vue'),
   },
   {
     path: '/House',
@@ -88,13 +88,13 @@ export const constantRoutes = [
     }
   },
   {
-    path: '/More',
-    component: () => import('@/views/More'),
+    path: '/More', //更多
+    component: () => import('@/views/More/index.vue'),
   },
   {
     path: '/Search',
     name: 'Search',
-    component: () => import('@/views/Search')
+    component: () => import('@/views/Search/index.vue')
   },
   {
     path: '/saveSearch',
@@ -122,13 +122,13 @@ export const constantRoutes = [
     meta: {
       title: '更多跟進人'
     },
-    component: () => import('@/views/More/follow')
+    component: () => import('@/views/More/follow.vue')
   },
   //带看记录
   {
     path: '/LookRecord',
     name: 'LookRecord',
-    component: () => import('@/views/LookRecord')
+    component: () => import('@/views/LookRecord/index.vue')
   },
   // 錄入帶看
   {

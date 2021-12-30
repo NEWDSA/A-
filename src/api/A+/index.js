@@ -2,8 +2,11 @@
  * @Author: luciano 
  * @Date: 2021-12-17 11:19:15 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-17 11:40:52
+ * @Last Modified time: 2021-12-30 18:06:41
  */
+
+//配置axios地址
+
 
 import lc_request from '@/utils/request'
 import axios from 'axios'
@@ -24,7 +27,7 @@ export default {
     // 首页轮播
     getBanner() {
       return lc_request({
-        url: '/GetSystemBannerList',
+        url: 'moaplusapi/System/GetSystemBannerList',
         method: 'get',
         headers: {
 
@@ -37,6 +40,7 @@ export default {
     getPriceDown(params) {
       return lc_request({
         url: '/api/System/get-reduce-price-property',
+        
         method: 'post',
         data: params
       })
@@ -72,6 +76,16 @@ export default {
         method: 'get',
         params: params
       })
+    },
+    // 房源排序
+    ListingSort() {
+      return lc_request({
+        url:'moaplusapi/Property/GetPropertySortData',
+        method: 'get'
+      })
+    },
+    back(){
+      this.$router.go(-1);
     },
     //獲取系統類型
     SystemType(Type) {

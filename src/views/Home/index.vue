@@ -21,6 +21,7 @@
               van-grid-item__content van-grid-item__content--center
               van-hairline
             "
+            @click="house"
           >
             <i class="van-icon van-grid-item__icon"
               ><img
@@ -30,7 +31,7 @@
             ><span class="van-grid-item__text">樓盤管理</span>
           </div>
         </div>
-        <div class="van-grid-item" style="flex-basis: 25%">
+        <div class="van-grid-item" @click="Customer" style="flex-basis: 25%">
           <div
             class="
               van-grid-item__content van-grid-item__content--center
@@ -128,7 +129,7 @@
       </div>
       <!-- 錄帶看 and 錄客戶box -->
       <div class="custom_box">
-        <nav class="bg1">
+        <nav class="bg1" @click="" >
           <div class="container">
             <div class="main_title">錄帶看</div>
             <div class="oth_container">
@@ -140,7 +141,7 @@
           </div>
         </nav>
         <div style="flex: 0.02"></div>
-        <nav class="bg2">
+        <nav class="bg2" @click="AddCustomer">
           <div class="container">
             <div class="main_title">錄客戶</div>
 
@@ -221,43 +222,13 @@ export default {
       },
       // 降價房源
       ReduceHouse: [],
-      houseDetail: [
-        {
-          title: "君悅灣(第六座)君匯 7A",
-          unit: "2-0-0-0",
-          area: "1,186",
-          price: "970",
-          priceCute: "30",
-        },
-        {
-          title: "星海豪庭(紅星閣) 13K",
-          unit: "3-2-0-0",
-          area: "1,458",
-          price: "880",
-          priceCute: "20",
-        },
-        {
-          title: "星星閣(紅星閣) 18K",
-          unit: "3-3-5-4",
-          area: "1,658",
-          price: "870",
-          priceCute: "30",
-        },
-        {
-          title: "海天樓(海海樓) 8K",
-          unit: "5-5-5-4",
-          area: "1,858",
-          price: "866",
-          priceCute: "50",
-        },
-      ],
       Banner: [],
       loading: true,
     };
   },
   mounted() {
-    this.getBanner();
-    this.getHouse_Down();
+    this.getBanner(); //輪播圖
+    this.getHouse_Down(); //降價房源
   },
   methods: {
     more() {
@@ -265,6 +236,9 @@ export default {
     },
     house() {
       this.$router.push("House?from=home");
+    },
+    Customer(){
+      this.$router.push("/Customer")
     },
     async getBanner() {
       aplus.apis.getBanner().then((res) => {
@@ -280,9 +254,12 @@ export default {
         })
         .then((res) => {
           this.ReduceHouse = res.Result;
-          // this.houseDetail = await res.HouseList;
         });
     },
+    // 新增客戶
+    AddCustomer(){
+      this.$router.push('AddCustomer')
+    }
   },
 };
 </script>

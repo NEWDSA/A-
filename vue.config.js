@@ -45,16 +45,13 @@ module.exports = {
         target: 'http://hq.centaline.com.cn/HqProcessApi',
         changeOrigin: true
       },
-      // '/api': {
-      //   target: 'http://10.68.2.9:8029',
-      //   changeOrigin: true
-      // }
-      '/api': {
+      '/api/': {
         target: 'http://10.1.31.83:22061',
+        // 替換
         changeOrigin: true
       },
-      '/GetSystemBannerList':{
-        target:'http://10.68.2.9:8324/moaplusapi/System/GetSystemBannerList',
+     'moaplusapi':{
+        target:'http://10.68.2.9:8324/',
         changeOrigin: true
       },
       '/upload': {
@@ -82,6 +79,11 @@ module.exports = {
     }
   },
   chainWebpack(config) {
+    // 去除項目打包上線後，代碼中所有的 console.log()
+    config.optimization.minimizer('terser').tap((args) => {
+      args[0].terserOptions.compress.drop_console = true
+      return args
+    })
     // it can improve the speed of the first screen, it is recommended to turn on preload
     // config.plugins.delete('preload')
 

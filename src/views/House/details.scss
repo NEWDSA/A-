@@ -162,17 +162,14 @@
       background-color: rgba($color: #C0C0C0, $alpha: 0.25);
       border-radius: 6px;
       margin-bottom: 10px;
-
       div {
         margin-top: 10px;
         margin-bottom: 5px;
-
         .first {
           // font-size: 14px;
           color: #333;
           padding: 8px;
         }
-
         span {
           font-size: 14px;
           font-weight: 700;
@@ -185,9 +182,6 @@
 
 
     }
-
-
-
     .price {
       justify-items: center;
       display: flex;
@@ -427,6 +421,7 @@
   border: solid 0.5px #c7e1ff;
   color: #2c81e1;
   font-size: 14px;
+  white-space: nowrap;
 }
 
 .lc_btn2 {
