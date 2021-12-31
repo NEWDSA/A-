@@ -39,7 +39,9 @@ let lc_md5 = md5(lc_sign);
 // create an axios instance
 const service = axios.create({
   //baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  baseURL: defaultSettings.baseURL ?? '',
+  //  baseURL: 'aplus_test',
+  baseURL:process.env.NODE_ENV === 'production' ? 'aplus_test' : '',
+  // baseURL: defaultSettings.baseURL ?? ' baseURL: aplus_test',
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
     'platform': 'ios',
@@ -103,5 +105,11 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+//設置請求頭
+// service.interceptors.request.use({
+//   headers:{
+//     'Content-Type': 'application/json;charset=UTF-8',
+//   }
+// })
 
 export default service

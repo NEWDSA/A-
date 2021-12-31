@@ -9,12 +9,14 @@
     ></van-nav-bar>
     <template v-for="index of 3">
       <div class="lc_card">
-        <div class="lc_items"><span>交易類型:</span>租售</div>
-        <div class="lc_items"><span>標籤:</span>經理推薦</div>
-        <div class="lc_items1"><span>房型:</span>兩居</div>
-        <div class="lc_items1"><span>排序:</span>默認排序</div>
-        <div class="lc_items1"><span>用途:</span>住宅</div>
-        <div class="lc_items1"><span>朝向:</span>西南</div>
+        <div style="width:100%;position:relative;top:0px;display:flex;flex-wrap:wrap;">
+          <div class="lc_items"><span>交易類型:</span>租售</div>
+          <div class="lc_items"><span>標籤:</span>經理推薦</div>
+          <div class="lc_items"><span>房型:</span>兩居</div>
+          <div class="lc_items"><span>排序:</span>默認排序</div>
+          <div class="lc_items"><span>用途:</span>住宅</div>
+          <div class="lc_items"><span>朝向:</span>西南</div>
+        </div>
         <div class="lc_footer">
           <van-divider />
           <div class="lc_main_footer">
@@ -24,8 +26,10 @@
             <div><span>刪除</span></div>
           </div>
         </div>
-        <div class="lc_cover">
-          <div class="lc_word"></div>
+        <div style="position: absolute; width: 100%;">
+          <div class="lc_cover">
+            <div class="lc_word"></div>
+          </div>
         </div>
       </div>
     </template>
@@ -97,39 +101,29 @@ export default {
     align-content: flex-start;
     flex-wrap: wrap;
     width: 343px;
-    height: 147.5px;
+    // height: 147.5px;
     background-color: #ffffff;
     border-radius: 10px;
     margin: 20px auto;
     .lc_items {
-      flex: 50%;
+      flex: 1;
       height: fit-content;
       font-size: 14px;
       padding-top: 19.5px;
       padding-left: 20px;
       padding-right: 10px;
       padding-bottom: 10px;
+      white-space: nowrap;
       span {
         color: #7e7e7e;
         margin-right: 5px;
-      }
-    }
-    .lc_items1 {
-      flex: 50%;
-      height: fit-content;
-      font-size: 14px;
-      //   padding-top: 19.5px;
-      padding-left: 20px;
-      padding-right: 10px;
-      padding-bottom: 10px;
-      span {
-        color: #7e7e7e;
-        margin-right: 5px;
-        // 設置字符間距
       }
     }
     .lc_footer {
       flex: 100%;
+       margin-left: 10px;
+       margin-right: 20px;
+       margin-bottom: 10px;
       .lc_divider {
         width: 95%;
         //   background-color: #e2e2e2;
@@ -138,10 +132,6 @@ export default {
         margin: 0 auto;
       }
       .lc_main_footer {
-        position: absolute;
-        // box-sizing: border-box;
-        // border: 1px solid green;
-        // bottom: 20px;
         bottom: 9px;
         width: 100%;
         display: flex;
@@ -150,8 +140,6 @@ export default {
         padding-right: 5px;
         font-size: 14px;
       }
-      //   box-sizing: border-box;
-      //   border: 1px solid gray;
     }
     .lc_cover {
       position: absolute;
@@ -159,11 +147,6 @@ export default {
       left: 0;
       width: 40px;
       height: 40px;
-      //   width: 100%;
-
-      //   height: 100%;
-      //   box-sizing: border-box;
-      //   border: 1px solid yellow;
       background: url("/icon/default.png");
       background-size: cover;
       &::after {

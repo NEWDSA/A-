@@ -31,7 +31,6 @@
           @click-item="area_click"
         >
         </van-tree-select>
-        <!-- <div style="display: flow-root;width:100%;"> -->
         <div class="sort_btn">
           <div class="btn">
             <van-button type="warning" class="btn_reset">重置</van-button>
@@ -43,7 +42,6 @@
             >
           </div>
         </div>
-        <!-- </div> -->
       </van-dropdown-item>
       <van-dropdown-item title="價格" ref="lc_item_price">
         <van-tree-select
@@ -57,6 +55,12 @@
           class="lc_tree-select"
         >
         </van-tree-select>
+        <div style="position:relative;top:-20px;width:100%;box-sizing:border-box;border:1px solid pink;display:flex;">
+          <div style="flex:1;">3333333</div>
+          <div style="flex:2;">
+            <van-field type="text" v-model="lc_price_input" placeholder="請輸入" style="width:100%;height:30px;"></van-field>
+          </div>
+        </div>
         <div class="sort_btn">
           <div class="btn">
             <van-button type="warning" class="btn_reset">重置</van-button>
@@ -128,12 +132,12 @@
                 <span class="lc_stauts_container">{{ item.Name }}</span>
               </template>
             </div>
-            <!-- <span class="lc_status_txt">房型</span>
+            <span class="lc_status_txt">房型</span>
             <div class="lc_status">
               <template v-show="RoomType" v-for="(item, index) in RoomType">
-                <span class="lc_status_container">{{ item.ItemName }}</span>
+                <span v-if="item" class="lc_status_container">{{ item.ItemName}}</span>
               </template>
-            </div> -->
+            </div>
           </template>
         </van-tree-select>
         <div class="sort_btn">
@@ -174,6 +178,7 @@
       </van-dropdown-item>
     </van-dropdown-menu>
     <!-- end 下拉框 -->
+    
     <!-- 搜索歷史區域 -->
     <div class="lc_hisotry_contianer">
       <div class="lc_pills">
@@ -382,44 +387,6 @@ export default {
         },
       ],
       item_t: [],
-      // item_t: [
-      //   {
-      //     text: "不限",
-      //     children: [],
-      //   },
-      //   {
-      //     text: "獨家",
-      //     children: [],
-      //   },
-      //   {
-      //     text: "放盤紙",
-      //     children: [],
-      //   },
-      //   {
-      //     text: "鑰匙",
-      //     children: [],
-      //   },
-      //   {
-      //     text: "有圖",
-      //     children: [],
-      //   },
-      //   {
-      //     text: "有360視頻",
-      //     children: [],
-      //   },
-      //   {
-      //     text: "72小時内新增房源",
-      //     children: [],
-      //   },
-      //   {
-      //     text: "30天租約到期房",
-      //     children: [],
-      //   },
-      //   {
-      //     text: "豪宅盤",
-      //     children: [],
-      //   },
-      // ],
       item_m: [
         {
           text: "聯係人類型",
@@ -458,9 +425,7 @@ export default {
           children: [],
         },
       ],
-      items: [],
-      // 房型
-
+      items: [],// 房型
       value: 0,
       values: this.$route.query.word,
       switch1: false,
@@ -486,13 +451,25 @@ export default {
           ItemName: "",
         },
       ], //房型
+      lc_price_input: "",
     };
+  },
+  mounted(){
+    // document.getElementsByClassName("van-tree-select__nav");
+    // console.log(this.$refs.tree_select);
+    this.$nextTick(()=>{
+      let lc_size= document.querySelectorAll("a[class='van-tree-select__nav-item']");
+      console.log(document.getElementsByClassName('van-tree-select__nav-item')[0]);
+      console.log(lc_size);
+      console.log(this.$refs.lc_item_price.style);
+    })
+    
+    // console.log(this.$refs.tree_select.querySelector(".van-tree-select__nav"));
+    
   },
   methods: {
     // search 區域
     onSearch(word) {
-      // console.log("打印搜索關鍵字");
-      // console.log(word);
       this.$router.push({
         path: "/Search",
         query: {
@@ -630,13 +607,20 @@ export default {
               Type: "25",
             })
             .then((res) => {
-            this.$nextTick(() => {
-                this.RoomType.push(res.Result.Items);
-              });
-              console.log("this.RoomType");
+              console.log('this RoomType');
+              
+              // this.RoomType.push(res.Result.Items);
+              this.RoomType = res.Result.Items;
               console.log(this.RoomType);
+            // this.$nextTick(() => {
+            //     this.RoomType.push(res.Result.Items);
+            //   });
+            //   console.log("this.RoomType");
+            //   console.log(this.RoomType);
+            // });
             });
-        });
+        })
+
       // aplush.apis.SystemType({
 
       // }).then(res=>{
@@ -823,6 +807,8 @@ export default {
       // 房源狀態篩選
       aplush.apis.ListingStatus().then((res) => {
         this.HouseStatus = res.propertyStatus;
+        console.log("房源狀態");
+        console.log(this.HouseStatus);
       });
     },
     //房源列表排序

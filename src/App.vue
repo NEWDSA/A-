@@ -4,12 +4,6 @@
     <!-- 对路由进行判断 -->
     <div class="lc_bar">
       <van-tabbar fixed safe-area-inset-bottom route active-color="#ee0a24" v-show="show_bar">
-        <van-tabbar-item replace to="/Home">
-          <template #icon="props">
-            <img :src="props.active ? icon_home.active : icon_home.inactive" />
-            <span class="lc_span">首頁</span>
-          </template>
-        </van-tabbar-item>
         <van-tabbar-item replace to="/House">
           <template #icon="props">
             <img
@@ -17,7 +11,7 @@
             />
             <span class="lc_span">樓盤管理</span>
           </template>
-        </van-tabbar-item>
+          </van-tabbar-item>
         <van-tabbar-item replace to="/Customer">
           <template #icon="props">
             <img
@@ -28,6 +22,13 @@
             <span class="lc_span">客戶管理</span>
           </template>
         </van-tabbar-item>
+        <van-tabbar-item replace to="/Home">
+          <template #icon="props">
+            <img :src="props.active ? icon_home.active : icon_home.inactive" />
+            <span class="lc_span">首頁</span>
+          </template>
+        </van-tabbar-item>
+        
         <van-tabbar-item replace to="/Message">
           <template #icon="props">
             <img :src="props.active ? icon_news.active : icon_news.inactive" />

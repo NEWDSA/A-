@@ -2,10 +2,12 @@
  * @Author: luciano 
  * @Date: 2021-12-17 11:19:15 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-30 18:06:41
+ * @Last Modified time: 2021-12-31 10:58:15
  */
 
-//配置axios地址
+//配置請求基準url
+let baseUrl='http://10.1.31.83:22061'
+
 
 
 import lc_request from '@/utils/request'
@@ -27,6 +29,7 @@ export default {
     // 首页轮播
     getBanner() {
       return lc_request({
+        
         url: 'moaplusapi/System/GetSystemBannerList',
         method: 'get',
         headers: {
@@ -83,9 +86,6 @@ export default {
         url:'moaplusapi/Property/GetPropertySortData',
         method: 'get'
       })
-    },
-    back(){
-      this.$router.go(-1);
     },
     //獲取系統類型
     SystemType(Type) {
