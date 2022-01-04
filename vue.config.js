@@ -26,7 +26,7 @@ module.exports = {
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
 
-  publicPath: '',
+  publicPath: '/aplus_test/',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: true,

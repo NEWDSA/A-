@@ -58,25 +58,25 @@ export default {
   data() {
     return {
       icon_home: {
-        active: "icon/home_seleted_icon.png",
-        inactive: "icon/home_unseleted_icon.png",
+        active: require("@/assets/icon/home_seleted_icon.png"),
+        inactive: require("@/assets/icon/home_unseleted_icon.png"),
       },
       icon_house: {
-        active: "icon/house_seleted_icon.png",
-        inactive: "icon/house_unseleted_icon.png",
+        active: require("@/assets/icon/house_seleted_icon.png"),
+        inactive: require("@/assets/icon/house_unseleted_icon.png"),
       },
       icon_customer: {
-        active: "icon/customer_selected_icon.png",
-        inactive: "icon/customer_unselected_icon.png",
+        active: require("@/assets/icon/customer_selected_icon.png"),
+        inactive: require("@/assets/icon/customer_unselected_icon.png"),
       },
 
       icon_news: {
-        active: "icon/news_seleted_icon.png",
-        inactive: "icon/news_unselected_icon.png",
+        active: require("@/assets/icon/news_seleted_icon.png"),
+        inactive: require("@/assets/icon/news_unselected_icon.png"),
       },
       icon_mine: {
-        active: "icon/mine_selected_icon.png",
-        inactive: "icon/mine_unselected_icon.png",
+        active: require("@/assets/icon/mine_selected_icon.png"),
+        inactive:require("@/assets/icon/mine_unselected_icon.png"),
       },
       show_bar: true, //是否顯示tabbar
     };

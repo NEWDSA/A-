@@ -25,7 +25,7 @@
           >
             <i class="van-icon van-grid-item__icon"
               ><img
-                src="icon/building_icon.png"
+                src="@/assets/icon/building_icon.png"
                 class="van-icon__image"
               /><!----></i
             ><span class="van-grid-item__text">樓盤管理</span>
@@ -40,7 +40,7 @@
           >
             <i class="van-icon van-grid-item__icon"
               ><img
-                src="icon/custome_icon.png"
+                src="@/assets/icon/custome_icon.png"
                 class="van-icon__image"
               /><!----></i
             ><span class="van-grid-item__text">客戶管理</span>
@@ -55,7 +55,7 @@
           >
             <i class="van-icon van-grid-item__icon"
               ><img
-                src="icon/poll_icon.png"
+                src="@/assets/icon/poll_icon.png"
                 class="van-icon__image"
               /><!----></i
             ><span class="van-grid-item__text">公客池</span>
@@ -70,7 +70,7 @@
           >
             <i class="van-icon van-grid-item__icon"
               ><img
-                src="icon/collection_icon.png"
+                src="@/assets/icon/collection_icon.png"
                 class="van-icon__image"
               /><!----></i
             ><span class="van-grid-item__text">我的收藏</span>
@@ -85,7 +85,7 @@
           >
             <i class="van-icon van-grid-item__icon"
               ><img
-                src="icon/work-icon.png"
+                src="@/assets/icon/work-icon.png"
                 class="van-icon__image"
               /><!----></i
             ><span class="van-grid-item__text">工作量化</span>
@@ -100,7 +100,7 @@
           >
             <i class="van-icon van-grid-item__icon"
               ><img
-                src="icon/deal_icon.png"
+                src="@/assets/icon/deal_icon.png"
                 class="van-icon__image"
               /><!----></i
             ><span class="van-grid-item__text">成交報告</span>
@@ -120,7 +120,7 @@
           >
             <i class="van-icon van-grid-item__icon"
               ><img
-                src="icon/more_icon.png"
+                src="@/assets/icon/more_icon.png"
                 class="van-icon__image"
               /><!----></i
             ><span class="van-grid-item__text">更多</span>
@@ -134,7 +134,7 @@
             <div class="main_title">錄帶看</div>
             <div class="oth_container">
               記錄帶看客戶<img
-                src="icon/arrow_one_icon.png"
+                src="@/assets/icon/arrow_one_icon.png"
                 class="right_icon"
               />
             </div>
@@ -147,7 +147,7 @@
 
             <div class="oth_title">
               新增客戶信息
-              <img src="icon/arrow_two_icon.png" class="right_icon" />
+              <img src="@/assets/icon/arrow_two_icon.png" class="right_icon" />
             </div>
           </div>
         </nav>
@@ -181,7 +181,7 @@
                   <span class="word">降</span
                   ><span class="money">{{ item.ReducePrice }}</span
                   ><span class="word">萬</span>
-                  <img class="left" src="icon/right_icon.png" />
+                  <img class="left" src="@/assets/icon/right_icon.png" />
                 </div>
               </div>
             </div>
@@ -198,28 +198,6 @@ export default {
   name: "Home",
   data() {
     return {
-      active: 0,
-      icon_home: {
-        active: "icon/home_seleted_icon.png",
-        inactive: "icon/home_unseleted_icon.png",
-      },
-      icon_house: {
-        active: "icon/house_seleted_icon.png",
-        inactive: "icon/house_unseleted_icon.png",
-      },
-      icon_customer: {
-        active: "icon/customer_selected_icon.png",
-        inactive: "icon/customer_unselected_icon.png",
-      },
-
-      icon_news: {
-        active: "icon/news_seleted_icon.png",
-        inactive: "icon/news_unselected_icon.png",
-      },
-      icon_mine: {
-        active: "icon/mine_selected_icon.png",
-        inactive: "icon/mine_unselected_icon.png",
-      },
       // 降價房源
       ReduceHouse: [],
       Banner: [],
@@ -306,7 +284,8 @@ export default {
       .bg1 {
         background-color: green;
         flex: 1;
-        background: url(/icon/bg_one_pic.png);
+        // background: url(/icon/bg_one_pic.png);
+        background:url(~@/assets/icon/bg_one_pic.png);
         height: 54px;
         background-size: cover;
         display: flex;
@@ -341,7 +320,7 @@ export default {
       .bg2 {
         background-color: #f8cfcf;
         flex: 1;
-        background: url(/icon/bg_two_pic.png);
+        background: url(~@/assets/icon/bg_two_pic.png);
         height: 54px;
         background-size: cover;
         display: flex;

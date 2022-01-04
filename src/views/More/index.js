@@ -2,7 +2,7 @@
  * @Author: luciano 
  * @Date: 2021-12-17 16:17:49 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-17 16:19:55
+ * @Last Modified time: 2022-01-03 10:49:10
  */
 import { Toast } from "vant";
 import Draggable from "vuedraggable"; //使用自由拖拽組件
@@ -13,37 +13,37 @@ export default {
       HomeApp: [
         {
           title: "樓盤管理",
-          icon: "icon/building_icon.png",
+          icon:require("@/assets/icon/building_icon.png"),
           bage: "",
           sort: 1,
         },
         {
           title: "客戶管理",
-          icon: "icon/custome_icon.png",
+          icon: require("@/assets/icon/custome_icon.png"),
           bage: "",
           sort: 2,
         },
         {
           title: "公客池",
-          icon: "icon/poll_icon.png",
+          icon: require("@/assets/icon/poll_icon.png"),
           bage: "",
           sort: 3,
         },
         {
           title: "我的收藏",
-          icon: "icon/collection_icon.png",
+          icon: require("@/assets/icon/collection_icon.png"),
           bage: "",
           sort: "4",
         },
         {
           title: "工作量化",
-          icon: "icon/work-icon.png",
+          icon: require("@/assets/icon/work-icon.png"),
           bage: "",
           sort: "5",
         },
         {
           title: "成交報告",
-          icon: "icon/deal_icon.png",
+          icon: require("@/assets/icon/deal_icon.png"),
           bage: "",
           sort: "6",
         },
@@ -51,22 +51,22 @@ export default {
       RecoApplication: [
         {
           title: "集團資訊",
-          icon: "icon/group_icon.png",
+          icon: require("@/assets/icon/group_icon.png"),
           sort: "1",
         },
         {
           title: "每日推薦",
-          icon: "icon/group_icon.png",
+          icon: require("@/assets/icon/group_icon.png"),
           sort: "2",
         },
         {
           title: "粵港澳資訊",
-          icon: "icon/group_icon.png",
+          icon: require("@/assets/icon/group_icon.png"),
           sort: "3",
         },
         {
           title: "蘋果日報",
-          icon: "icon/group_icon.png",
+          icon: require("@/assets/icon/group_icon.png"),
           sort: "4",
         },
       ],

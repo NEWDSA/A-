@@ -104,7 +104,7 @@ export const constantRoutes = [
   {
     path: '/AddFollow',
     name: 'AddFollow',
-    component: () => import('@/views/AddFollow')
+    component: () => import('@/views/AddFollow/index.vue')
   },
   //選擇提醒人
   {

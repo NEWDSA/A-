@@ -2,7 +2,7 @@
  * @Author: luciano 
  * @Date: 2021-12-17 11:19:15 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-31 10:58:15
+ * @Last Modified time: 2022-01-03 10:30:37
  */
 
 //配置請求基準url
@@ -30,7 +30,7 @@ export default {
     getBanner() {
       return lc_request({
         
-        url: 'moaplusapi/System/GetSystemBannerList',
+        url: '/moaplusapi/System/GetSystemBannerList',
         method: 'get',
         headers: {
 

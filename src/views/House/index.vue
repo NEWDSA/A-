@@ -54,13 +54,37 @@
           @click-item="price_click"
           class="lc_tree-select"
         >
+        <template slot="content" >
+          <ul>
+            <li class="lc_ul_li"  v-for="(item, index) in priceList">
+              {{item.text}}
+            </li>
+          </ul>
+          <template v-if="lc_price_activeId=='0'">
+            <div style="display:flex;">
+              <van-field style="flex:1;" type="number" v-model="price_min" placeholder="最低價" />
+              <span>---</span>
+              <van-field style="flex:1;" type="number" v-model="price_max" placeholder="最高價" />
+            </div>
+          </template>
+          <template v-else>
+            <div style="display:flex;">
+              <van-field style="flex:1;" type="number" v-model="price_min" placeholder="最低價" />
+              <span>---</span>
+              <van-field style="flex:1;" type="number" v-model="price_max" placeholder="最高價" />
+            </div>
+          </template>
+        </template>
         </van-tree-select>
-        <div style="position:relative;top:-20px;width:100%;box-sizing:border-box;border:1px solid pink;display:flex;">
-          <div style="flex:1;">3333333</div>
+        <!-- <div style="position:relative;top:-20px;width:100%;box-sizing:border-box;border:1px solid pink;display:flex;">
+          <div style="flex:1;"></div>
           <div style="flex:2;">
-            <van-field type="text" v-model="lc_price_input" placeholder="請輸入" style="width:100%;height:30px;"></van-field>
+            <van-field type="text" v-model="lc_price_input" placeholder="最低價格" style="width:100%;height:30px;"></van-field>
           </div>
-        </div>
+          <div style="flex:3;">
+            <van-field type="text" v-model="lc_price_input" placeholder="最高價格" style="width:100%;height:30px;"></van-field>
+          </div>
+        </div> -->
         <div class="sort_btn">
           <div class="btn">
             <van-button type="warning" class="btn_reset">重置</van-button>
@@ -452,17 +476,24 @@ export default {
         },
       ], //房型
       lc_price_input: "",
+      priceList:[],
+      price_min: "",
+      price_max: "",
+      // priceList:this.item["0].children, //價格列表
     };
+  },
+  created(){
+    this.priceList=this.item[0].children;
   },
   mounted(){
     // document.getElementsByClassName("van-tree-select__nav");
     // console.log(this.$refs.tree_select);
-    this.$nextTick(()=>{
-      let lc_size= document.querySelectorAll("a[class='van-tree-select__nav-item']");
-      console.log(document.getElementsByClassName('van-tree-select__nav-item')[0]);
-      console.log(lc_size);
-      console.log(this.$refs.lc_item_price.style);
-    })
+    // this.$nextTick(()=>{
+    //   let lc_size= document.querySelectorAll("a[class='van-tree-select__nav-item']");
+    //   console.log(document.getElementsByClassName('van-tree-select__nav-item')[0]);
+    //   console.log(lc_size);
+    //   console.log(this.$refs.lc_item_price.style);
+    // })
     
     // console.log(this.$refs.tree_select.querySelector(".van-tree-select__nav"));
     
@@ -738,6 +769,9 @@ export default {
       console.log("價格左側點擊下標");
       this.lc_price_left = left_click;
       console.log(left_click);
+      // 根據左側顯示右側內容
+      console.log(this.item[left_click].children);
+      this.priceList=this.item[left_click].children;
     },
     // 价格點擊
     price_click(e) {
@@ -814,6 +848,8 @@ export default {
     //房源列表排序
     house_sort() {
       aplush.apis.ListingSort().then((res) => {
+        console.log("房源列表排序");
+        console.log(res);
         let _temp = res;
         _temp.forEach((item, index) => {
           if (item.id == this.house_sort_id) {
@@ -824,6 +860,7 @@ export default {
             });
           }
         });
+        console.log("房源列表排序",this.HouseSort);
       });
     },
     // 排序重置

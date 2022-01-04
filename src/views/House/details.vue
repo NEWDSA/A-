@@ -3,7 +3,7 @@
     <!-- 顶部导航 -->
     <van-sticky>
       <div class="navs">
-        <img @click="back" src="/icon/nav_back_transparent_icon.png" alt="" />
+        <img @click="back" src="@/assets/icon/nav_back_transparent_icon.png" alt="" />
         <!-- 更多 -->
         <!--彈出內容、現場相、-->
         <van-popover
@@ -18,7 +18,7 @@
             <img
               style="margin: 0px"
               @click="more_i"
-              src="/icon/nav_more_transparent_icon.png"
+              src="@/assets/icon/nav_more_transparent_icon.png"
               alt=""
             />
           </template>
@@ -27,7 +27,7 @@
         <img
           v-if="bool_good"
           @click="good_i"
-          src="/icon/nav_good_transparent_icon.png"
+          src="@/assets/icon/nav_good_transparent_icon.png"
           alt=""
         />
         <img
@@ -40,13 +40,13 @@
         <img
           v-if="bool_collect"
           @click="collect_i"
-          src="/icon/nav_collected_transparent_icon.png"
+          src="@/assets/icon/nav_collected_transparent_icon.png"
           alt=""
         />
         <img
           v-else
           @click="collect_i"
-          src="/icon/nav_collect_transparent_icon.png"
+          src="@/assets/icon/nav_collect_transparent_icon.png"
           alt=""
         />
       </div>
@@ -68,10 +68,10 @@
         </van-image>
       </van-swipe-item>
       <van-swipe-item v-if="House_detail.Photos">
-        <img height="500px" src="img/noImg@2x.png" alt="" />
+        <img height="500px" src="@/assets/img/noImg@2x.png" alt="" />
       </van-swipe-item>
       <van-swipe-item v-else>
-        <img width="100%;" src="img/noImg@2x.png" alt="" />
+        <img width="100%;" src="@/assets/img/noImg@2x.png" alt="" />
       </van-swipe-item>
       <template #indicator>
         <div class="custom-indicator">{{ current + 1 }}/4</div>
@@ -120,7 +120,7 @@
         </div>
       </div>
       <div class="content">
-        <span>{{ House_detail.AllHouseInfo }}</span>
+        <span class="lc_title">{{ House_detail.AllHouseInfo }}</span>
         <div class="price">
           <div v-if="House_detail.SalePrice">{{ House_detail.SalePrice }}</div>
           <div v-if="House_detail.SaleUnitPrice">
@@ -193,7 +193,7 @@
       <van-tabs v-model="active" @click="lc_vant_click">
         <van-tab title="現場相">
           <template #title>
-            <van-button class="lc_btn1" icon="/icon/photo_icon.png"
+            <van-button class="lc_btn1" icon="@/assets/icon/photo_icon.png"
               >現場相</van-button
             >
           </template>
@@ -306,7 +306,7 @@
         </van-tab>
         <van-tab title="放盤紙">
           <template #title>
-            <van-button class="lc_btn2" icon="/icon/paper_icon.png"
+            <van-button class="lc_btn2" icon="@/assets/icon/paper_icon.png"
               >放盤紙</van-button
             >
           </template>
@@ -361,7 +361,7 @@
         </van-tab>
         <van-tab title="鑰匙">
           <template #title>
-            <van-button class="lc_btn3" icon="/icon/key_icon.png"
+            <van-button class="lc_btn3" icon="@/assets/icon/key_icon.png"
               >鑰匙</van-button
             >
           </template>
@@ -437,7 +437,7 @@
     <div class="lc_contact">
       <div class="tel">
         <article>
-          <img src="/icon/photo_defual_pic.png" style="width: 49px" alt="" />
+          <img src="@/assets/icon/photo_defual_pic.png" style="width: 49px" alt="" />
         </article>
         <div>
           <p>Jane Wong</p>

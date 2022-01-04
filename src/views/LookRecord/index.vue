@@ -75,13 +75,13 @@
                   >
                     <img
                       class="lc_customer_img"
-                      src="/icon/nonmember_woman_picture.png"
+                      src="@/assets/icon/nonmember_woman_picture.png"
                     />
                   </template>
                   <template v-else>
                     <img
                       class="lc_customer_img"
-                      src="/icon/member_man_picture.png"
+                      src="@/assets/icon/member_man_picture.png"
                     />
                   </template>
 

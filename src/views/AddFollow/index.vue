@@ -242,7 +242,7 @@
         <!-- <van-field v-model="Remind_TA" type="text" placeholder="請輸入" /> -->
 
       </van-cell>
-    </van-cell-group> -->
+    </van-cell-group>
     <!-- 更改房源狀態彈窗 -->
     <van-popup
       v-model="Show_Listing_Status"

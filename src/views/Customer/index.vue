@@ -1,9 +1,9 @@
 <template>
   <div id="cus">
     <div class="fixed">
-      <img src="/icon/new-customers_icon.png" @click="AddCustomer()" alt="" />
-      <img src="/icon/poll_float_icon.png" alt="" />
-      <img src="/icon/look_icon.png" @click="AddLook()" alt="" />
+      <img src="@/assets/icon/new-customers_icon.png" @click="AddCustomer()" alt="" />
+      <img src="@/assets/icon/poll_float_icon.png" alt="" />
+      <img src="@/assets/icon/look_icon.png" @click="AddLook()" alt="" />
     </div>
     <div
       style="
@@ -25,7 +25,7 @@
         />
       </div>
       <div style="flex: 1" @click="lc_filter">
-        <img class="lc_search" src="/icon/screen_icon.png" alt="" />
+        <img class="lc_search" src="@/assets/icon/screen_icon.png" alt="" />
       </div>
     </div>
 
@@ -58,18 +58,18 @@
           <div class="fx">
             <div class="avater">
               <template v-if="item.Male && item.IsVip">
-                <img src="/icon/man_vip_pictur.png" alt="" />
+                <img src="@/assets/icon/man_vip_pictur.png" alt="" />
               </template>
 
               <template v-else-if="item.Male && item.IsVip != 'true'">
-                <img src="/icon/member_man_picture.png" alt="" />
+                <img src="@/assets/icon/member_man_picture.png" alt="" />
               </template>
 
               <template v-else-if="item.Male != 'true' && item.IsVip">
-                <img src="/icon/woman_vip_pictur.png" />
+                <img src="@/assets/icon/woman_vip_pictur.png" />
               </template>
               <template v-else>
-                <img src="/icon/nonmember_woman_picture.png" />
+                <img src="@/assets/icon/nonmember_woman_picture.png" />
               </template>
               <button>{{ item.InquiryStatus }}</button>
             </div>
