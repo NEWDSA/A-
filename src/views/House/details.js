@@ -2,7 +2,7 @@
  * @Author: luciano 
  * @Date: 2021-12-10 15:22:09 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-16 14:19:36
+ * @Last Modified time: 2022-01-04 17:28:14
  * 楼盘管理详情
  */
 import Cookies from 'js-cookie'
@@ -191,7 +191,7 @@ export default {
       Rent_Start: "", // 租金開始
       Rent_End: "",// 租金結束
       lc_AttachmentPath: "", // 附件路徑
-
+      imgSize:Number, // 图片高度
       
     };
   },
@@ -199,8 +199,18 @@ export default {
     formatt: function (value) {},
   },
   methods: {
+    // 加载图片
+    loadingImg(){
+      // this.imgSize=this.$refs['']
+      console.log('加载图片高度');
+      console.log(this.imgSize= this.$refs.img.$el.clientHeight)
+    },
     back() {
       this.$router.push("/House");
+    },
+    // 查看現場相
+    look_Scene() {
+      this.$router.push("/Scene");
     },
     dujia(e) {
       console.log(e);

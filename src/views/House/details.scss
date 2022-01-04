@@ -1,5 +1,5 @@
 .container {
-  background-color: #fff;
+  background-color: #f3f3f3;
 
   .navs {
     width: 100%;
@@ -71,14 +71,20 @@
       background: rgba(0, 0, 0, 0.1);
     }
   }
-
+   .property_info{
+     background-color: #ffffff;
+     width: 95%;
+    //  margin: 0 auto;
+    margin: 20px auto 10px auto;
+     border-radius: 10px;
+   }
   .house_tag {
     position: relative;
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
 
-    div {
+    // div {
       .tag_btn {
         width: 30px;
         height: 25px;
@@ -102,7 +108,7 @@
         margin-left: 6px;
         color: #b77af0;
       }
-    }
+    // }
 
   }
 
@@ -158,17 +164,26 @@
       position: relative;
       display: flex;
       flex-wrap: wrap;
+      width: 90%;
+      margin: 10px auto;
       // background-color: #C0C0C0;
-      background-color: rgba($color: #C0C0C0, $alpha: 0.25);
-      border-radius: 6px;
+      //   background-color: rgba($color: #C0C0C0, $alpha: 0.25);
+      background-color: #ffffff;
+      //   border-radius: 6px;
+      border-radius: 10px;
       margin-bottom: 10px;
-      div {
-        margin-top: 10px;
-        margin-bottom: 5px;
+      .lc_collapse_items {
+        position: relative;
+        width: 100%;
+        margin: 10px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+  
         .first {
           // font-size: 14px;
           color: #333;
-          padding: 8px;
+          // padding: 8px;
         }
         span {
           font-size: 14px;
@@ -177,10 +192,7 @@
           // width: 40%;
           // display: inline-block;
         }
-
       }
-
-
     }
     .price {
       justify-items: center;
@@ -230,7 +242,11 @@
       }
     }
   }
-
+  // 
+  .end_content{
+    position: relative;
+    margin-bottom: 10px;
+  }
   .lc_contact {
     position: relative;
     height: 80px;
@@ -448,7 +464,8 @@
     display: flex;
     flex-wrap: wrap;
     // background-color: #C0C0C0;
-    background-color: rgba($color: #C0C0C0, $alpha: 0.25);
+    // background-color: rgba($color: #C0C0C0, $alpha: 0.25);
+    background-color: #fff;
     border-radius: 6px;
     margin-bottom: 10px;
   }
@@ -459,7 +476,8 @@
   display: flex;
   flex-wrap: wrap;
   // background-color: #C0C0C0;
-  background-color: rgba($color: #C0C0C0, $alpha: 0.25);
+  // background-color: rgba($color: #C0C0C0, $alpha: 0.25);
+  background-color: #fff;
   border-radius: 6px;
   margin-bottom: 10px;
 

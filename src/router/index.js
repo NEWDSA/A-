@@ -140,13 +140,13 @@ export const constantRoutes = [
   {
     path: '/Scene',
     name: 'Scene',
-    component: () => import('@/views/Scene')
+    component: () => import('@/views/Scene/index.vue')
   },
   //編輯現場相
   {
     path: '/EditScene',
     name: 'EditScene',
-    component: () => import('@/views/Scene/edit')
+    component: () => import('@/views/Scene/edit.vue')
   }
 
 ]
