@@ -1,15 +1,13 @@
 import Vue from 'vue' // A modern alternative to CSS resets
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
-import 'amfe-flexible'
 import App from './App'
 import store from './store'
 import router from './router'
 import '@/permission' // permission control
 import vant from 'vant' // 引入Vant
+import 'amfe-flexible';
 import 'vant/lib/index.css';
 import './assets/css/iconfont.css';
+import '@vant/touch-emulator';
 import {
   Toast
 } from 'vant';
@@ -17,7 +15,7 @@ import {
   PullRefresh
 } from 'vant';
 
-
+ 
 
 // console.log(`%cSometime problems is not difficult like you imagine`,"color:red;font-size:20px;font-weight:bold;text-decoration:underline;cursor:pointer");
 /**
@@ -34,14 +32,6 @@ if (process.env.NODE_ENV === 'production') {
   } = require('../mock')
   mockXHR()
 }
-
-// set ElementUI lang to EN
-Vue.use(ElementUI, {
-  locale
-})
-// 如果想要中文版 element-ui，按如下方式声明
-// Vue.use(ElementUI)
-
 
 Vue.use(Toast);
 Vue.use(vant);

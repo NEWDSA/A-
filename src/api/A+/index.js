@@ -2,7 +2,7 @@
  * @Author: luciano 
  * @Date: 2021-12-17 11:19:15 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-01-03 10:30:37
+ * @Last Modified time: 2022-01-10 15:04:30
  */
 
 //配置請求基準url
@@ -21,7 +21,7 @@ export default {
     // 搜索智能提示
     searchSuggest(params) {
       return lc_request({
-        url: 'api/Property/find-estate-auto',
+        url: '/api/Property/find-estate-auto',
         method: 'post',
         data: params
       })
@@ -83,7 +83,7 @@ export default {
     // 房源排序
     ListingSort() {
       return lc_request({
-        url:'moaplusapi/Property/GetPropertySortData',
+        url:'/moaplusapi/Property/GetPropertySortData',
         method: 'get'
       })
     },

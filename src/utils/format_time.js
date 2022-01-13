@@ -7,9 +7,16 @@ function format_time(time) {
     var hour = date.getHours();
     var minute = date.getMinutes();
     var second = date.getSeconds();
+    // 顯示時間日期格式 yymmdd
+
+    //適配ios時間日期格式
+
+
+
+
     if (hour == 0 && minute == 0 && second == 0) {
         if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-            return [year, month, day].map(formatNumber).join('/') + ' ';
+            return [year, month, day].map(formatNumber).replace(/-/g,'/');
         } else {
             return [year, month, day].map(formatNumber).join('-') + ' ';
         }
@@ -17,10 +24,14 @@ function format_time(time) {
     } else {
         if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
             return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':');
+            // return [year,month,day].map(formatNumber).replace(/-/g,'/')
         } else {
+            // return [year, month, day].map(formatNumber).join('-')+'';
             return [year, month, day].map(formatNumber).join('-') + ' ' + [hour, minute, second].map(formatNumber).join(':');
         }
     }
+    
+    
 
 }
 exports.format_time = format_time;

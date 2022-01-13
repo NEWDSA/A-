@@ -2,7 +2,7 @@
  * @Author: luciano 
  * @Date: 2021-12-10 15:22:09 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-01-04 17:28:14
+ * @Last Modified time: 2022-01-05 17:06:43
  * 楼盘管理详情
  */
 import Cookies from 'js-cookie'
@@ -108,7 +108,7 @@ export default {
       soucrce_keyId: "bb649e23-fcdf-44a1-9420-52769a129de1", //現場相圖片類型
       House_Owner: [], // 業主
       activeName: ["1"], // 業主信息
-      active: "现场相",
+      active: "",
       // 业绩申明
       PaperName: ["1"], //放盤紙
       PaperList: [], // 放盤紙
@@ -201,7 +201,6 @@ export default {
   methods: {
     // 加载图片
     loadingImg(){
-      // this.imgSize=this.$refs['']
       console.log('加载图片高度');
       console.log(this.imgSize= this.$refs.img.$el.clientHeight)
     },
@@ -211,6 +210,16 @@ export default {
     // 查看現場相
     look_Scene() {
       this.$router.push("/Scene");
+    },
+    // 放盤紙
+    putPaper(){
+      // 路由傳參
+      this.$router.push({
+        path: "PutPaper",
+        query: {
+          keyId:this.$route.query.KeyId
+        }
+      });
     },
     dujia(e) {
       console.log(e);
@@ -391,18 +400,18 @@ export default {
         });
     },
     // 獲取放盤紙
-    Get_Paper() {
-      let keyId = this.$route.query.KeyId;
-      aplush.apis
-        .ListingPaper({
-          keyId: keyId,
-        })
-        .then((res) => {
-          this.PaperList = res.PropOnlyTrusts;
-          console.log("打印放盤紙");
-          console.log(res);
-        });
-    },
+    // Get_Paper() {
+    //   let keyId = this.$route.query.KeyId;
+    //   aplush.apis
+    //     .ListingPaper({
+    //       keyId: keyId,
+    //     })
+    //     .then((res) => {
+    //       this.PaperList = res.PropOnlyTrusts;
+    //       console.log("打印放盤紙");
+    //       console.log(res);
+    //     });
+    // },
     //獲取鑰匙
     Get_Key() {
       let keyId = this.$route.query.KeyId;
@@ -414,42 +423,42 @@ export default {
           this.KeyList = res.PropKeys;
         });
     },
-    lc_vant_click(name, title) {
-      console.log("現場相復合內容");
-      // console.log(name);
-      console.log(title);
-      title == "現場相" ?
-        this.M_live_Pohto() :
-        title == "放盤紙" ?
-        this.Get_Paper() :
-        title == "鑰匙" ?
-        this.Get_Key() :
-        "";
-    },
-    beforeClose({
-      position,
-      instance
-    }) {
-      switch (position) {
-        case "left":
-        case "cell":
-        case "outside":
-          instance.close();
-          // 跳轉到編輯頁面
-          this.$router.push({
-            path: "/EditScene",
-          });
-          break;
-        case "right":
-          Dialog.confirm({
-            message: "确定删除吗？",
-          }).then(() => {
-            instance.close();
-            // 刪除對應頁面
-          });
-          break;
-      }
-    },
+    // lc_vant_click(name, title) {
+    //   console.log("現場相復合內容");
+    //   // console.log(name);
+    //   console.log(title);
+    //   title == "現場相" ?
+    //     this.M_live_Pohto() :
+    //     title == "放盤紙" ?
+    //     this.Get_Paper() :
+    //     title == "鑰匙" ?
+    //     this.Get_Key() :
+    //     "";
+    // },
+    // beforeClose({
+    //   position,
+    //   instance
+    // }) {
+    //   switch (position) {
+    //     case "left":
+    //     case "cell":
+    //     case "outside":
+    //       instance.close();
+    //       // 跳轉到編輯頁面
+    //       this.$router.push({
+    //         path: "/EditScene",
+    //       });
+    //       break;
+    //     case "right":
+    //       Dialog.confirm({
+    //         message: "确定删除吗？",
+    //       }).then(() => {
+    //         instance.close();
+    //         // 刪除對應頁面
+    //       });
+    //       break;
+    //   }
+    // },
     getTypeSelected() {
       switch (this.selected) {
         case 56:

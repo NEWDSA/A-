@@ -1,9 +1,9 @@
 import axios from 'axios'
-import {
-  MessageBox,
-  Message
-} from 'element-ui'
+
 import store from '@/store'
+
+//引入 vant 消息提示
+import { Toast } from 'vant'
 import {
   getToken
 } from '@/utils/auth'
@@ -40,7 +40,7 @@ let lc_md5 = md5(lc_sign);
 const service = axios.create({
   //baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   //  baseURL: 'aplus_test',
-  baseURL:process.env.NODE_ENV === 'production' ? 'aplus_test' : '',
+  baseURL: process.env.NODE_ENV === 'production' ? 'aplus_test' : '',
   // baseURL: defaultSettings.baseURL ?? ' baseURL: aplus_test',
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
@@ -56,7 +56,15 @@ const service = axios.create({
 })
 
 
-
+// 移除空白參數
+const removeEmpty = (obj) => {
+  for (let key in obj) {
+    if (obj[key] === null || obj[key] === '') {
+      delete obj[key]
+    }
+  }
+  return obj
+}
 
 
 // response interceptor
@@ -82,12 +90,13 @@ service.interceptors.response.use(
       if (success) {
         return Promise.resolve(data)
       } else {
-        Message({
-          message: error_msg || 'Error',
-          type: 'error',
-          duration: 0, //5 * 1000
-          showClose: true,
-        })
+        // Message({
+        //   message: error_msg || 'Error',
+        //   type: 'error',
+        //   duration: 0, //5 * 1000
+        //   showClose: true,
+        // })
+        Toast.fail(error_msg || 'Error')
         return Promise.reject(new Error(error_msg || 'Error'))
       }
     } else { //非标准返回格式 直接放回data对象
@@ -97,19 +106,28 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+    // Message({
+    //   message: error.message,
+    //   type: 'error',
+    //   duration: 5 * 1000
+    // })
+    Toast.fail(error.message)
     return Promise.reject(error)
   }
 )
-//設置請求頭
-// service.interceptors.request.use({
-//   headers:{
-//     'Content-Type': 'application/json;charset=UTF-8',
-//   }
-// })
+
+//在請求頭中移除空白參數
+service.interceptors.request.use(
+  config => {
+    // Do something before request is sent
+    if (config.method === 'post') {
+      config.data = removeEmpty(config.data)
+    } else if (config.method === 'get') {
+      config.params = removeEmpty(config.params)
+    }
+    return config
+  }
+  
+)
 
 export default service

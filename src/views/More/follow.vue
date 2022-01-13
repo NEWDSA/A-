@@ -27,10 +27,10 @@
           class="lc_step"
         >
           <template #active-icon>
-            <van-icon class-prefix="my-icon" name="circle" color="#f12945" />
+            <van-icon size="10" class-prefix="my-icon" name="circle" color="#f12945" />
           </template>
           <template #inactive-icon>
-            <van-icon class-prefix="my-icon" name="circle" color="#f12945" />
+            <van-icon size="10" class-prefix="my-icon" name="circle" color="#f12945" />
           </template>
           <span class="lc_main_title">{{ item.FollowContent }}</span>
 
@@ -43,7 +43,6 @@
       </van-steps>
       <!-- end 房源跟進 -->
     </div>
-
     <!-- 底部彈出層 -->
     <van-popup position="bottom" v-model="show">
       <van-picker @cancel="show = false" show-toolbar :columns="columns" />
@@ -56,6 +55,6 @@
 export {default} from './follow'
 </script>
 
-<style lang="scss" scoped>
- @import './index.scss'
+<style lang="scss" scoped >
+ @import 'follow.scss'
 </style>

@@ -147,6 +147,18 @@ export const constantRoutes = [
     path: '/EditScene',
     name: 'EditScene',
     component: () => import('@/views/Scene/edit.vue')
+  },
+  // 放盤紙
+  {
+    path: '/PutPaper',
+    name: 'PutPaper',
+    component: () => import('@/views/PutPaper/index.vue')
+  },
+  // 新增放盤紙
+  {
+    path: '/AddPutPaper',
+    name: 'AddPutPaper',
+    component: () => import('@/views/PutPaper/add.vue')
   }
 
 ]

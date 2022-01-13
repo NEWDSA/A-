@@ -64,7 +64,7 @@ module.exports = {
             // 替換
             changeOrigin: true
           },
-          'moaplusapi': {
+          '/moaplusapi': {
             target: 'http://10.68.2.9:8324/',
             changeOrigin: true
           },

@@ -7,7 +7,8 @@
       :fixed="true"
       :placeholder="true"
     ></van-nav-bar>
-    <template v-for="index of 3">
+    <!-- The mock data is juker -->
+    <!-- <template v-for="index of 3">
       <div class="lc_card">
         <div style="width:100%;position:relative;top:0px;display:flex;flex-wrap:wrap;">
           <div class="lc_items"><span>交易類型:</span>租售</div>
@@ -32,15 +33,58 @@
           </div>
         </div>
       </div>
+    </template> -->
+    <template v-for="(item,index) in SearchOption">
+      <div class="lc_card">
+        <div style="width:100%;position:relative;top:0px;display:flex;flex-wrap:wrap;">
+          <div class="lc_items" v-if="item.TagsName"><span>地區:</span>{{item.TagsName}}</div>
+          <div class="lc_items" v-if="item.areaName"><span>區域:</span>{{item.areaName}}</div>
+          <!-- 房屋朝向 -->
+            <div class="lc_items" v-if="item.HouseDirection.length>0">
+              <span>朝向:</span>
+            <span>
+
+              {{item.HouseDirection[index]==='0ca691b3-541d-4108-ad77-45799d618c48'?'北':
+              item.HouseDirection[index]=='4f61a203-e355-466c-a582-7d94329a79d7'?'東北':
+              item.HouseDirection[index]==='77831b13-7eb9-46a2-b78a-851c10143e99'?'東南':
+              item.HouseDirection[index]==='ada8969a-bb45-440b-917c-8b7798fb6279'?'西北':
+              item.HouseDirection[index]==='9843c331-78f4-419c-8f2c-1d3166322bee'?'東':
+              item.HouseDirection[index]==='94c435d0-bca0-43f2-84f7-b1a0a9f24b5b'?'西':
+              item.HouseDirection[index]==='51f504a0-1ce8-44bd-8929-f85d19cdf43b'?'南':
+              item.HouseDirection[index]==='86c2e43f-44fd-4022-b07e-ffb223fa0731'?'西南':
+              item.HouseDirection[index]==='32e220ba-14a2-48cb-8a52-923ff75f0a8d'?'三面单边':''
+              }}</span>
+            </div>
+            
+          <!-- </template> -->
+          <div class="lc_items" v-if="item.SalePriceFrom"><span>售價起:</span>{{item.SalePriceFrom}}</div>
+          <div class="lc_items" v-if="item.SalePriceTo"><span>售價止:</span>{{item.SalePriceTo}}</div>
+          <div class="lc_items" v-if="item.SalePriceTo"><span>租價起:</span>{{item.RentPriceFrom}}</div>
+          <div class="lc_items" v-if="item.SalePriceTo"><span>租價止:</span>{{item.RentPriceTo}}</div>
+          <div class="lc_items" v-if="item.SalePriceTo"><span>排序方式:</span>{{item.SortField}}</div>
+        </div>
+        <div class="lc_footer">
+          <van-divider />
+          <div class="lc_main_footer">
+            <van-radio-group v-model="radio">
+              <van-radio name="1" checked-color="#ee0a24">設置默認</van-radio>
+            </van-radio-group>
+            <div @click="move_search"><span>刪除</span></div>
+          </div>
+        </div>
+      </div>
     </template>
   </div>
 </template>
 
 <script>
+import Cookies from "js-cookie";
+import aplush from "@/api/A+";
 export default {
+  // get-property-conditions
   data() {
     return {
-      //设置保存记录内容
+      //设置保存记录内容 mock data 數據
       saveRecord: [
         {
           isdefault: true,
@@ -70,16 +114,29 @@ export default {
           orientation: "東南",
         },
       ],
-      //end 设置报存记录内容
       radio: "1",
+      SearchOption:[]
     };
+  },
+  mounted() {
+    let _temp_Option= Cookies.get("SearchCookies");
+    if(_temp_Option){
+      this.SearchOption=JSON.parse(_temp_Option);
+      // 通過keyId獲取對應的區域名稱
+    }
+
+  
   },
   methods: {
     //返回上一頁
     goPage() {
       this.$router.go(-1);
     },
-    //end 返回上一頁
+    //保存搜索項
+    move_search(){
+      this.SearchOption.pop(); //移除保存內容
+      Cookies.set("SearchCookies",JSON.stringify(this.SearchOption));
+    },
   },
 };
 </script>

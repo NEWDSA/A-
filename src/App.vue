@@ -2,8 +2,8 @@
   <div id="app">
     <router-view />
     <!-- 对路由进行判断 -->
-    <div class="lc_bar">
-      <van-tabbar fixed safe-area-inset-bottom route active-color="#ee0a24" v-show="show_bar">
+    <!-- <div class="lc_bar"> -->
+      <van-tabbar fixed route active-color="#ee0a24" v-if="show_bar">
         <van-tabbar-item replace to="/House">
           <template #icon="props">
             <img
@@ -42,7 +42,7 @@
           </template>
         </van-tabbar-item>
       </van-tabbar>
-    </div>
+    <!-- </div> -->
     <!-- end 对路由进行判断 -->
   </div>
 </template>
@@ -52,7 +52,7 @@
 import Cookies from "js-cookie";
 import watermark from "./utils/watermark";
 import { getUserInfo } from "./api/authentication";
-
+// import './assets/flexible.js';
 export default {
   name: "Home",
   data() {
@@ -125,11 +125,14 @@ html,
 body,
 #app {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   font-family: "PingFangSC-Regular", sans-serif;
   font-weight: normal;
   font-stretch: normal;
+  background-color: #f3f3f3;
+ 
 }
+
 ::-webkit-scrollbar {
   display: none;
   width: 0px;
@@ -174,4 +177,8 @@ body,
     font-size: 10px;
   }
 }
+// 媒體查詢配置電腦端
+
+
+
 </style>

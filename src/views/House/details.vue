@@ -1,61 +1,65 @@
 <template>
   <div class="container">
     <!-- 顶部导航 -->
-    <van-sticky>
-      <div class="navs">
-        <img
-          @click="back"
-          src="@/assets/icon/nav_back_transparent_icon.png"
-          alt=""
-        />
-        <!-- 更多 -->
-        <!--彈出內容、現場相、-->
-        <van-popover
-          class="lc_popover_more"
-          v-model="showPopover"
-          trigger="click"
-          placement="bottom-end"
-          :actions="actions"
-          @select="onSelect"
-        >
-          <template #reference>
+    <div ref="container" style="background: #fff">
+      <van-sticky>
+          <div class="navs">
+            <!-- <div style="display:flex;align-items:center;"> -->
             <img
-              style="margin: 0px"
-              @click="more_i"
-              src="@/assets/icon/nav_more_transparent_icon.png"
+              @click="back"
+              src="@/assets/icon/nav_back_transparent_icon.png"
               alt=""
             />
-          </template>
-        </van-popover>
-        <!-- 點讚 -->
-        <img
-          v-if="bool_good"
-          @click="good_i"
-          src="@/assets/icon/nav_good_transparent_icon.png"
-          alt=""
-        />
-        <img
-          v-else
-          @click="good_i"
-          src="/icon/nav_good_collected_icon.png"
-          alt=""
-        />
-        <!-- 收藏 -->
-        <img
-          v-if="bool_collect"
-          @click="collect_i"
-          src="@/assets/icon/nav_collected_transparent_icon.png"
-          alt=""
-        />
-        <img
-          v-else
-          @click="collect_i"
-          src="@/assets/icon/nav_collect_transparent_icon.png"
-          alt=""
-        />
-      </div>
-      <!-- end 顶部导航 -->
-    </van-sticky>
+            <!-- 更多 -->
+            <!--彈出內容、現場相、-->
+            <van-popover
+              class="lc_popover_more"
+              v-model="showPopover"
+              trigger="click"
+              placement="bottom-end"
+              :actions="actions"
+              @select="onSelect"
+            >
+              <template #reference>
+                <img
+                  style="margin: 0px"
+                  @click="more_i"
+                  src="@/assets/icon/nav_more_transparent_icon.png"
+                  alt=""
+                />
+              </template>
+            </van-popover>
+            <!-- 點讚 -->
+            <img
+              v-if="bool_good"
+              @click="good_i"
+              src="@/assets/icon/nav_good_transparent_icon.png"
+              alt=""
+            />
+            <img
+              v-else
+              @click="good_i"
+              src="@/assets/icon/nav_good_collected_icon.png"
+              alt=""
+            />
+            <!-- 收藏 -->
+            <img
+              v-if="bool_collect"
+              @click="collect_i"
+              src="@/assets/icon/nav_collected_transparent_icon.png"
+              alt=""
+            />
+            <img
+              v-else
+              @click="collect_i"
+              src="@/assets/icon/nav_collect_transparent_icon.png"
+              alt=""
+            />
+            <!-- </div> -->
+          </div>
+        <!-- end 顶部导航 -->
+      </van-sticky>
+    </div>
     <!-- 轮播图 -->
     <van-swipe
       class="my-swipe"
@@ -76,7 +80,6 @@
         </van-image>
       </van-swipe-item>
       <van-swipe-item v-if="House_detail.Photos">
-        <!-- <img  src="@/assets/img/noImg@2x.png" alt="" /> -->
         <van-image
           @load="loadingImg"
           ref="img"
@@ -84,7 +87,6 @@
         />
       </van-swipe-item>
       <van-swipe-item v-else>
-        <!-- <img width="100%;" src="@/assets/img/noImg@2x.png" alt="" /> -->
         <van-image
           @load="loadingImg"
           ref="img"
@@ -170,6 +172,29 @@
           </article>
         </div>
       </div>
+      <!-- 顯示更多內容 -->
+      <div class="btn_content">
+        <div class="btn">
+          <van-button
+            class="lc_btn1"
+            @click="look_Scene"
+            :icon="require('@/assets/icon/photo_icon.png')"
+            >現場相</van-button
+          >
+          <van-button
+            class="lc_btn2"
+            @click="putPaper"
+            :icon="require('@/assets/icon/paper_icon.png')"
+            >放盤紙</van-button
+          >
+          <van-button
+            class="lc_btn3"
+            :icon="require('@/assets/icon/key_icon.png')"
+            >鑰匙</van-button
+          >
+        </div>
+      </div>
+
       <div class="end_content">
         <!-- 業主信息 -->
         <van-collapse
@@ -206,256 +231,52 @@
             </div>
           </van-collapse-item>
         </van-collapse>
-        <van-tabs v-model="active" @click="lc_vant_click">
-          <van-tab title="現場相">
-            <template #title>
-              <van-button class="lc_btn1">現場相</van-button>
-            </template>
-            <van-swipe-cell :before-close="beforeClose">
-              <template #left>
-                <van-button square type="primary" text="编辑" />
-              </template>
-              <div class="collapse">
-                <div class="lc_collapse_items">
-                  <div style="display: flex; justify-content: center">
-                    <span class="first"> 部門: </span>
-                    <span>MB</span>
-                  </div>
-                  <div style="display: flex; justify-content: center">
-                    <span class="first"> 業務員: </span>
-                    <span>Sandy HO</span>
-                  </div>
-                  <div style="display: flex; justify-content: center">
-                    <span class="first"> 錄入日期: </span>
-                    <span>2021-12-07</span>
-                  </div>
-                  <div style="display: flex; justify-content: center">
-                    <span class="first"> 照片數量: </span>
-                    <span>6</span>
-                  </div>
-                </div>
-              </div>
-              <template #right>
-                <van-button square type="danger" text="删除" />
-              </template>
-            </van-swipe-cell>
-            <div class="collapse">
-              <div class="title">房源圖片</div>
-              <div style="width: 100%">
-                <select
-                  name="build"
-                  v-model="selected"
-                  @change="getTypeSelected"
-                >
-                  <option value="">全部</option>
-                  <!-- 戶型圖 -->
-
-                  <option
-                    v-for="(item, index) in House_Type"
-                    :value="item.SysParameter.ParameterType"
-                  >
-                    {{ item.SysParameter.ParameterName }}
-                  </option>
-                  <!-- 室內圖 -->
-                  <option
-                    v-for="(item, index) in lc_IndoorMap"
-                    :value="item.SysParameter.ParameterType"
-                  >
-                    {{ item.SysParameter.ParameterName }}
-                  </option>
-                  <!-- 小區圖 -->
-
-                  <option
-                    v-for="(item, index) in Polt"
-                    :value="item.SysParameter.ParameterType"
-                  >
-                    {{ item.SysParameter.ParameterName }}
-                  </option>
-
-                  <!-- 景觀圖 -->
-                  <option
-                    v-for="(item, index) in Landscape"
-                    :value="item.SysParameter.ParameterType"
-                  >
-                    {{ item.SysParameter.ParameterName }}
-                  </option>
-                </select>
-
-                <select
-                  @change="other_change"
-                  v-model="other_select"
-                  v-show="selectType.length > 0"
-                  name="built"
-                >
-                  <option value="">全部</option>
-                  <option
-                    v-for="(item, index) in selectType"
-                    :value="item.KeyId"
-                  >
-                    {{ item.ItemName }}
-                  </option>
-                </select>
-                <div style="font-size: 14px; margin-left: 9px">上傳時間</div>
-                <div style="display: flex">
-                  <input v-model="start_time" id="date" type="date" />
-                  <input
-                    @change="select_change"
-                    v-model="end_time"
-                    id="date"
-                    type="date"
-                  />
-                </div>
-                <template v-if="IndoorMap.length > 0">
-                  <div
-                    v-for="(item, indx) in IndoorMap"
-                    style="width: 100%; display: flex; justify-content: center"
-                  >
-                    <van-image
-                      width="95%"
-                      radius="0.20rem"
-                      round
-                      :src="item.PhotoPath"
-                    >
-                      <template v-slot:error>加载失败</template>
-                    </van-image>
-                  </div>
-                </template>
-
-                <div v-if="IndoorMap.length == 0">
-                  <div style="font-size: 14px">暫無數據</div>
-                </div>
-              </div>
-            </div>
-          </van-tab>
-          <van-tab title="放盤紙">
-            <template #title>
-              <van-button class="lc_btn2">放盤紙</van-button>
-            </template>
-
-            <van-swipe-cell :before-close="beforeClose">
-              <template #left>
-                <van-button square type="primary" text="编辑" />
-              </template>
-
-              <div
-                v-if="PaperList.length > 0"
-                class="collapse"
-                v-for="(item, index) in PaperList"
-              >
-                <div style="width: 100%" @click="AddPaperShow = true">
-                  <span class="lc_btn_add">添加</span>
-                </div>
-
-                <div v-if="item.DepartmentName">
-                  <span class="first">部門:</span>
-                  <span>{{ item.DepartmentName }}</span>
-                </div>
-                <div v-if="item.OnlyTrustPerson">
-                  <span class="first">簽署人:</span>
-                  <span>{{ item.OnlyTrustPerson }}</span>
-                </div>
-                <div v-if="item.papertype">
-                  <span class="first">放盤類型:</span>
-                  <span>{{ item.papertype }}</span>
-                </div>
-                <div v-if="item.EffectiveDate">
-                  <span class="first">放盤日期起:</span>
-                  <span>{{ item.EffectiveDate }}</span>
-                </div>
-                <div v-if="item.EffectiveDate">
-                  <span class="first">放盤日期止:</span>
-                  <span>{{ item.EffectiveDate }}</span>
-                </div>
-                <div v-if="item.TrustBookNo">
-                  <span class="first">放盤紙編號:</span>
-                  <span>{{ item.TrustBookNo }}</span>
-                </div>
-              </div>
-              <template #right>
-                <van-button square type="danger" text="删除" />
-              </template>
-            </van-swipe-cell>
-
-            <div class="collapse" v-if="PaperList.length == 0">
-              <div class="no_data">暫無數據</div>
-            </div>
-          </van-tab>
-          <van-tab title="鑰匙">
-            <template #title>
-              <van-button class="lc_btn3">鑰匙</van-button>
-            </template>
-
-            <div class="collapse" v-for="(item, index) in KeyList">
-              <div style="width: 100%" @click="AddKeyShow = true">
-                <span class="lc_btn_add">添加</span>
-              </div>
-              <div>
-                <span class="first">部門:</span>
-                <span>{{ item.DepartmentName }}</span>
-              </div>
-              <div>
-                <span class="first">業務員:</span>
-                <span>{{ item.Receiver }}</span>
-              </div>
-              <div>
-                <span class="first">鑰匙數量:</span>
-                <span>{{ item.KeyCount }}</span>
-              </div>
-              <div>
-                <span class="first">鑰匙狀態:</span>
-                <span>{{ item.PropKeyStatus }}</span>
-              </div>
-              <div>
-                <span class="first">鑰匙類型:</span>
-                <span>{{ item.Type }}</span>
-              </div>
-              <div>
-                <span class="first">鑰匙箱名稱:</span>
-                <span>{{ item.KeyBoxName }}</span>
-              </div>
-            </div>
-            <div class="collapse" v-if="KeyList.length == 0">
-              <div style="width: 100%" @click="AddKeyShow = true">
-                <span class="lc_btn_add">添加</span>
-              </div>
-              <div class="no_data">暫無數據</div>
-            </div>
-          </van-tab>
-        </van-tabs>
       </div>
-      <!-- 房源跟进 -->
-        <div class="nav_follow">
-          <span>房源跟进</span><van-icon name="arrow" @click="full_Follow" />
-        </div>
-        <van-steps
-          direction="vertical"
-          active-color="#646566"
-          inactive-color="#646566"
-        >
-          <van-step
-            v-for="(item, index) in FollowUp"
-            :key="index"
-            class="lc_step"
-          >
-            <template #active-icon>
-              <van-icon class-prefix="my-icon" name="circle" color="#f12945" />
-            </template>
-            <template #inactive-icon>
-              <van-icon class-prefix="my-icon" name="circle" color="#f12945" />
-            </template>
-            <span class="lc_main_title">{{ item.FollowContent }}</span>
-
-            <div class="sub_title">
-              <article>{{ item.Follower }}</article>
-              <article>{{ item.FollowType }}</article>
-              <article>{{ item.FollowTime }}</article>
-            </div>
-          </van-step>
-        </van-steps>
     </div>
+    <!-- 其它區域內容 -->
+    <div class="property_info_other">
+      <!-- 房源跟进 -->
+      <div class="nav_follow">
+        <span>房源跟进</span><van-icon name="arrow" @click="full_Follow" />
+      </div>
+      <van-steps
+        direction="vertical"
+        active-color="#646566"
+        inactive-color="#646566"
+      >
+        <van-step
+          v-for="(item, index) in FollowUp"
+          :key="index"
+          class="lc_step"
+        >
+          <template #active-icon>
+            <van-icon
+              size="10"
+              class-prefix="my-icon"
+              name="circle"
+              color="#f12945"
+            />
+          </template>
+          <template #inactive-icon>
+            <van-icon
+              size="10"
+              class-prefix="my-icon"
+              name="circle"
+              color="#f12945"
+            />
+          </template>
+          <span class="lc_main_title">{{ item.FollowContent }}</span>
 
+          <div class="sub_title">
+            <article>{{ item.Follower }}</article>
+            <article>{{ item.FollowType }}</article>
+            <article>{{ item.FollowTime }}</article>
+          </div>
+        </van-step>
+      </van-steps>
+    </div>
     <!-- 聯繫人 -->
-    <div class="lc_contact">
+    <div class="lc_contact" safe-area-inset-bottom>
       <div class="tel">
         <article>
           <img
