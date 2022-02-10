@@ -7,125 +7,115 @@
       :fixed="true"
       :placeholder="true"
     ></van-nav-bar>
-    <!-- The mock data is juker -->
-    <!-- <template v-for="index of 3">
-      <div class="lc_card">
-        <div style="width:100%;position:relative;top:0px;display:flex;flex-wrap:wrap;">
-          <div class="lc_items"><span>交易類型:</span>租售</div>
-          <div class="lc_items"><span>標籤:</span>經理推薦</div>
-          <div class="lc_items"><span>房型:</span>兩居</div>
-          <div class="lc_items"><span>排序:</span>默認排序</div>
-          <div class="lc_items"><span>用途:</span>住宅</div>
-          <div class="lc_items"><span>朝向:</span>西南</div>
-        </div>
-        <div class="lc_footer">
-          <van-divider />
-          <div class="lc_main_footer">
-            <van-radio-group v-model="radio">
-              <van-radio name="1" checked-color="#ee0a24">設置默認</van-radio>
-            </van-radio-group>
-            <div><span>刪除</span></div>
-          </div>
-        </div>
-        <div style="position: absolute; width: 100%;">
-          <div class="lc_cover">
-            <div class="lc_word"></div>
-          </div>
-        </div>
-      </div>
-    </template> -->
-    <template v-for="(item,index) in SearchOption">
-      <div class="lc_card">
-        <div style="width:100%;position:relative;top:0px;display:flex;flex-wrap:wrap;">
-          <div class="lc_items" v-if="item.TagsName"><span>地區:</span>{{item.TagsName}}</div>
-          <div class="lc_items" v-if="item.areaName"><span>區域:</span>{{item.areaName}}</div>
-          <!-- 房屋朝向 -->
-            <div class="lc_items" v-if="item.HouseDirection.length>0">
-              <span>朝向:</span>
-            <span>
-
-              {{item.HouseDirection[index]==='0ca691b3-541d-4108-ad77-45799d618c48'?'北':
-              item.HouseDirection[index]=='4f61a203-e355-466c-a582-7d94329a79d7'?'東北':
-              item.HouseDirection[index]==='77831b13-7eb9-46a2-b78a-851c10143e99'?'東南':
-              item.HouseDirection[index]==='ada8969a-bb45-440b-917c-8b7798fb6279'?'西北':
-              item.HouseDirection[index]==='9843c331-78f4-419c-8f2c-1d3166322bee'?'東':
-              item.HouseDirection[index]==='94c435d0-bca0-43f2-84f7-b1a0a9f24b5b'?'西':
-              item.HouseDirection[index]==='51f504a0-1ce8-44bd-8929-f85d19cdf43b'?'南':
-              item.HouseDirection[index]==='86c2e43f-44fd-4022-b07e-ffb223fa0731'?'西南':
-              item.HouseDirection[index]==='32e220ba-14a2-48cb-8a52-923ff75f0a8d'?'三面单边':''
-              }}</span>
+    <van-radio-group @change="radio_select_change" v-model="radio">
+      <template v-for="(item, index) in SearchOption">
+        <div class="lc_card">
+          <div
+            style="
+              width: 100%;
+              position: relative;
+              top: 0px;
+              display: flex;
+              flex-wrap: wrap;
+            "
+          >
+            <div class="lc_items" v-if="item.TagsName">
+              <span>地區:</span>{{ item.TagsName }}
             </div>
-            
-          <!-- </template> -->
-          <div class="lc_items" v-if="item.SalePriceFrom"><span>售價起:</span>{{item.SalePriceFrom}}</div>
-          <div class="lc_items" v-if="item.SalePriceTo"><span>售價止:</span>{{item.SalePriceTo}}</div>
-          <div class="lc_items" v-if="item.SalePriceTo"><span>租價起:</span>{{item.RentPriceFrom}}</div>
-          <div class="lc_items" v-if="item.SalePriceTo"><span>租價止:</span>{{item.RentPriceTo}}</div>
-          <div class="lc_items" v-if="item.SalePriceTo"><span>排序方式:</span>{{item.SortField}}</div>
-        </div>
-        <div class="lc_footer">
-          <van-divider />
-          <div class="lc_main_footer">
-            <van-radio-group v-model="radio">
-              <van-radio name="1" checked-color="#ee0a24">設置默認</van-radio>
-            </van-radio-group>
-            <div @click="move_search"><span>刪除</span></div>
+            <div class="lc_items" v-if="item.areaName">
+              <span>區域:</span>{{ item.areaName }}
+            </div>
+            <!-- 房屋朝向 -->
+            <div class="lc_items" v-if="item.HouseDirection.length > 0">
+              <span>朝向:</span>
+              <span>
+                {{
+                  item.HouseDirection[index] ===
+                  "0ca691b3-541d-4108-ad77-45799d618c48"
+                    ? "北"
+                    : item.HouseDirection[index] ==
+                      "4f61a203-e355-466c-a582-7d94329a79d7"
+                    ? "東北"
+                    : item.HouseDirection[index] ===
+                      "77831b13-7eb9-46a2-b78a-851c10143e99"
+                    ? "東南"
+                    : item.HouseDirection[index] ===
+                      "ada8969a-bb45-440b-917c-8b7798fb6279"
+                    ? "西北"
+                    : item.HouseDirection[index] ===
+                      "9843c331-78f4-419c-8f2c-1d3166322bee"
+                    ? "東"
+                    : item.HouseDirection[index] ===
+                      "94c435d0-bca0-43f2-84f7-b1a0a9f24b5b"
+                    ? "西"
+                    : item.HouseDirection[index] ===
+                      "51f504a0-1ce8-44bd-8929-f85d19cdf43b"
+                    ? "南"
+                    : item.HouseDirection[index] ===
+                      "86c2e43f-44fd-4022-b07e-ffb223fa0731"
+                    ? "西南"
+                    : item.HouseDirection[index] ===
+                      "32e220ba-14a2-48cb-8a52-923ff75f0a8d"
+                    ? "三面单边"
+                    : ""
+                }}</span
+              >
+            </div>
+
+            <!-- </template> -->
+            <div class="lc_items" v-if="item.SalePriceFrom">
+              <span>售價起:</span>{{ item.SalePriceFrom }}
+            </div>
+            <div class="lc_items" v-if="item.SalePriceTo">
+              <span>售價止:</span>{{ item.SalePriceTo }}
+            </div>
+            <div class="lc_items" v-if="item.SalePriceTo">
+              <span>租價起:</span>{{ item.RentPriceFrom }}
+            </div>
+            <div class="lc_items" v-if="item.SalePriceTo">
+              <span>租價止:</span>{{ item.RentPriceTo }}
+            </div>
+            <div class="lc_items" v-if="item.SalePriceTo">
+              <span>排序方式:</span>{{ item.SortField }}
+            </div>
+          </div>
+          <div class="lc_footer">
+            <van-divider />
+            <div class="lc_main_footer">
+              <van-radio
+                @click="select_save"
+                :name="index"
+                checked-color="#ee0a24"
+                >設置默認</van-radio
+              >
+              <div @click="move_search"><span>刪除</span></div>
+            </div>
           </div>
         </div>
-      </div>
-    </template>
+      </template>
+    </van-radio-group>
   </div>
 </template>
 
 <script>
 import Cookies from "js-cookie";
+// 使用 localStorage 存取
+
 import aplush from "@/api/A+";
 export default {
   // get-property-conditions
   data() {
     return {
-      //设置保存记录内容 mock data 數據
-      saveRecord: [
-        {
-          isdefault: true,
-          transType: "3", //1，售 2、租 3、租售
-          tag: "经理推荐", //标签
-          houseType: "两居", //房型
-          sort: "默認排序",
-          purpose: "住宅",
-          orientation: "西南",
-        },
-        {
-          isdefault: false,
-          transType: "2", //1，售 2、租 3、租售
-          tag: "经理推荐", //标签
-          houseType: "两居", //房型
-          sort: "默認排序",
-          purpose: "住宅",
-          orientation: "西南",
-        },
-        {
-          isdefault: false,
-          transType: "1",
-          buildType: "有電梯大廈", //建築類型
-          houseType: "三居", //房型
-          tag: "區經推薦", //用途
-          use: "車位",
-          orientation: "東南",
-        },
-      ],
-      radio: "1",
-      SearchOption:[]
+      radio: "",
+      SearchOption: [],
     };
   },
   mounted() {
-    let _temp_Option= Cookies.get("SearchCookies");
-    if(_temp_Option){
-      this.SearchOption=JSON.parse(_temp_Option);
+    let _temp_Option = Cookies.get("SearchCookies");
+    if (_temp_Option) {
+      this.SearchOption = JSON.parse(_temp_Option);
       // 通過keyId獲取對應的區域名稱
     }
-
-  
   },
   methods: {
     //返回上一頁
@@ -133,9 +123,32 @@ export default {
       this.$router.go(-1);
     },
     //保存搜索項
-    move_search(){
+    move_search() {
       this.SearchOption.pop(); //移除保存內容
-      Cookies.set("SearchCookies",JSON.stringify(this.SearchOption));
+      Cookies.set("SearchCookies", JSON.stringify(this.SearchOption));
+    },
+    select_save(e) {
+      console.log("点击事件", e);
+    },
+    radio_select_change(e) {
+      console.log("radio_select_change", e);
+      let lc_str = null;
+      // 使用cookies 保存状态
+      // 讀取瀏覽器中的cookies
+      let local_cookies = Cookies.get("SearchCookies");
+      if (local_cookies != null) {
+        lc_str = JSON.parse(local_cookies);
+      }
+      lc_str[e].isdefault = true;
+      lc_str.forEach((item, index) => {
+        if (index == e) {
+          lc_str[index].isdefault = true;
+        } else {
+          lc_str[index].isdefault = false;
+        }
+      });
+
+      console.log(lc_str);
     },
   },
 };
@@ -178,9 +191,9 @@ export default {
     }
     .lc_footer {
       flex: 100%;
-       margin-left: 10px;
-       margin-right: 20px;
-       margin-bottom: 10px;
+      margin-left: 10px;
+      margin-right: 20px;
+      margin-bottom: 10px;
       .lc_divider {
         width: 95%;
         //   background-color: #e2e2e2;
