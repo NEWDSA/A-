@@ -27,6 +27,7 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs'
 
 })()
 
+
 //判断 state 对象是否包含某个属性
 // let lc_info= store.getters.userInfo
 var staffNo = '2010195'
@@ -124,6 +125,7 @@ service.interceptors.request.use(
     // Do something before request is sent
     if (config.method === 'post') {
       config.data = removeEmpty(config.data)
+
     } else if (config.method === 'get') {
       config.params = removeEmpty(config.params)
     }

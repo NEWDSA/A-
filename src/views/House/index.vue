@@ -823,20 +823,45 @@ export default {
   created() {
     this.priceList = this.item[0].children;
   },
+  beforeMount() {
+    this.lc_area_data();
+  },
   mounted() {
     this.$nextTick(() => {
       this.ck_house_status();
     });
     this.house_sort();
-    this.baseData();
+    // this.baseData();
     //獲取查詢條件
-    let SearchObject = Cookies.get("SearchCookies");
-    if (SearchObject != null) {
-      this.lc_saveSearch = JSON.parse(SearchObject);
-    }
-    //获取Cookies
-    let cookies = Cookies.get("SearchCookies");
     
+    if(Cookies.get("SearchCookies")!=undefined){
+      let SearchObject = Cookies.get("SearchCookies");
+      this.lc_saveSearch = JSON.parse(SearchObject);
+      //獲取默認選中
+      let lc_default_result = this.lc_saveSearch.find(
+        (item) => (item.isdefault =='true')
+      );
+      aplush.apis
+        .Listinglist({
+          PageIndex: this.pageIndex,
+          PageSize: 20,
+          PropType: 1, //查詢類型
+          EstateSelectType: lc_default_result.EstateSelectType, //房源查詢類型
+          AreaKeyIdStr: lc_default_result.AreaKeyIdStr, //區域選中的keyId
+          SalePriceFrom: lc_default_result.SalePriceFrom, //
+          SalePriceTo: lc_default_result.SalePriceTo,
+          HouseDirection: lc_default_result.HouseDirection,
+          RentPriceFrom: lc_default_result.RentPriceFrom,
+          RentPriceTo: lc_default_result.RentPriceTo,
+          SortField: lc_default_result.SortField, // 排序條件
+        })
+        .then((res) => {
+          let _temp = res.PropertysModel;
+          this.HouseList = _temp;
+        });
+    }else{
+      this.baseData();
+    }
     
   },
   methods: {
@@ -912,9 +937,7 @@ export default {
       this.lc_Tag_KeyId = this.item_t[this.active].KeyId;
     },
     // 點擊顯示區域
-    show_area() {
-      this.lc_area_data();
-    },
+    show_area() {},
     // 顯示標籤
     show_tag() {
       aplush.apis
@@ -1146,18 +1169,46 @@ export default {
     },
     // 保存Cookies
     SaveCookies() {
-      console.log("打印問題");
-      console.log(this.items);
+      var _temp_tages_name = [];
+      let _temp_items = null;
+      if (this.items.length > 0)
+        //通過下標查找符合條件的集合
+        this.lc_area_left.length > 0
+          ? (this.lc_area_left = this.lc_area_left)
+          : (this.lc_area_left = 0);
+      _temp_items = this.items[this.lc_area_left].children;
+      let _temp_districtKey = this.lc_districtKey.split(",");
+      if (_temp_districtKey.length > 0) {
+        _temp_districtKey.forEach((lcitem) => {
+          console.log("lcitem");
+          console.log(lcitem);
+          _temp_items
+            .filter((item) => item.KeyId == lcitem)
+            .forEach((item) => {
+              _temp_tages_name.push(item.text);
+            });
+        });
+      } else {
+        _temp_items.filter((item) => {
+          if (item.KeyId == this.lc_districtKey) {
+            _temp_tages_name.push(item.text);
+          }
+        });
+      }
+
       let SearchObject = {
         EstateSelectType: this.QueryType, //房源查詢類型
         AreaKeyIdStr: this.lc_districtKey, //區域選中的keyId
+        //保存區域
+        TagsName: _temp_tages_name,
         areaName:
-          this.items.length <= 0 ? "澳門" : this.items[this.lc_area_left].Name,
+          this.lc_area_left.length <= 0
+            ? "澳門"
+            : this.items[this.lc_area_left].Name,
         // 下標, //區域名稱
         HouseDirection:
           this.lc_orentation_keyId.length > 0 ? this.lc_orentation_keyId : "", // 朝向
         SalePriceFrom: this.lc_price_select.startPrice, //
-        TagsName: this.lc_tagsName, //標籤
         SalePriceTo: this.lc_price_select.endPrice,
         RentPriceFrom: this.lc_price_select_rent.startPrice,
         RentPriceTo: this.lc_price_select_rent.endPrice,
@@ -1483,22 +1534,22 @@ export default {
     },
     //通過標籤搜索
     tags_Search(tags_index) {
+      let lc_default_result = this.lc_saveSearch.find(
+        (item,index) => (index == tags_index)
+      );
       aplush.apis
         .Listinglist({
           PageIndex: this.pageIndex,
           PageSize: 20,
           PropType: 1, //查詢類型
-          EstateSelectType: this.lc_saveSearch[tags_index].EstateSelectType, //房源查詢類型
-          AreaKeyIdStr: this.lc_saveSearch[tags_index].AreaKeyIdStr, //區域選中的keyId
-          SalePriceFrom: this.lc_saveSearch[tags_index].SalePriceFrom, //
-          SalePriceTo: this.lc_saveSearch[tags_index].SalePriceTo,
-          HouseDirection:
-            this.lc_saveSearch[tags_index].HouseDirection.length > 0
-              ? this.this.lc_saveSearch[tags_index].HouseDirection.join(",")
-              : this.this.lc_saveSearch[tags_index].HouseDirection.join(""), // 房屋朝向
-          RentPriceFrom: this.lc_saveSearch[tags_index].RentPriceFrom,
-          RentPriceTo: this.lc_saveSearch[tags_index].RentPriceTo,
-          SortField: this.lc_saveSearch[tags_index].SortField, // 排序條件
+          EstateSelectType: lc_default_result.EstateSelectType, //房源查詢類型
+          AreaKeyIdStr: lc_default_result.AreaKeyIdStr, //區域選中的keyId
+          SalePriceFrom: lc_default_result.SalePriceFrom, //
+          SalePriceTo: lc_default_result.SalePriceTo,
+          HouseDirection: lc_default_result.HouseDirection,
+          RentPriceFrom: lc_default_result.RentPriceFrom,
+          RentPriceTo: lc_default_result.RentPriceTo,
+          SortField: lc_default_result.SortField, // 排序條件
         })
         .then((res) => {
           let _temp = res.PropertysModel;

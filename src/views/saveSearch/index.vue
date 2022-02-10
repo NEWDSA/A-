@@ -19,11 +19,14 @@
               flex-wrap: wrap;
             "
           >
-            <div class="lc_items" v-if="item.TagsName">
-              <span>地區:</span>{{ item.TagsName }}
+            <div class="lc_far" v-if="item.TagsName">
+              <div class="lc_dor">地區:</div>
+              <template v-for="(item, index) in item.TagsName">
+                <span class="lc_directions">{{ item }}</span>
+              </template>
             </div>
             <div class="lc_items" v-if="item.areaName">
-              <span>區域:</span>{{ item.areaName }}
+              <span class="lc_directions">區域:</span>{{ item.areaName }}
             </div>
             <!-- 房屋朝向 -->
             <div class="lc_items" v-if="item.HouseDirection.length > 0">
@@ -114,7 +117,13 @@ export default {
     let _temp_Option = Cookies.get("SearchCookies");
     if (_temp_Option) {
       this.SearchOption = JSON.parse(_temp_Option);
-      // 通過keyId獲取對應的區域名稱
+      // 設置默認選中的值
+      // this.radio=
+      this.SearchOption.filter((item,index) => {
+        if (item.isdefault==true) {
+          this.radio = index;
+        }
+      });
     }
   },
   methods: {
@@ -128,27 +137,18 @@ export default {
       Cookies.set("SearchCookies", JSON.stringify(this.SearchOption));
     },
     select_save(e) {
-      console.log("点击事件", e);
+      // console.log("点击事件", e);
     },
     radio_select_change(e) {
-      console.log("radio_select_change", e);
-      let lc_str = null;
-      // 使用cookies 保存状态
-      // 讀取瀏覽器中的cookies
-      let local_cookies = Cookies.get("SearchCookies");
-      if (local_cookies != null) {
-        lc_str = JSON.parse(local_cookies);
-      }
-      lc_str[e].isdefault = true;
-      lc_str.forEach((item, index) => {
+      this.SearchOption[e].isdefault = true;
+      this.SearchOption.forEach((item, index) => {
         if (index == e) {
-          lc_str[index].isdefault = true;
+          this.SearchOption[index].isdefault = true;
         } else {
-          lc_str[index].isdefault = false;
+          this.SearchOption[index].isdefault = false;
         }
       });
-
-      console.log(lc_str);
+      Cookies.set("SearchCookies", JSON.stringify(this.SearchOption));
     },
   },
 };
@@ -229,6 +229,20 @@ export default {
         transform: rotate(-45deg);
       }
     }
+  }
+  .lc_far {
+    font-size: 14px;
+    padding-top: 19.5px;
+    padding-left: 20px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+  }
+  .lc_dor {
+    color: #7e7e7e;
+    margin-bottom: 5px;
+  }
+  .lc_directions {
+    margin-left: 5px;
   }
 }
 </style>
