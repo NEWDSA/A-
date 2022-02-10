@@ -1,6 +1,12 @@
 .container {
   background-color: #f3f3f3;
-  ::-webkit-scrollbar{width:0;height:0}
+  height: 100%;
+  overflow-y:scroll;
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0
+  }
+
   ::v-deep .van-sticky--fixed {
     .navs {
       width: 100%;
@@ -96,32 +102,39 @@
     }
   }
 
-  .my-swipe {
-    .van-swipe-item {
-      height: 200px;
-      color: #fff;
-      font-size: 20px;
-      line-height: 200px;
-      text-align: center;
+  .lc_layout {
 
-      img {
-        width: 100%;
+    height: 667px;
+    overflow-y: scroll;
+
+    .my-swipe {
+      .van-swipe-item {
+        height: 200px;
+        color: #fff;
+        font-size: 20px;
+        line-height: 200px;
+        text-align: center;
+
+        img {
+          width: 100%;
+        }
       }
-    }
 
-    .custom-indicator {
-      text-align: center;
-      width: 52px;
-      border-radius: 13px;
-      height: 26px;
-      line-height: 26px;
-      color: #fff;
-      position: absolute;
-      right: 5px;
-      bottom: 5px;
-      padding: 2px 5px;
-      font-size: 12px;
-      background: rgba(0, 0, 0, 0.1);
+
+      .custom-indicator {
+        text-align: center;
+        width: 52px;
+        border-radius: 13px;
+        height: 26px;
+        line-height: 26px;
+        color: #fff;
+        position: absolute;
+        right: 5px;
+        bottom: 5px;
+        padding: 2px 5px;
+        font-size: 12px;
+        background: rgba(0, 0, 0, 0.1);
+      }
     }
   }
 
@@ -412,6 +425,11 @@
       box-shadow: 10px 10px 10px 10px rgba(130, 119, 119, 0.2);
       background-color: #fff;
       height: 60px;
+      // iphone 安全区域
+      padding-bottom: constant(safe-area-inset-bottom);
+      /*兼容 IOS<11.2*/
+      padding-bottom: env(safe-area-inset-bottom);
+      /*兼容 IOS>11.2*/
 
       div p {
         font-size: 13px;
@@ -756,7 +774,7 @@
         position: relative;
         width: 50px;
         height: 50px;
-        background: url("/icon/select-img.png") no-repeat;
+        background: url("/assets/icon/select-img.png") no-repeat;
         background-size: cover;
       }
 
@@ -802,6 +820,20 @@
   font-weight: bold;
 }
 
-::v-deep .van-steps{
+::v-deep .van-steps {
   background-color: transparent;
+}
+
+::v-deep .van-image__img{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+::v-deep .van-image{
+  position: relative;
+  width: 100%;
+  padding-bottom:100%;
 }

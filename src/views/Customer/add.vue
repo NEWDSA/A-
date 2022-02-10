@@ -147,7 +147,7 @@
     </van-row>
     <!-- 備註 -->
     <van-row type="flex" align="center">
-      <van-col span="22">
+      <van-col span="24">
         <van-field
           v-model="remark"
           type="textarea"
@@ -314,8 +314,7 @@
           type="text"
           placeholder="請選擇"
           right-icon="arrow-down"
-          label-width="70"
-          @click-right-icon="showRoomType = true"
+          @click="showRoomType = true"
         />
       </van-col>
     </van-row>
@@ -329,10 +328,9 @@
           @keyup="UpNumber"
           type="text"
           placeholder=""
-          label-width="70"
         />
       </van-col>
-      <van-col span="10">
+      <van-col span="12">
         <van-field
           @keyup="UpNumber"
           @keydown="UpNumber"
@@ -340,9 +338,7 @@
           type="text"
           placeholder=""
         />
-      </van-col>
-      <van-col span="2">
-        <span style="font-size: 12px">㎡</span>
+      <span>㎡</span>
       </van-col>
     </van-row>
     <!-- 朝向 -->
@@ -355,8 +351,7 @@
           readonly
           placeholder="請選擇"
           right-icon="arrow-down"
-          @click-right-icon="orientation_show = true"
-          label-width="70"
+          @click="orientation_show = true"
         />
       </van-col>
     </van-row>
@@ -372,7 +367,7 @@
           placeholder="請選擇"
           label-width="70"
           right-icon="arrow-down"
-          @click-right-icon="floor_show = true"
+          @click="floor_show = true"
         />
       </van-col>
     </van-row>
@@ -386,7 +381,7 @@
           type="text"
           placeholder="請選擇"
           right-icon="arrow-down"
-          @click-right-icon="decoration_show = true"
+          @click="decoration_show = true"
           label-width="70"
         />
       </van-col>
@@ -401,7 +396,7 @@
           required
           readonly
           right-icon="arrow-down"
-          @click-right-icon="buy_show = true"
+          @click="buy_show = true"
           placeholder="請選擇"
           label-width="70"
         />
@@ -419,25 +414,10 @@
           placeholder="請選擇"
           label-width="70"
           right-icon="arrow-down"
-          @click-right-icon="source_show = true"
+          @click="source_show = true"
         />
       </van-col>
     </van-row>
-
-    <!-- 備註 -->
-    <!-- <van-row>
-        <van-col span="24">
-          <van-field
-            v-model="message"
-            rows="1"
-            autosize
-            label="備註"
-            type="textarea"
-            placeholder="請輸入"
-            label-width="70"
-          />
-        </van-col>
-      </van-row> -->
     <!-- 轉介信息 -->
     <van-row>
       <van-col>

@@ -2,22 +2,71 @@
  * @Author: luciano 
  * @Date: 2021-12-17 11:19:15 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-01-10 15:04:30
+ * @Last Modified time: 2022-02-09 10:10:03
  */
 
 //配置請求基準url
-let baseUrl='http://10.1.31.83:22061'
-
-
+let baseUrl = 'http://10.1.31.83:22061'
 
 import lc_request from '@/utils/request'
 import axios from 'axios'
+// 引入 qs 模块，用来序列化 post 的数据
+// import qs from 'qs'
 import {
+  data,
   param
 } from 'jquery'
 
 export default {
   apis: {
+    //獲取未讀消息數量
+    unReaderMsg(params) {
+      return lc_request({
+        url: '/api/Center/get_messages_notreadcount',
+        method: 'get',
+        params
+      })
+    },
+    //獲取我的消息
+    getMsg(params) {
+      return lc_request({
+        url: '/api/Center/get_messages',
+        method: 'post',
+        data: params
+      })
+    },
+    //  企業微信登錄
+    workChatLogin(params) {
+      return lc_request({
+        headers:{
+          'Content-Type':'application/json'
+        },
+        url: '/MoAplusApi/User/Login',
+        method: 'post',
+        data: params
+      })
+    },
+
+    //獲取消息詳情
+    getMsgDetail(params) {
+      console.log(JSON.stringify(params))
+      return lc_request({
+        url: '/api/Center/get_message_detail',
+        method: 'post',
+        // data 轉json qs
+        data: JSON.stringify(params)
+      })
+    },
+    //發送消息
+    sendMsg(params) {
+      return lc_request({
+        url: '/api/Center/message_sending',
+        method: 'post',
+        // data:params
+        data: JSON.stringify(params)
+
+      })
+    },
     // 搜索智能提示
     searchSuggest(params) {
       return lc_request({
@@ -29,7 +78,7 @@ export default {
     // 首页轮播
     getBanner() {
       return lc_request({
-        
+
         url: '/moaplusapi/System/GetSystemBannerList',
         method: 'get',
         headers: {
@@ -43,7 +92,7 @@ export default {
     getPriceDown(params) {
       return lc_request({
         url: '/api/System/get-reduce-price-property',
-        
+
         method: 'post',
         data: params
       })
@@ -83,7 +132,7 @@ export default {
     // 房源排序
     ListingSort() {
       return lc_request({
-        url:'/moaplusapi/Property/GetPropertySortData',
+        url: '/moaplusapi/Property/GetPropertySortData',
         method: 'get'
       })
     },
@@ -201,6 +250,22 @@ export default {
     AddCustom(params) {
       return lc_request({
         url: '/api/Customer/add_inquiry',
+        method: 'post',
+        data: params
+      })
+    },
+    // 添加会员
+    AddMember(params) {
+      return lc_request({
+        url: '/api/Customer/open-inquirys-member',
+        method: 'post',
+        data: params
+      })
+    },
+    // 添加VIP
+    AddVip(params) {
+      return lc_request({
+        url: '/api/Customer/set-inquiry-vip',
         method: 'post',
         data: params
       })

@@ -3,7 +3,7 @@
  * 客戶詳情
  * @Date: 2021-12-17 16:06:16 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-17 16:12:16
+ * @Last Modified time: 2022-01-19 15:28:59
  */
 
 import formattime from "@/utils/format_time";
@@ -46,7 +46,6 @@ export default {
   methods: {
     async getCustomer() {
       //獲取客戶詳情
-
       aplush.apis
         .LookRecordDetail({
           KeyId: this.$route.query.id,
@@ -55,6 +54,7 @@ export default {
           console.log(res);
           this.customer = res;
           console.log(this.customer);
+          console.log('this.customer')
         });
     },
     onClickLeft() {

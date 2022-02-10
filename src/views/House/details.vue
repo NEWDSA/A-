@@ -3,280 +3,279 @@
     <!-- 顶部导航 -->
     <div ref="container" style="background: #fff">
       <van-sticky>
-          <div class="navs">
-            <!-- <div style="display:flex;align-items:center;"> -->
-            <img
-              @click="back"
-              src="@/assets/icon/nav_back_transparent_icon.png"
-              alt=""
-            />
-            <!-- 更多 -->
-            <!--彈出內容、現場相、-->
-            <van-popover
-              class="lc_popover_more"
-              v-model="showPopover"
-              trigger="click"
-              placement="bottom-end"
-              :actions="actions"
-              @select="onSelect"
-            >
-              <template #reference>
-                <img
-                  style="margin: 0px"
-                  @click="more_i"
-                  src="@/assets/icon/nav_more_transparent_icon.png"
-                  alt=""
-                />
-              </template>
-            </van-popover>
-            <!-- 點讚 -->
-            <img
-              v-if="bool_good"
-              @click="good_i"
-              src="@/assets/icon/nav_good_transparent_icon.png"
-              alt=""
-            />
-            <img
-              v-else
-              @click="good_i"
-              src="@/assets/icon/nav_good_collected_icon.png"
-              alt=""
-            />
-            <!-- 收藏 -->
-            <img
-              v-if="bool_collect"
-              @click="collect_i"
-              src="@/assets/icon/nav_collected_transparent_icon.png"
-              alt=""
-            />
-            <img
-              v-else
-              @click="collect_i"
-              src="@/assets/icon/nav_collect_transparent_icon.png"
-              alt=""
-            />
-            <!-- </div> -->
-          </div>
+        <div class="navs">
+          <!-- <div style="display:flex;align-items:center;"> -->
+          <img
+            @click="back"
+            src="@/assets/icon/nav_back_transparent_icon.png"
+            alt=""
+          />
+          <!-- 更多 -->
+          <!--彈出內容、現場相、-->
+          <van-popover
+            class="lc_popover_more"
+            v-model="showPopover"
+            trigger="click"
+            placement="bottom-end"
+            :actions="actions"
+            @select="onSelect"
+          >
+            <template #reference>
+              <img
+                style="margin: 0px"
+                @click="more_i"
+                src="@/assets/icon/nav_more_transparent_icon.png"
+                alt=""
+              />
+            </template>
+          </van-popover>
+          <!-- 點讚 -->
+          <img
+            v-if="bool_good"
+            @click="good_i"
+            src="@/assets/icon/nav_good_transparent_icon.png"
+            alt=""
+          />
+          <img
+            v-else
+            @click="good_i"
+            src="@/assets/icon/nav_good_collected_icon.png"
+            alt=""
+          />
+          <!-- 收藏 -->
+          <img
+            v-if="bool_collect"
+            @click="collect_i"
+            src="@/assets/icon/nav_collected_transparent_icon.png"
+            alt=""
+          />
+          <img
+            v-else
+            @click="collect_i"
+            src="@/assets/icon/nav_collect_transparent_icon.png"
+            alt=""
+          />
+          <!-- </div> -->
+        </div>
         <!-- end 顶部导航 -->
       </van-sticky>
     </div>
-    <!-- 轮播图 -->
-    <van-swipe
-      class="my-swipe"
-      :autoplay="3000"
-      indicator-color="white"
-      @change="onChange"
-    >
-      <van-swipe-item
-        v-if="House_detail.Photos"
-        v-for="(item, index) in House_detail.Photos"
-        :key="index"
+    <div class="lc_layout">
+      <!-- 轮播图 -->
+      <van-swipe
+        class="my-swipe"
+        :autoplay="3000"
+        indicator-color="white"
+        @change="onChange"
       >
-        <van-image
-          @load="loadingImg"
-          ref="img"
-          :src="item.ImgPath + '?w=800&watermark=smallgroup_center'"
-        >
-        </van-image>
-      </van-swipe-item>
-      <van-swipe-item v-if="House_detail.Photos">
-        <van-image
-          @load="loadingImg"
-          ref="img"
-          :src="require('@/assets/img/noImg@2x.png')"
-        />
-      </van-swipe-item>
-      <van-swipe-item v-else>
-        <van-image
-          @load="loadingImg"
-          ref="img"
-          :src="require('@/assets/img/noImg@2x.png')"
-        />
-      </van-swipe-item>
-      <template #indicator>
-        <div class="custom-indicator">{{ current + 1 }}/4</div>
-      </template>
-    </van-swipe>
-    <!-- end 轮播图 -->
-
-    <!-- 房源基本資料 -->
-    <div class="property_info">
-      <div class="content">
-        <!-- 房源標籤 -->
-        <div class="house_tag">
-          <!-- <div> -->
-          <van-button
-            v-if="House_detail.HouseType"
-            type="default"
-            size="small"
-            class="tag_btn3"
-          >
-            業
-          </van-button>
-          <van-button
-            v-if="House_detail.HasOnlyTrust"
-            type="default"
-            size="small"
-            class="tag_btn2"
-          >
-            獨
-          </van-button>
-          <van-button
-            v-if="House_detail.PropertyKeyType != '1'"
-            type="default"
-            size="small"
-            class="tag_btn2"
-          >
-            匙
-          </van-button>
-          <van-button type="default" size="small" class="tag_btn2">
-            {{
-              House_detail.TrustType === "1"
-                ? "售"
-                : House_detail.TrustType === "2"
-                ? "租"
-                : "租售"
-            }}
-          </van-button>
-          <!-- </div> -->
-        </div>
-        <span class="lc_title">{{ House_detail.AllHouseInfo }}</span>
-        <div class="price">
-          <div v-if="House_detail.SalePrice">{{ House_detail.SalePrice }}</div>
-          <div v-if="House_detail.SaleUnitPrice">
-            {{ House_detail.SaleUnitPrice }}
-          </div>
-          <div v-if="House_detail.RentPrice">{{ House_detail.RentPrice }}</div>
-          <div v-if="House_detail.RentUnitPrice">
-            {{ House_detail.RentUnitPrice }}
-          </div>
-          <div v-if="House_detail.RoomType">{{ House_detail.RoomType }}</div>
-        </div>
-        <div class="price">
-          <nav v-if="House_detail.SalePrice">售價</nav>
-          <nav v-if="House_detail.SaleUnitPrice">售均價</nav>
-          <nav v-if="House_detail.RentPrice">租價</nav>
-          <nav v-if="House_detail.RentUnitPrice">租均價</nav>
-          <nav v-if="House_detail.RoomType">房型</nav>
-        </div>
-        <div class="price" v-if="House_detail.Orientation">
-          <article style="flex: 1">
-            朝向:
-            <span>{{ House_detail.Orientation }}</span>
-          </article>
-        </div>
-        <div class="price" v-if="House_detail.Floor">
-          <article style="flex: 1">
-            樓層:
-            <span>{{ House_detail.Floor }}</span>
-          </article>
-        </div>
-      </div>
-      <!-- 顯示更多內容 -->
-      <div class="btn_content">
-        <div class="btn">
-          <van-button
-            class="lc_btn1"
-            @click="look_Scene"
-            :icon="require('@/assets/icon/photo_icon.png')"
-            >現場相</van-button
-          >
-          <van-button
-            class="lc_btn2"
-            @click="putPaper"
-            :icon="require('@/assets/icon/paper_icon.png')"
-            >放盤紙</van-button
-          >
-          <van-button
-            class="lc_btn3"
-            :icon="require('@/assets/icon/key_icon.png')"
-            >鑰匙</van-button
-          >
-        </div>
-      </div>
-
-      <div class="end_content">
-        <!-- 業主信息 -->
-        <van-collapse
-          v-model="activeName"
-          :close-on-click-mask="false"
-          @change="getOwner"
-        >
-          <van-collapse-item title="業主信息">
-            <div class="collapse" v-for="(item, index) in House_Owner">
-              <div>
-                <span class="first">類型:</span
-                ><span>{{ item.TrustorType }}</span>
-              </div>
-              <div v-if="item.Mobile">
-                <span class="first">手機:</span><span>{{ item.Mobile }}</span>
-              </div>
-              <div v-if="item.Tel">
-                <span>座機:</span><span class="first">{{ item.Tel }}</span>
-              </div>
-              <div v-if="item.WeChat">
-                <span class="first">微信:</span><span>{{ item.WeChat }}</span>
-              </div>
-              <div v-if="item.CompanyName">
-                <span class="first">公司名稱:</span
-                ><span>{{ item.CompanyName }}</span>
-              </div>
-              <div v-if="item.CreateTime">
-                <span class="first">錄入時間:</span
-                ><span>{{ item.CreateTime }}</span>
-              </div>
-              <div v-if="item.Remark">
-                <span class="first">備註:</span><span>{{ item.Remark }}</span>
-              </div>
-            </div>
-          </van-collapse-item>
-        </van-collapse>
-      </div>
-    </div>
-    <!-- 其它區域內容 -->
-    <div class="property_info_other">
-      <!-- 房源跟进 -->
-      <div class="nav_follow">
-        <span>房源跟进</span><van-icon name="arrow" @click="full_Follow" />
-      </div>
-      <van-steps
-        direction="vertical"
-        active-color="#646566"
-        inactive-color="#646566"
-      >
-        <van-step
-          v-for="(item, index) in FollowUp"
+        <van-swipe-item
+          v-if="House_detail.Photos.length > 0"
+          v-for="(item, index) in House_detail.Photos"
           :key="index"
-          class="lc_step"
         >
-          <template #active-icon>
-            <van-icon
-              size="10"
-              class-prefix="my-icon"
-              name="circle"
-              color="#f12945"
-            />
-          </template>
-          <template #inactive-icon>
-            <van-icon
-              size="10"
-              class-prefix="my-icon"
-              name="circle"
-              color="#f12945"
-            />
-          </template>
-          <span class="lc_main_title">{{ item.FollowContent }}</span>
+          <van-image
+            fit="cover"
+            @load="loadingImg"
+            ref="img"
+            :src="item.ImgPath + `?w=${imgWidth}&watermark=smallgroup_center`"
+          />
+        </van-swipe-item>
+        <van-swipe-item v-if="House_detail.Photos.length==0">
+          <van-image
+            @load="loadingImg"
+            ref="img"
+            :src="require('@/assets/img/noImg@2x.png')"
+          />
+        </van-swipe-item>
+        <template #indicator>
+          <div class="custom-indicator">{{ current }}/{{ imgCount }}</div>
+        </template>
+      </van-swipe>
+      <!-- end 轮播图 -->
 
-          <div class="sub_title">
-            <article>{{ item.Follower }}</article>
-            <article>{{ item.FollowType }}</article>
-            <article>{{ item.FollowTime }}</article>
+      <!-- 房源基本資料 -->
+      <div class="property_info">
+        <div class="content">
+          <!-- 房源標籤 -->
+          <div class="house_tag">
+            <!-- <div> -->
+            <van-button
+              v-if="House_detail.HouseType"
+              type="default"
+              size="small"
+              class="tag_btn3"
+            >
+              業
+            </van-button>
+            <van-button
+              v-if="House_detail.HasOnlyTrust"
+              type="default"
+              size="small"
+              class="tag_btn2"
+            >
+              獨
+            </van-button>
+            <van-button
+              v-if="House_detail.PropertyKeyType != '1'"
+              type="default"
+              size="small"
+              class="tag_btn2"
+            >
+              匙
+            </van-button>
+            <van-button type="default" size="small" class="tag_btn2">
+              {{
+                House_detail.TrustType === "1"
+                  ? "售"
+                  : House_detail.TrustType === "2"
+                  ? "租"
+                  : "租售"
+              }}
+            </van-button>
+            <!-- </div> -->
           </div>
-        </van-step>
-      </van-steps>
+          <span class="lc_title">{{ House_detail.AllHouseInfo }}</span>
+          <div class="price">
+            <div v-if="House_detail.SalePrice">
+              {{ House_detail.SalePrice }}
+            </div>
+            <div v-if="House_detail.SaleUnitPrice">
+              {{ House_detail.SaleUnitPrice }}
+            </div>
+            <div v-if="House_detail.RentPrice">
+              {{ House_detail.RentPrice }}
+            </div>
+            <div v-if="House_detail.RentUnitPrice">
+              {{ House_detail.RentUnitPrice }}
+            </div>
+            <div v-if="House_detail.RoomType">{{ House_detail.RoomType }}</div>
+          </div>
+          <div class="price">
+            <nav v-if="House_detail.SalePrice">售價</nav>
+            <nav v-if="House_detail.SaleUnitPrice">售均價</nav>
+            <nav v-if="House_detail.RentPrice">租價</nav>
+            <nav v-if="House_detail.RentUnitPrice">租均價</nav>
+            <nav v-if="House_detail.RoomType">房型</nav>
+          </div>
+          <div class="price" v-if="House_detail.Orientation">
+            <article style="flex: 1">
+              朝向:
+              <span>{{ House_detail.Orientation }}</span>
+            </article>
+          </div>
+          <div class="price" v-if="House_detail.Floor">
+            <article style="flex: 1">
+              樓層:
+              <span>{{ House_detail.Floor }}</span>
+            </article>
+          </div>
+        </div>
+        <!-- 顯示更多內容 -->
+        <div class="btn_content">
+          <div class="btn">
+            <van-button
+              class="lc_btn1"
+              @click="look_Scene"
+              :icon="require('@/assets/icon/photo_icon.png')"
+              >現場相</van-button
+            >
+            <van-button
+              class="lc_btn2"
+              @click="putPaper"
+              :icon="require('@/assets/icon/paper_icon.png')"
+              >放盤紙</van-button
+            >
+            <van-button
+              class="lc_btn3"
+              :icon="require('@/assets/icon/key_icon.png')"
+              >鑰匙</van-button
+            >
+          </div>
+        </div>
+
+        <div class="end_content">
+          <!-- 業主信息 -->
+          <van-collapse
+            v-model="activeName"
+            :close-on-click-mask="false"
+            @change="getOwner"
+          >
+            <van-collapse-item title="業主信息">
+              <div class="collapse" v-for="(item, index) in House_Owner">
+                <div>
+                  <span class="first">類型:</span
+                  ><span>{{ item.TrustorType }}</span>
+                </div>
+                <div v-if="item.Mobile">
+                  <span class="first">手機:</span><span>{{ item.Mobile }}</span>
+                </div>
+                <div v-if="item.Tel">
+                  <span>座機:</span><span class="first">{{ item.Tel }}</span>
+                </div>
+                <div v-if="item.WeChat">
+                  <span class="first">微信:</span><span>{{ item.WeChat }}</span>
+                </div>
+                <div v-if="item.CompanyName">
+                  <span class="first">公司名稱:</span
+                  ><span>{{ item.CompanyName }}</span>
+                </div>
+                <div v-if="item.CreateTime">
+                  <span class="first">錄入時間:</span
+                  ><span>{{ item.CreateTime }}</span>
+                </div>
+                <div v-if="item.Remark">
+                  <span class="first">備註:</span><span>{{ item.Remark }}</span>
+                </div>
+              </div>
+            </van-collapse-item>
+          </van-collapse>
+        </div>
+      </div>
+      <!-- 其它區域內容 -->
+      <div class="property_info_other">
+        <!-- 房源跟进 -->
+        <div class="nav_follow">
+          <span>房源跟进</span><van-icon name="arrow" @click="full_Follow" />
+        </div>
+        <van-steps
+          direction="vertical"
+          active-color="#646566"
+          inactive-color="#646566"
+        >
+          <van-step
+            v-for="(item, index) in FollowUp"
+            :key="index"
+            class="lc_step"
+          >
+            <template #active-icon>
+              <van-icon
+                size="10"
+                class-prefix="my-icon"
+                name="circle"
+                color="#f12945"
+              />
+            </template>
+            <template #inactive-icon>
+              <van-icon
+                size="10"
+                class-prefix="my-icon"
+                name="circle"
+                color="#f12945"
+              />
+            </template>
+            <span class="lc_main_title">{{ item.FollowContent }}</span>
+
+            <div class="sub_title">
+              <article>{{ item.Follower }}</article>
+              <article>{{ item.FollowType }}</article>
+              <article>{{ item.FollowTime }}</article>
+            </div>
+          </van-step>
+        </van-steps>
+      </div>
     </div>
     <!-- 聯繫人 -->
-    <div class="lc_contact" safe-area-inset-bottom>
+    <div class="lc_contact">
       <div class="tel">
         <article>
           <img
@@ -286,8 +285,10 @@
           />
         </article>
         <div>
-          <p>Jane Wong</p>
-          <p style="color: #666666">MB</p>
+          <p>{{ House_detail.PropertyChiefName }}</p>
+          <p style="color: #666666">
+            {{ House_detail.PropertyChiefDepartmentName }}
+          </p>
         </div>
 
         <van-button
@@ -297,6 +298,9 @@
           @click="addFollow"
           >新增跟進</van-button
         >
+        <!-- <van-button type="info" size="small" color="#54bd46" @click="call"
+          >撥打電話</van-button
+        > -->
         <van-button type="info" size="small" color="#54bd46" @click="call"
           >撥打電話</van-button
         >

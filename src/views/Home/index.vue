@@ -5,7 +5,7 @@
       <van-swipe class="my-swipe" indicator-color="#f12945">
         <van-swipe-item v-for="(item, index) in Banner" :key="index">
           <div style="width: 100%; height: 0; padding-bottom: 56.25%">
-            <img style="width: 100%; height: 200px" :src="item.url" alt="" />
+            <img style="width: 100%;" :src="item.url" alt="" />
           </div>
         </van-swipe-item>
       </van-swipe>
@@ -253,6 +253,9 @@ export default {
     font-size: 20px;
     line-height: 150px;
     text-align: center;
+    img{
+      height: 200px;
+    }
   }
   .lc_gap {
     position: relative;
@@ -260,7 +263,8 @@ export default {
     border-radius: 15px;
 
     height: calc(100vh - 253px);
-    overflow-y: scroll;
+    overflow-y: auto;
+    // overflow-y: scroll;
     top: -35px;
     .gap1 {
       height: 13px;
@@ -282,12 +286,11 @@ export default {
       display: flex;
       margin: 0 10px;
       .bg1 {
-        background-color: green;
+  
         flex: 1;
-        // background: url(/icon/bg_one_pic.png);
         background:url(~@/assets/icon/bg_one_pic.png);
         height: 54px;
-        background-size: cover;
+        background-size: 100% 100%;
         display: flex;
         .container {
           padding: 11px;
@@ -322,7 +325,7 @@ export default {
         flex: 1;
         background: url(~@/assets/icon/bg_two_pic.png);
         height: 54px;
-        background-size: cover;
+        background-size: 100% 100%;
         display: flex;
         .container {
           padding: 11px;

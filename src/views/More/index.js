@@ -2,7 +2,7 @@
  * @Author: luciano 
  * @Date: 2021-12-17 16:17:49 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-01-03 10:49:10
+ * @Last Modified time: 2022-01-20 10:02:32
  */
 import { Toast } from "vant";
 import Draggable from "vuedraggable"; //使用自由拖拽組件
@@ -110,6 +110,7 @@ export default {
           item.bage = "";
         });
         this.index = 0;
+        this.disabled=true;
       }
       // end 給應用添加移除標籤
     },

@@ -4,7 +4,7 @@ import store from './store'
 import router from './router'
 import '@/permission' // permission control
 import vant from 'vant' // 引入Vant
-import 'amfe-flexible';
+import "./utils/auflex.js";
 import 'vant/lib/index.css';
 import './assets/css/iconfont.css';
 import '@vant/touch-emulator';

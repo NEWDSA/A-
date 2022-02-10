@@ -3,7 +3,7 @@
   客戶管理 操作
  * @Date: 2021-12-17 11:38:35 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-27 09:28:41
+ * @Last Modified time: 2022-02-09 11:20:26
  */
 import axios from "axios";
 import {
@@ -319,6 +319,41 @@ export default {
         this.show_tips=false;
         this.SearchPerson='';
 
+    },
+    // 設置VIP
+    Settings_VIP(keyId) {
+      let keyId_arr=[]
+      keyId_arr.push(keyId)
+      aplush.apis.AddVip(
+        keyId_arr
+      ).then(res=>{
+        console.log('打印最終結果');
+        console.log(res);
+        res.flag===1?Toast('設置成功'):Toast(res.ErrorMsg);
+      })
+    },
+    // 重置查詢條件
+    reset_filter(){
+      this.TransIndex='';
+      this.start_mindRent='';
+      this.end_mindRent='';
+      this.start_mindBuy='';
+      this.end_mindBuy='';
+      this.RoomIndex='';
+      this.depart_name='';
+      this.sales_man='';
+      this.FloorIndex='';
+      // this.get_suggest('');
+     
+    },
+    // 客戶詳情
+    Customer_Details(val) {
+      this.$router.push({
+        path: "/CustomerDetail",
+        query: {
+          id: val,
+        },
+      });
     }
 
   },

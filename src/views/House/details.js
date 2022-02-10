@@ -2,11 +2,14 @@
  * @Author: luciano 
  * @Date: 2021-12-10 15:22:09 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-01-05 17:06:43
+ * @Last Modified time: 2022-02-08 18:09:59
  * 楼盘管理详情
  */
 import Cookies from 'js-cookie'
 import aplush from "@/api/A+"; // 獲取樓詳情
+//mapgetters
+import { mapGetters } from 'vuex';
+
 import {
   title
 } from "@/settings";
@@ -15,6 +18,11 @@ import {
   Toast
 } from "vant";
 export default {
+  computed:{
+    ...mapGetters([
+      'userInfo'
+    ])
+  },
   mounted() {
     let keyId = this.$route.query.KeyId;
     // 房源详情接口
@@ -32,12 +40,12 @@ export default {
       this.FollowUp = res.PropFollows;
     });
     // end 房源跟进接口
-    this.M_live_Pohto();
+    // this.M_live_Pohto();
     //獲取系統類型
     this.base_system();
-    let userinfo = JSON.parse(Cookies.get('userInfo'));
-    console.log(userinfo);
-    this.signature = userinfo.StaffNo;
+    console.log('this userinfo',this.userInfo.StaffNo);
+    
+    this.signature=this.userInfo.StaffNo;
 
     //  TODO:缺少通过员工工号查询员工姓名接口
 
@@ -98,7 +106,7 @@ export default {
       loading: false,
       finished: false,
       House_detail: {},
-      current: 0,
+      current: 1,
       title: "", //title 標題
       FollowUp: [], //房源跟进
       pageIndex: 1, //起始页
@@ -192,17 +200,30 @@ export default {
       Rent_End: "",// 租金結束
       lc_AttachmentPath: "", // 附件路徑
       imgSize:Number, // 图片高度
+      //图片总数
+      imgCount:0,
+      imgWidth:0
       
     };
   },
   filters: {
     formatt: function (value) {},
   },
+  //获取 clientwidth
+  beforeMount() {
+    console.log(document.documentElement.clientWidth);
+    console.log('宽度测试宽度测试')
+    // this.nextTick(() => {
+      this.$nextTick(() => {
+        this.imgWidth = document.documentElement.clientWidth;
+      });
+    
+  },
   methods: {
     // 加载图片
     loadingImg(){
       console.log('加载图片高度');
-      console.log(this.imgSize= this.$refs.img.$el.clientHeight)
+      // console.log(this.imgSize= this.$refs.img.$el.clientHeight)
     },
     back() {
       this.$router.push("/House");
@@ -254,6 +275,7 @@ export default {
       });
     },
     onChange(index) {
+      
       this.current = index;
     },
     collect_i() {
@@ -344,23 +366,6 @@ export default {
         }
       });
     },
-    // 現場相
-    M_live_Pohto() {
-      this.Pic_base();
-    },
-    Pic_base() {
-      let that = this;
-      aplush.apis
-        .ListingPhoto({
-          propertyKeyId: this.$route.query.KeyId,
-          PhotoTypeKeyId: this.Scene_keyId,
-        })
-        .then((res) => {
-          this.IndoorMap = res._Photos;
-          console.log("現場相44444");
-          console.log(this.IndoorMap);
-        });
-    },
     // 切換圖片
     Chage_Pic(item) {
       // 切換默認選中
@@ -368,14 +373,12 @@ export default {
       item.value == "室內圖" ?
         this.soucrce_keyId :
         (this.soucrce_keyId = "8457527f-9269-4d8e-9c06-714f7c276421");
-      // ? (this.Live_Photo_Show = true)
-      // : (this.Live_Photo_Show = false);
-      // console.log(item);
     },
     // 獲取房源詳情
     Get_House_Detail(keyId) {
       aplush.apis.ListingDetail(keyId).then((res) => {
         this.House_detail = res;
+        this.imgCount = res.Photos.length;
         this.bool_collect=this.House_detail.IsFavorite
         console.log("打印房源详情");
         console.log(this.House_detail);

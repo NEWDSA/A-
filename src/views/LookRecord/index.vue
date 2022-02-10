@@ -90,7 +90,7 @@
                     <div class="lc_Estatename">{{ item.EstateName }}</div>
                   </div>
                   <div class="lc_seetime">
-                    {{ item.TakeSeeTime | formatDate }}
+                    {{ item.TakeSeeTime.substring(0, 16) }}
                   </div>
                 </div>
               </template>

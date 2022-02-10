@@ -86,7 +86,7 @@
           </div>
           <div class="fx">
             <aside>
-              <div style="font-weight: 700; font-size: 16px">
+              <div class="lc_username" @click="Customer_Details(item.InquiryKeyId)" style="font-weight: 700; font-size: 16px;">
                 {{ item.CustomerName }}
               </div>
               <van-button type="primary" class="btn_f" size="mini">
@@ -100,9 +100,18 @@
               >
                 {{ item.HouseType }}
               </van-button>
+              <!-- 設置VIP -->
+              <van-button
+                type="primary"
+                class="btn_s"
+                size="mini"
+                @click="Settings_VIP(item.InquiryKeyId)"
+              >
+                {{ item.IsVip ? '取消VIP' : '設置VIP' }}
+              </van-button>
             </aside>
             <aside style="font-size: 14px">
-              <div>{{ item.InquiryTradeType }}價：</div>
+              <div>{{ item.InquiryTradeType }}價:</div>
               <template v-if="item.InquiryTradeType == '租购'">
                 {{ item.RentPrice }}元
               </template>
@@ -228,17 +237,11 @@
         </div>
       </div>
       <div
-        style="
-          position: relative;
-          height: 60px;
-          width: 100%;
-          display: flex;
-          justify-content: center;
-          bottom: -0.14rem;
-        "
+       class="lc_footer_btn"
       >
         <div style="width: 50%; display: flex; justify-content: center">
           <van-button
+            @click="reset_filter"
             style="display: inline-block; justify-content: center; flex: 1"
             >重置</van-button
           >

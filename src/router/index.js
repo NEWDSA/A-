@@ -41,6 +41,11 @@ export const constantRoutes = [
     path: '/Message',
     component: () => import('@/views/Message/index.vue'),
   },
+  //消息詳情
+  {
+    path: '/Message/details',
+    component: () => import('@/views/Message/details.vue'),
+  },
   {
     path: '/Customer', 
     component: () => import('@/views/Customer/index.vue'),
@@ -136,7 +141,7 @@ export const constantRoutes = [
     name: 'AddLook',
     component: () => import('@/views/AddLook')
   },
-  // 新增現場相
+  //現場相
   {
     path: '/Scene',
     name: 'Scene',
@@ -147,6 +152,12 @@ export const constantRoutes = [
     path: '/EditScene',
     name: 'EditScene',
     component: () => import('@/views/Scene/edit.vue')
+  },
+  //新增現場相
+  {
+    path: '/AddScene',
+    name: 'AddScene',
+    component: () => import('@/views/Scene/add.vue')
   },
   // 放盤紙
   {

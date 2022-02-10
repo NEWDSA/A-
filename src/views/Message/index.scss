@@ -3,8 +3,104 @@
  *  消息通知
  * @Date: 2021-12-17 16:16:30 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-17 16:17:27
+ * @Last Modified time: 2022-01-25 13:37:21
  */
- #message {
-    background-color: #fff;
- }
+#message {
+  background-color: #fff;
+  .lc_nav_bar{
+    position: relative;
+    height: 46px;
+  }
+  .message-item {
+
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+
+    .message_container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      height: 72px;
+      overflow: hidden;
+
+      .message_list {
+        margin-left: 16px;
+        .message_head {
+          width:65px;
+          height:65px;
+        }
+      }
+
+      .message_list_main {
+        margin-left: 25px;
+        width: calc(100% - 145px);
+        .message_list_content {
+         //  flex: 1;
+          display: flex;
+         //  margin-bottom: 11px;
+         flex: 0.5px;
+         //  width: calc(100% - 121px);
+
+          .message_list_other {
+            font-family: PingFangSC-Regular;
+            font-size: 16px;
+            font-weight: bold;
+            font-stretch: normal;
+            line-height: 18px;
+            letter-spacing: 0px;
+            color: #333333;
+            flex: 1;
+          }
+
+          .message_list_content_text {
+            font-family: PingFangSC-Regular;
+            font-size: 11px;
+            font-weight: normal;
+            font-stretch: normal;
+            line-height: 22px;
+            letter-spacing: 0px;
+            color: #b5b5b5;
+
+          }
+        }
+        .message_list_time{
+         
+         font-family: PingFangSC-Regular;
+         font-size: 14px;
+         font-weight: normal;
+         font-stretch: normal;
+         line-height: 14px;
+         letter-spacing: 1px;
+         color: #9b9b9b;
+         white-space: nowrap;
+         overflow: hidden;
+         // width: calc(100% - 121px);
+         // 使用媒體查詢
+         @media screen and(min-width:900px) {
+            width: auto;
+         }
+         margin-right: 11px;
+         text-overflow: ellipsis;
+       
+        }
+      }
+    }
+
+  }
+
+}
+
+::v-deep .van-badge--fixed {
+  top: 10px;
+  right: 5px;
+}
+
+::v-deep .van-badge {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  background-color: #f00d0d;
+}

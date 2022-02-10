@@ -3,7 +3,7 @@
  * @Date: 2021-11-25 17:40:25 
  * @Last Modified by: luciano
  *  楼盘管理
- * @Last Modified time: 2022-01-13 11:11:50
+ * @Last Modified time: 2022-02-09 12:13:00
  */
 
 
@@ -36,7 +36,8 @@
   padding: 6px;
   margin: 5px;
 }
-.lc_box_selected{
+
+.lc_box_selected {
   box-sizing: border-box;
   background-color: #f1f1f1;
   color: #9c5858;
@@ -86,7 +87,7 @@
 
 .lc_status {
   position: relative;
-  margin-top:10px;
+  margin-top: 10px;
   font-size: 12px;
   font-family: PingFangSC-Regular;
   display: flex;
@@ -105,7 +106,8 @@
     box-sizing: border-box;
     text-align: center;
   }
-  .lc_status_active{
+
+  .lc_status_active {
     border-radius: 2px;
     background-color: #f0c6c6;
     padding: 9px;
@@ -136,7 +138,7 @@
   .lc_pills {
     position: relative;
     display: flex;
-    margin-left:16px;
+    margin-left: 16px;
 
     .lc_button {
       width: 50px;
@@ -216,6 +218,10 @@
 
 .van-dropdown-item__content {
   position: absolute;
+  width: 100%;
+  // add coditons
+  overflow: auto;
+  top: 0;
   max-height: 100%;
 }
 
@@ -225,15 +231,20 @@
   background-color: #f12945;
 }
 
-.sort_btn {
-  position: fixed;
-  height: 70px;
+.sort_btn{
+  // position: fixed;
+  position: absolute;
+  // add conditions
+  bottom: 0;
+  // height: 100px;
   margin-top: -5px;
+  line-height: 100px;
   background: #ffffff;
   width: 100%;
 
   .btn {
     display: flex;
+    // height: 70px;
     justify-content: space-around;
     margin: 13px;
 
@@ -252,14 +263,18 @@
     }
   }
 }
-.lc_sort_btn{
-  position: fixed;
+
+.lc_sort_btn {
+  position: relative;
   height: 70px;
   margin-top: -5px;
   background: #ffffff;
   width: 100%;
   overflow: hidden;
+
   .btn {
+    // position: fixed;
+    height: 70px;
     display: flex;
     justify-content: space-around;
     margin: 13px;
@@ -411,15 +426,23 @@
   .van-cell__value {
     padding: 10px;
   }
+
   // 媒体查询电脑适配 大于 900
- 
-  @media (min-width: 900px) {
-    ::v-deep .van-cell-group {
-      height: 400px !important;
-    }
-    
-  }
-  
+
+  // @media (min-width: 900px) {
+  //   ::v-deep .van-cell-group {
+  //     height: 400px !important;
+  //   }
+
+  // }
+
+  // @media screen and (min-width: 600px) and (max-width: 700px) {
+  //   ::v-deep .van-cell-group {
+  //     height: 200px !important;
+  //   }
+  // }
+
+
 
   .van-sidebar-item--select {
     color: #f12945 !important;
@@ -457,39 +480,77 @@
     color: #f12945;
   }
 }
-.lc_ul_li_active{
+
+.lc_ul_li_active {
   position: relative;
-  height:50px;
+  height: 50px;
   line-height: 50px;
   margin-left: 10px;
-  color:#f12945;
+  color: #f12945;
 }
-.lc_ul_li{
+
+.lc_ul_li {
   position: relative;
-  height:50px;
+  height: 50px;
   line-height: 50px;
   margin-left: 10px;
 }
-.lc_divider{
+
+.lc_divider {
   width: 15.5px;
   height: 2px;
   background: #cccccc;
   margin: 0 2px;
 }
-.lc_rr{
+
+.lc_rr {
+  //  height: 300px !important;
   ::v-deep .van-dropdown-item__content{
-    overflow: hidden;
+    height: 300px;
+    // overflow-y: hidden;
+    //蘋果手機滾動條
+    -webkit-overflow-scrolling: touch;
+  }
+  ::v-deep .van-cell-group {
+    // height: 300px;
+    overflow: auto;
+    position: static;
   }
 }
 
-@media screen and(min-width: 900px){
-  .van-dropdown-item__content{
-    .van-tree-select{
-      height: 400px !important;
+.lc_tree-select {
+  height: 300px !important;
+}
+
+//手機橫屏css
+//手機高度css
+
+
+
+
+
+// @media screen and(min-width: 900px){
+//   .van-dropdown-item__content{
+//     .van-tree-select{
+//       height: 400px !important;
+//     }
+//   }
+// }
+// // 媒體查詢處於某個區間 700 ~ 800
+@media screen and (min-width: 600px) and (max-width: 700px) {
+  .van-dropdown-item__content {
+    .van-tree-select {
+      height: 200px !important;
     }
   }
 }
-  
 
 
-  
+
+// @media screen and(max-width: 900px){
+//   .van-dropdown-item__content{
+//     .van-tree-select{
+//       height: 400px !important;
+//     }
+//   }
+// }

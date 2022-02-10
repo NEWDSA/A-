@@ -3,7 +3,7 @@
  * 帶看
  * @Date: 2021-12-17 16:14:28 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-17 16:15:11
+ * @Last Modified time: 2022-01-24 14:55:48
  */
 import aplush from "@/api/A+";
 
@@ -97,7 +97,7 @@ export default {
           PageIndex: this.lcPageIndex,
           PageSize: this.lcPageSize,
           InquiryKeyid: "",
-          CustomerName: this.search,
+          CustomerName: this.search_customer,
         })
         .then((res) => {
           let lc_temp = res.TakeSeeLists;

@@ -3,7 +3,7 @@
  * 客戶管理
  * @Date: 2021-12-16 15:51:18 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-01-12 12:04:44
+ * @Last Modified time: 2022-02-09 11:25:20
  */
 .lc_search {
   width: 20px;
@@ -15,14 +15,25 @@
   width: 60px;
   bottom: 250px;
   z-index: 222;
+
+  @media screen and(min-width: 900px) {
+    right: 16px;
+  }
+
 }
 
 .fixed img:nth-child(2) {
   bottom: 120px;
   right: 4px;
+
   position: fixed;
   width: 60px;
   z-index: 222;
+
+  @media screen and(min-width: 900px) {
+    right: 16px;
+  }
+
 }
 
 .fixed img:nth-child(3) {
@@ -31,6 +42,10 @@
   position: fixed;
   width: 60px;
   z-index: 222;
+
+  @media screen and(min-width: 900px) {
+    right: 16px;
+  }
 }
 
 .van-icon-search::before {
@@ -54,7 +69,7 @@
     height: 18px;
     font-size: 9px;
     position: relative;
-    top: -35px;
+    // top: -35px;
     border: 0;
     background-color: #fff;
     box-shadow: 0px 0px 3px 1px rgba(110, 26, 26, 0.28);
@@ -97,8 +112,12 @@ article {
 
 nav {
   margin: 18px auto;
-  // width: 343px;
-  width:93%;
+  width: 93%;
+
+  @media screen and(min-width:900px) {
+    width: 97.5%;
+  }
+
   padding: 9px;
   border-radius: 5px;
   display: flex;
@@ -121,60 +140,75 @@ nav {
 
   .fx:nth-child(1) {
     text-align: center;
-    flex: 1;
-  }
 
-  .fx:nth-child(2) {
-    flex: 3.5;
-  }
-
-  .fx aside:nth-child(2) {
-    font-size: 15px;
-    color: #f12945;
-    font-weight: 700;
-  }
-
-  .fx aside:nth-child(3) div:nth-child(1) {
-    color: #999;
-  }
-
-  .fx aside:nth-child(4) div:nth-child(1) {
-    color: #999;
-  }
-
-  .fx aside {
-    align-items: center;
-    padding: 8px;
-    display: flex;
-
-    .btn_f {
-      width: auto;
-      background-color: #f12945;
-      margin: 0 5px;
-      border: 0;
-
-      span {
-        color: #fff !important;
-      }
+    // flex: 1;
+    .avater {
+      //  width: 70px;
+      flex-direction: column;
+      display: flex;
+      align-items: center;
     }
-
-    .btn_s {
-      width: auto;
-      // width: 46px;
-      background-color: #fff;
-      border: solid 1px #313e60;
-      margin: 0 5px;
-
-      span {
-        color: #333 !important;
-      }
-    }
-  }
-
-  .fx aside:last-child {
-    padding-top: 22px;
   }
 }
+
+.fx:nth-child(2) {
+  flex: 3.5;
+}
+
+.fx aside:nth-child(2) {
+  font-size: 15px;
+  color: #f12945;
+  font-weight: 700;
+}
+
+.fx aside:nth-child(3) div:nth-child(1) {
+  color: #999;
+}
+
+.fx aside:nth-child(4) div:nth-child(1) {
+  color: #999;
+}
+
+.fx aside {
+  align-items: center;
+  padding: 8px;
+  display: flex;
+
+  .lc_username {
+    &:hover {
+      color: #f12945;
+      text-decoration: underline;
+    }
+  }
+
+  .btn_f {
+    width: auto;
+    background-color: #f12945;
+    margin: 0 5px;
+    border: 0;
+
+    span {
+      color: #fff !important;
+    }
+  }
+
+  .btn_s {
+    width: auto;
+    // width: 46px;
+    background-color: #fff;
+    border: solid 1px #313e60;
+    margin: 0 5px;
+
+    span {
+      color: #333 !important;
+    }
+  }
+}
+
+.fx aside:last-child {
+  padding-top: 22px;
+}
+
 
 .van-search {
   height: 46px;
@@ -287,6 +321,22 @@ nav {
   position: relative;
   height: calc(100% - 120px);
   overflow-y: scroll;
+}
+
+.lc_footer_btn {
+  position: relative;
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  bottom: -0.14rem;
+  // iphone 安全区域
+  padding-bottom: constant(safe-area-inset-bottom);
+  /*兼容 IOS<11.2*/
+  padding-bottom: env(safe-area-inset-bottom);
+  /*兼容 IOS>11.2*/
+  
+
 }
 
 input::-webkit-input-placeholder {

@@ -9,7 +9,6 @@ module.exports = {
     // to edit target browsers: use "browserslist" field in package.json
     'postcss-pxtorem': {
       rootValue: 37.5,
-      rootValuePC:192,
       propList: ['*'],
       unitPrecision: 7,
       mediaQuery: false,

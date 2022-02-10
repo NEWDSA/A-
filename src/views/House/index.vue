@@ -23,7 +23,7 @@
       <!-- 區域設定 main-active-index左侧选中项的索引、active-id右側選中的id支持傳入數組[] -->
       <van-dropdown-item @open="show_area" title="區域" ref="lc_item">
         <van-tree-select
-          height="70vw"
+          class="lc_tree-select"
           :items="items"
           :main-active-index.sync="active"
           :active-id.sync="lcactiveId"
@@ -33,7 +33,9 @@
         </van-tree-select>
         <div class="sort_btn">
           <div class="btn">
-            <van-button type="warning" class="btn_reset">重置</van-button>
+            <van-button @click="reset_area" type="warning" class="btn_reset"
+              >重置</van-button
+            >
             <van-button
               class="btn_confrim"
               type="danger"
@@ -45,14 +47,13 @@
       </van-dropdown-item>
       <van-dropdown-item title="價格" ref="lc_item_price">
         <van-tree-select
-          height="70vw"
+          class="lc_tree-select"
           :items="item"
           :main-active-index.sync="lc_price_activeId"
           :isShow="false"
           :active-id.sync="lc_price_acitve"
           @click-nav="price_left_click"
           @click-item="price_click"
-          class="lc_tree-select"
         >
           <template slot="content">
             <ul>
@@ -133,7 +134,9 @@
         </van-tree-select>
         <div class="sort_btn">
           <div class="btn">
-            <van-button type="warning" class="btn_reset">重置</van-button>
+            <van-button @click="price_reset()" type="warning" class="btn_reset"
+              >重置</van-button
+            >
             <van-button
               class="btn_confrim"
               type="danger"
@@ -143,9 +146,9 @@
           </div>
         </div>
       </van-dropdown-item>
-      <van-dropdown-item title="標簽" @open="show_tag" ref="item">
+      <van-dropdown-item title="標簽" @open="show_tag" ref="lc_items_tags">
         <van-tree-select
-          height="70vw"
+          class="lc_tree-select"
           :items="item_t"
           :main-active-index.sync="active"
           :active-id.sync="activeId"
@@ -164,7 +167,7 @@
       </van-dropdown-item>
       <van-dropdown-item @open="show_more" title="更多" ref="item">
         <van-tree-select
-          height="70vw"
+          class="lc_tree-select"
           :items="item_m"
           :main-active-index.sync="active"
           :active-id.sync="activeId"
@@ -191,6 +194,7 @@
                   style="
                     background-color: #f1f1f1;
                     border: 0.025rem solid #696969;
+                    margin-left: 10px;
                   "
                   readonly
                   v-model="Type_Text"
@@ -289,6 +293,7 @@
                   style="
                     background-color: #f1f1f1;
                     border: 0.025rem solid #696969;
+                    margin-left: 10px;
                   "
                   readonly
                   v-model="build_name"
@@ -328,19 +333,34 @@
             </div>
             <!-- 樓層 -->
             <span class="lc_status_txt lc_floor">樓層</span>
-            <div class="lc_status">
+            <div class="lc_field">
+              <van-field
+                v-model="lc_floor_min"
+                placeholder="請輸入起始樓層"
+                size="mini"
+              />
+            </div>
+            <div class="lc_field">
+              <van-field
+                v-model="lc_floor_max"
+                placeholder="請輸入結尾樓層"
+                size="mini"
+              />
+            </div>
+
+            <!-- <div class="lc_status">
               <template v-for="(item, index) in lc_Floor">
                 <span
                   @click="change_floor(item, index)"
                   :class="
-                    lc_floor_index.includes(index)
+                    lc_floor_index === index
                       ? 'lc_status_active'
                       : 'lc_stauts_container'
                   "
                   >{{ item.ItemName }}</span
                 >
               </template>
-            </div>
+            </div> -->
             <!-- 樓齡 -->
             <span
               v-show="lc_BuildingAge.length > 0"
@@ -356,8 +376,10 @@
         </van-tree-select>
         <div class="sort_btn">
           <div class="btn">
-            <van-button type="warning" class="btn_reset">重置</van-button>
-            <van-button type="danger" class="btn_confrim" @click="sure"
+            <van-button @click="more_rest()" type="warning" class="btn_reset"
+              >重置</van-button
+            >
+            <van-button type="danger" class="btn_confrim" @click="more"
               >確定</van-button
             >
           </div>
@@ -365,7 +387,7 @@
       </van-dropdown-item>
       <!-- 排序 -->
       <van-dropdown-item
-       style="overflow:hidden;"
+        style="overflow: hidden"
         @open="show_sort"
         class="lc_rr"
         ref="sort_item"
@@ -373,33 +395,33 @@
         <template #title>
           <van-icon color="#666666" size="20" name="sort" />
         </template>
-        <van-cell-group style="height:70vw;">
-          <template v-for="(item, index) in HouseSort">
-            <van-cell
-              :class="{ lc_active_in: sortIndex === index }"
-              :key="index"
-              @click="sort_event(index)"
-              :title="item.text"
-            >
-            </van-cell>
-          </template>
-        </van-cell-group>
-
-        <div v-show="lc_sort_type" id="sort_btn" ref="lc_sort" class="lc_sort_btn">
-          <div class="btn lc_btnrr">
-            <van-button type="warning" class="btn_reset" @click="reset_sort"
-              >重置</van-button
-            >
-            <van-button class="btn_confrim" type="danger" @click="sort_click"
-              >確定</van-button
-            >
+        <van-cell-group>
+          <div style="height: 300px">
+            <template v-for="(item, index) in HouseSort">
+              <van-cell
+                :class="{ lc_active_in: sortIndex === index }"
+                @click="sort_event(index)"
+                :title="item.text"
+              >
+              </van-cell>
+            </template>
           </div>
-        </div>
-        
+
+          <div id="sort_btn" class="sort_btn" ref="lc_sort">
+            <div class="btn">
+              <van-button type="warning" class="btn_reset" @click="reset_sort"
+                >重置</van-button
+              >
+              <van-button class="btn_confrim" type="danger" @click="sort_click"
+                >確定</van-button
+              >
+            </div>
+          </div>
+        </van-cell-group>
       </van-dropdown-item>
     </van-dropdown-menu>
     <!-- 搜索歷史區域 -->
-    <div class="lc_hisotry_contianer" v-show="lc_saveSearch.length > 0">
+    <div class="lc_hisotry_contianer">
       <!-- tags 需要滿足如下條件 區域 才進行保存 -->
       <div class="lc_pills">
         <template v-for="(item, index) in lc_saveSearch">
@@ -408,17 +430,21 @@
             type="default"
             size="small"
             class="lc_button"
-            >{{ item.TagsName }}</van-button
+            >{{ item.areaName }}</van-button
           >
         </template>
       </div>
       <van-button
+        v-show="has_search_result"
         type="default"
         size="small"
         style="color: blue !important; border: 0px !important"
         @click="saveSearch"
-        >保存搜索</van-button
+        >保存記錄</van-button
       >
+      <span @click="search_record" style="margin-right: 5px">{{
+        "已保存" + `${lc_saveSearch.length}` + "記錄"
+      }}</span>
     </div>
     <van-pull-refresh
       v-model="pullLoading"
@@ -553,6 +579,9 @@ export default {
       refreshing: false,
       lc_area_left: [],
       lc_price_left: 0,
+      has_search_result: false,
+      //搜索條件條目數
+      search_items: 0,
       // 售選中的價格
       lc_price_select: {
         startPrice: "",
@@ -631,11 +660,11 @@ export default {
               endPrice: 2000,
               id: 7,
             },
-          ]
+          ],
         },
       ],
       item_t: [],
-      lc_sort_type:false,
+      lc_sort_type: false,
       item_m: [
         {
           text: "聯係人類型",
@@ -770,6 +799,8 @@ export default {
       lc_BuildingType_index: [],
       // 建築類型keyid
       lc_BuildingType_KeyId: [],
+      //標籤KeyId
+      lc_Tag_KeyId: "",
       lc_tagsName: "",
       HouseUse: [], //物業用途
       lc_Orientation: [], // 朝向
@@ -782,26 +813,32 @@ export default {
       lc_area_max: "", //面積止
       lc_orentation_keyId: [],
       lc_Keywords: this.$route.query.word,
-      //keyId
+      lc_floor_start: "",
+      lc_floor_end: "",
+      lc_floor_min: "",
+      lc_floor_max: "",
+      save_cookies: false, // 保存cookies
     };
   },
   created() {
     this.priceList = this.item[0].children;
   },
   mounted() {
-    this.$nextTick(()=>{
-    this.ck_house_status();
-    })
-    
+    this.$nextTick(() => {
+      this.ck_house_status();
+    });
     this.house_sort();
     this.baseData();
     //獲取查詢條件
     let SearchObject = Cookies.get("SearchCookies");
-    if (SearchObject) {
+    if (SearchObject != null) {
       this.lc_saveSearch = JSON.parse(SearchObject);
     }
+    //获取Cookies
+    let cookies = Cookies.get("SearchCookies");
+    
+    
   },
-
   methods: {
     // search 區域
     onSearch(word) {
@@ -840,62 +877,39 @@ export default {
     },
     // 保存搜索
     saveSearch() {
-      this.$router.push("/saveSearch");
+      Toast({
+        message: "保存成功",
+        duration: 2000,
+        forbidClick: true,
+      });
+
+      this.save_cookies = true;
+      this.SaveCookies();
     },
     // 跳轉房源詳情
     detail(item, keyId) {
-      console.log("this.lct_area");
-      console.log(this.lct_area);
       let lc_keyId = keyId;
       this.$router.push({ path: "details", query: { KeyId: lc_keyId } });
-      this.lc_tagsName = this.HouseList.find(
-        (item) => item.KeyId == lc_keyId
-      ).DistrictName;
-      let SearchObject = {
-        EstateSelectType: this.QueryType, //房源查詢類型
-        AreaKeyIdStr: this.lc_districtKey, //區域選中的keyId
-        areaName: item.AreaName, //區域名稱
-        HouseDirection:
-          this.lc_orentation_keyId.length > 0 ? this.lc_orentation_keyId : "", // 朝向
-        SalePriceFrom: this.lc_price_select.startPrice, //
-        TagsName: this.lc_tagsName, //標籤
-        SalePriceTo: this.lc_price_select.endPrice,
-        RentPriceFrom: this.lc_price_select_rent.startPrice,
-        RentPriceTo: this.lc_price_select_rent.endPrice,
-        SortField: this.sort_name, // 排序條件
-      };
-
-      // 限制添加條數
-      if (this.lc_saveSearch.length >= 3) {
-        this.lc_saveSearch.pop();
-      }
-      let lc_saveSearch_index = this.lc_saveSearch.findIndex(
-        (item) =>
-          item.EstateSelectType == SearchObject.EstateSelectType &&
-          item.AreaKeyIdStr == SearchObject.AreaKeyIdStr &&
-          item.SalePriceFrom == SearchObject.SalePriceFrom &&
-          item.SalePriceTo == SearchObject.SalePriceTo &&
-          item.RentPriceFrom == SearchObject.RentPriceFrom &&
-          item.RentPriceTo == SearchObject.RentPriceTo &&
-          item.SortField == SearchObject.SortField
-      );
-      //去除重複內容
-      if (lc_saveSearch_index == -1) {
-        this.lc_saveSearch.unshift(SearchObject);
-      }
-      //保存搜索條件
-      Cookies.set("SearchCookies", JSON.stringify(this.lc_saveSearch), {
-        expires: 365,
-      });
     },
-    // end 跳轉房源詳情
+    //標籤
     sure() {
+      this.$refs.lc_items_tags.toggle();
+      this.baseData();
+      this.has_search_result = true;
+    },
+    //更多
+    more() {
       this.$refs.item.toggle();
       this.baseData();
+      this.has_search_result = true;
+      // this.SaveCookies();
     },
     // 排序確認
     left_c(e) {
-      console.log(this.items[e]);
+      //通過index獲取排序條件
+      // this.sort_name = this.sort_list[e].sort_name;
+      console.log(this.item_t);
+      this.lc_Tag_KeyId = this.item_t[this.active].KeyId;
     },
     // 點擊顯示區域
     show_area() {
@@ -908,15 +922,13 @@ export default {
           Type: "27",
         })
         .then((res) => {
-          // this.item_t=res.Result;
           let _temp = res.Result.Items;
-          console.log("打印temp");
-          console.log(_temp);
           _temp.forEach((item, index) => {
             if (item.id == this.house_sort_id) {
               this.item_t.push({
                 text: item.ItemName,
                 value: item.KeyId,
+                KeyId: item.KeyId,
               });
             }
           });
@@ -987,6 +999,20 @@ export default {
       this.lc_build_index = value.value;
       console.log(this.lc_build_index);
     },
+    // 更改選中的建築類型
+    change_BuildingType(item, index) {
+      // this.lc_BuildingType_index
+      var idx = this.lc_BuildingType_index.indexOf(index);
+      if (idx > -1) {
+        this.lc_BuildingType_index.splice(idx, 1);
+        this.lc_BuildingType_KeyId.splice(idx, 1);
+        //移除
+        lc_orientation_KeyId.splice(idx, 1);
+      } else {
+        this.lc_BuildingType_index.push(index);
+        this.lc_BuildingType_KeyId.push(item.KeyId);
+      }
+    },
     //搜索類型點擊確認事件
     SearchType_confirm(value, index) {
       // 獲取選中的值
@@ -1001,7 +1027,10 @@ export default {
       this.show_build = false;
     },
     //搜索類型點擊取消事件
-    SearchType_cancel() {},
+    SearchType_cancel() {
+      //取消選擇項
+      this.show_type = false;
+    },
     //搜索類型點擊點擊事件
     SearchType_change(picker, value, index) {
       console.log("SearchType_change");
@@ -1011,6 +1040,29 @@ export default {
     },
     BuildType_change(picker, value, index) {
       this.build_name = value.text;
+    },
+    // 更多重置
+    more_rest() {
+      this.active = 0;
+      //清除聯繫人類型選中狀態
+      this.lc_CustomIndex = "";
+      // 清除狀態選中狀態
+      this.RoomTypeList = [];
+      // 清除房型選中狀態
+      this.HouseListIndex = [];
+      // 清除用途選中狀態
+      this.lc_use_index = [];
+      // 清除朝向選中狀態
+      this.lc_orientation_index = [];
+      // 清除建築面積，建築類型選中
+      this.build_name = "";
+      this.lc_area_min = "";
+      this.lc_area_max = "";
+      //清除建築類型選中
+      this.lc_BuildingType_index = [];
+      //清除樓層選中
+      this.lc_floor_index = [];
+      console.log(this.lc_floor_index);
     },
     // 排序右侧点击
     Sort_right_Click(e) {
@@ -1083,8 +1135,7 @@ export default {
         });
     },
     show_sort() {
-      
-      console.log('this is lc sort');
+      console.log("this is lc sort");
       console.log(document.querySelector(".sort_btn"));
     },
     back() {
@@ -1092,6 +1143,45 @@ export default {
     },
     onConfirm() {
       this.$refs.item.toggle();
+    },
+    // 保存Cookies
+    SaveCookies() {
+      console.log("打印問題");
+      console.log(this.items);
+      let SearchObject = {
+        EstateSelectType: this.QueryType, //房源查詢類型
+        AreaKeyIdStr: this.lc_districtKey, //區域選中的keyId
+        areaName:
+          this.items.length <= 0 ? "澳門" : this.items[this.lc_area_left].Name,
+        // 下標, //區域名稱
+        HouseDirection:
+          this.lc_orentation_keyId.length > 0 ? this.lc_orentation_keyId : "", // 朝向
+        SalePriceFrom: this.lc_price_select.startPrice, //
+        TagsName: this.lc_tagsName, //標籤
+        SalePriceTo: this.lc_price_select.endPrice,
+        RentPriceFrom: this.lc_price_select_rent.startPrice,
+        RentPriceTo: this.lc_price_select_rent.endPrice,
+        SortField: this.sort_name, // 排序條件
+      };
+
+      // 限制添加條數
+      if (this.lc_saveSearch.length >= 3) {
+        this.lc_saveSearch.pop();
+      }
+      console.log(SearchObject);
+      //去除重複內容
+      // if (this.lc_saveSearch == -1) {
+      this.lc_saveSearch.unshift(SearchObject);
+      // }
+      //保存Cookies
+
+      //保存搜索條件
+      if (this.save_cookies) {
+        console.log("enter this result");
+        Cookies.set("SearchCookies", JSON.stringify(this.lc_saveSearch), {
+          expires: 365,
+        });
+      }
     },
     //篩選條件使用
     baseData() {
@@ -1121,8 +1211,8 @@ export default {
               : this.lc_BuildingType_KeyId.join(""), //建築類型
           FilterType: this.lc_saveSearch_index, //篩選類型
           Filter: this.lc_filter, //不限條件搜索關鍵詞
-          FloorFrom: "", //樓層起始值
-          FloorTo: "", //樓層結束值
+          FloorFrom: this.lc_floor_min, //樓層起始值
+          FloorTo: this.lc_floor_max, //樓層結束值
           IsOnlyTrust: "", // 是否獨家
           SalePriceFrom:
             this.lc_price_select.startPrice == ""
@@ -1140,16 +1230,31 @@ export default {
             this.lc_price_select_rent.endPrice == ""
               ? this.rent_price_max
               : this.lc_price_select_rent.endPrice,
+          PropertyboolTag: this.lc_Tag_KeyId, //標籤類型
           SortField: this.sort_name, // 排序條件
         })
         .then((res) => {
           let _temp = res.PropertysModel;
           this.HouseList = _temp;
+          console.log("打印內容");
+          console.log(this.lc_area_min == null ? "false" : "true");
+          //如果請求參數不為空則發送請求
+          //this.lc_Keywords=="" ? this.has_search_result = false : this.has_search_result = true;
+          // this.lc_districtKey=="" ? this.has_search_result = false : this.has_search_result = true;
+          // js 條件多選當有一個條件為真時都為真
+
+          // this.has_search_result =
+
+          //   // js 一個條件為真則結果為真
+
+          console.log("has_search_result");
+          console.log(this.has_search_result);
+          // js 一個條件為真則結果為真
+
+          // this.has_search_result=res.PropertysModel.length>0?true:false;
         });
     },
     onLoad() {
-      // console.log("onLoad");
-      // ++this.pageIndex;
       this.pageIndex++;
       aplush.apis
         .Listinglist({
@@ -1169,11 +1274,12 @@ export default {
             this.finished = true;
           }
         });
-      // this.baseData();
     },
     // 區域左側選擇
     area_left_click(left_click) {
       this.lc_area_left = left_click;
+      console.log("this.lc_area_left");
+      console.log(this.lc_area_left);
     },
     // 區域點擊
     area_click(result_item) {
@@ -1216,6 +1322,11 @@ export default {
           : (this.lc_price_select_rent.endPrice = item.endPrice);
       }
     },
+    //區域重置
+    reset_area() {
+      this.active = "";
+      this.lcactiveId = "";
+    },
     // 區域確認選擇
     area_confrim_click() {
       //清空數據
@@ -1237,6 +1348,19 @@ export default {
         ? (this.lc_districtKey = this.lct_area.join(","))
         : (this.lc_districtKey = this.lct_area.join(""));
       this.baseData();
+      this.has_search_result = true;
+
+      // this.SaveCookies();
+    },
+    // 價格重置
+    price_reset() {
+      this.lc_price_activeId = "";
+      this.lc_price_acitve = "";
+      this.lc_price_acitve_two = "";
+      this.saler_price_min = "";
+      this.saler_price_max = "";
+      this.rent_price_min = "";
+      this.rent_price_max = "";
     },
     price_confirm_click() {
       this.$refs.lc_item_price.toggle();
@@ -1261,6 +1385,8 @@ export default {
         });
       });
       this.baseData();
+      this.has_search_result = true;
+      this.SaveCookies();
     },
     price_confirm_click2() {
       this.$refs.lc_item_price.toggle();
@@ -1290,13 +1416,15 @@ export default {
           }
         });
       });
-      this.$nextTick(()=>{
-        this.lc_sort_type=true;
-      })
+      this.$nextTick(() => {
+        this.lc_sort_type = true;
+      });
     },
     // 排序重置
     reset_sort() {
       this.sort_name = "";
+      // this.sortIndex = "";
+      // 清除選中顏色
       this.sortIndex = "";
     },
     //房源排序選中
@@ -1324,6 +1452,8 @@ export default {
       // 關閉 dropitems
       this.$refs.sort_item.toggle();
       this.baseData();
+      this.has_search_result = true;
+      // this.SaveCookies();
     },
     //區域數據
     lc_area_data() {
@@ -1409,6 +1539,7 @@ export default {
     },
     // 改變朝向
     change_orentation(item, index) {
+      console.log("朝向");
       var idx = this.lc_orientation_index.indexOf(index);
       if (idx > -1) {
         this.lc_orientation_index.splice(idx, 1);
@@ -1418,35 +1549,38 @@ export default {
       } else {
         this.lc_orientation_index.push(index);
         this.lc_orentation_keyId.push(item.KeyId);
-
-        //新增
-        // lc_orientation_KeyId.push(index);
       }
     },
     // 改變樓層
     change_floor(item, index) {
-      var idx = this.lc_floor_index.indexOf(index);
-      if (idx > -1) {
-        this.lc_floor_index.splice(idx, 1);
-        this.lc_floor_keyId.splice(idx, 1);
-      } else {
-        this.lc_floor_index.push(index);
-        this.lc_floor_keyId.push(item.KeyId);
-      }
+      this.lc_floor_index = index;
+      this.lc_floor_start = 0;
+      var str = ">12";
+      console.log("樓層開始");
+      console.log(
+        item.ItemValue.includes(">")
+          ? (this.lc_floort_end = item.ItemValue.split(">")[0])
+          : (this.lc_floor_end = item.ItemValue.split("<")[0])
+      );
+      console.log(this.lc_floor_end);
     },
-    //改變建築類型
-    change_BuildingType(item, index) {
-      // console.log('item keyId')
-      // console.log(item);
-      var idx = this.lc_BuildingType_index.indexOf(index);
-      if (idx > -1) {
-        this.lc_BuildingType_index.splice(idx, 1);
-        this.lc_BuildingType_KeyId.splice(idx, 1);
-      } else {
-        this.lc_BuildingType_index.push(index);
-        this.lc_BuildingType_KeyId.push(item.KeyId);
-      }
+    // 查看搜索記錄
+    search_record() {
+      this.$router.push("/saveSearch");
     },
+  },
+  //改變建築類型
+  change_BuildingType(item, index) {
+    // console.log('item keyId')
+    // console.log(item);
+    var idx = this.lc_BuildingType_index.indexOf(index);
+    if (idx > -1) {
+      this.lc_BuildingType_index.splice(idx, 1);
+      this.lc_BuildingType_KeyId.splice(idx, 1);
+    } else {
+      this.lc_BuildingType_index.push(index);
+      this.lc_BuildingType_KeyId.push(item.KeyId);
+    }
   },
 };
 </script>

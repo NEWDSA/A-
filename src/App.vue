@@ -3,56 +3,54 @@
     <router-view />
     <!-- 对路由进行判断 -->
     <!-- <div class="lc_bar"> -->
-      <van-tabbar fixed route active-color="#ee0a24" v-if="show_bar">
-        <van-tabbar-item replace to="/House">
-          <template #icon="props">
-            <img
-              :src="props.active ? icon_house.active : icon_house.inactive"
-            />
-            <span class="lc_span">樓盤管理</span>
-          </template>
-          </van-tabbar-item>
-        <van-tabbar-item replace to="/Customer">
-          <template #icon="props">
-            <img
-              :src="
-                props.active ? icon_customer.active : icon_customer.inactive
-              "
-            />
-            <span class="lc_span">客戶管理</span>
-          </template>
-        </van-tabbar-item>
-        <van-tabbar-item replace to="/Home">
-          <template #icon="props">
-            <img :src="props.active ? icon_home.active : icon_home.inactive" />
-            <span class="lc_span">首頁</span>
-          </template>
-        </van-tabbar-item>
-        
-        <van-tabbar-item replace to="/Message">
-          <template #icon="props">
-            <img :src="props.active ? icon_news.active : icon_news.inactive" />
-            <span class="lc_span">消息</span>
-          </template>
-        </van-tabbar-item>
-        <van-tabbar-item replace to="/Mine">
-          <template #icon="props">
-            <img :src="props.active ? icon_mine.active : icon_mine.inactive" />
-            <span class="lc_span">我的</span>
-          </template>
-        </van-tabbar-item>
-      </van-tabbar>
+    <van-tabbar fixed route active-color="#ee0a24" v-if="show_bar">
+      <van-tabbar-item replace to="/House">
+        <template #icon="props">
+          <img :src="props.active ? icon_house.active : icon_house.inactive" />
+          <span class="lc_span">樓盤管理</span>
+        </template>
+      </van-tabbar-item>
+      <van-tabbar-item replace to="/Customer">
+        <template #icon="props">
+          <img
+            :src="props.active ? icon_customer.active : icon_customer.inactive"
+          />
+          <span class="lc_span">客戶管理</span>
+        </template>
+      </van-tabbar-item>
+      <van-tabbar-item replace to="/Home">
+        <template #icon="props">
+          <img :src="props.active ? icon_home.active : icon_home.inactive" />
+          <span class="lc_span">首頁</span>
+        </template>
+      </van-tabbar-item>
+      <!-- <van-badge :content="unread_message"> -->
+      <van-tabbar-item replace to="/Message" :badge="unread_message">
+        <template #icon="props">
+          <img :src="props.active ? icon_news.active : icon_news.inactive" />
+          <span class="lc_span">消息</span>
+        </template>
+      </van-tabbar-item>
+      <!-- </van-badge> -->
+      <van-tabbar-item replace to="/Mine">
+        <template #icon="props">
+          <img :src="props.active ? icon_mine.active : icon_mine.inactive" />
+          <span class="lc_span">我的</span>
+        </template>
+      </van-tabbar-item>
+    </van-tabbar>
     <!-- </div> -->
     <!-- end 对路由进行判断 -->
   </div>
 </template>
 
-<!-- <script src="//wurfl.io/wurfl.js" crossorigin></script> -->
 <script>
+import aplush from "@/api/A+"; // 獲取樓詳情
 import Cookies from "js-cookie";
 import watermark from "./utils/watermark";
-import { getUserInfo } from "./api/authentication";
-// import './assets/flexible.js';
+// import user from 'mock/user';
+import {mapGetters} from "vuex";
+// import { getUserInfo } from "./api/authentication";
 export default {
   name: "Home",
   data() {
@@ -76,9 +74,12 @@ export default {
       },
       icon_mine: {
         active: require("@/assets/icon/mine_selected_icon.png"),
-        inactive:require("@/assets/icon/mine_unselected_icon.png"),
+        inactive: require("@/assets/icon/mine_unselected_icon.png"),
       },
       show_bar: true, //是否顯示tabbar
+
+      // 調用 getters 中的 unread_count
+      unread_message: "",
     };
   },
   watch: {
@@ -96,13 +97,29 @@ export default {
       } else {
         this.show_bar = false;
       }
-      //判断是否显示tabbar
-      // v-if="this.$route.path=='/Home' || this.$route.path=='/Customer' || this.$route.path=='/Mine' || this.$route.path=='/House' "
     },
   },
-
+  beforeCreate() {
+    this.$store.dispatch("bage/get_unread_count");
+  },
+  beforeMount() {
+    this.unread_message = this.$store.getters.unread_count;
+    // 獲取更新後的數據
+    this.$store.watch(
+      (state) => state.bage.unread_count,
+      (new_count) => {
+        this.unread_message = new_count;
+      }
+    );
+  },
   mounted() {
-    watermark.set("IT Luciano 彭量 4176 ");
+    // let userInfo = Cookies.get("userInfo");
+    // if (userInfo != null) {
+    //   userInfo = JSON.parse(userInfo);
+    //   watermark.set(userInfo.UserName + "" + userInfo.StaffNo);
+    // }
+    // userInfo.Mobile
+    
   },
   methods: {
     more() {
@@ -130,13 +147,12 @@ body,
   font-weight: normal;
   font-stretch: normal;
   background-color: #f3f3f3;
- 
+  //橫屏檢測
 }
 
 ::-webkit-scrollbar {
   display: none;
   width: 0px;
-  
 }
 ::v-deep .van-pull-refresh {
   width: 100%;
@@ -177,8 +193,10 @@ body,
     font-size: 10px;
   }
 }
-// 媒體查詢配置電腦端
-
-
-
+::v-deep .van-tabbar-item .van-info {
+  margin-top: 10px;
+}
+// ::v-deep .van-badge--fixed {
+//   top: 12px;
+// }
 </style>

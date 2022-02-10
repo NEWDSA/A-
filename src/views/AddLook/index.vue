@@ -953,7 +953,7 @@ export default {
         position: relative;
         width: 50px;
         height: 50px;
-        background: url("/icon/select-img.png") no-repeat;
+        background: url("/assets/icon/select-img.png") no-repeat;
         background-size: cover;
       }
       .lc_house {
@@ -1013,7 +1013,7 @@ export default {
         position: relative;
         width: 50px;
         height: 50px;
-        background: url("/icon/select-img.png") no-repeat;
+        background: url("/assets/icon/select-img.png") no-repeat;
         background-size: cover;
       }
       .lc_house {

@@ -1,5 +1,4 @@
 import axios from 'axios'
-
 import store from '@/store'
 
 //引入 vant 消息提示
@@ -28,28 +27,31 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs'
 
 })()
 
+//判断 state 对象是否包含某个属性
+// let lc_info= store.getters.userInfo
+var staffNo = '2010195'
 //vue 产生10位时间戳
 let lc_timestamp = (new Date().getTime().toString());
 lc_timestamp = lc_timestamp.substr(0, 10);
 // end vue 产生10位时间戳
 // MD5加密
-let lc_sign = "CYDAP_com-group~Centa@" + lc_timestamp + "2016090007";
+let lc_sign = "CYDAP_com-group~Centa@" + lc_timestamp + staffNo;
 let lc_md5 = md5(lc_sign);
-// end MD5 加密
 // create an axios instance
 const service = axios.create({
   //baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   //  baseURL: 'aplus_test',
   baseURL: process.env.NODE_ENV === 'production' ? 'aplus_test' : '',
-  // baseURL: defaultSettings.baseURL ?? ' baseURL: aplus_test',
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
-    'platform': 'ios',
+    // 'platform': 'ios',
+    'platform' : navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Adr') > -1 ? 'android' : 'ios',
     'Centaline': '9527',
     'number': lc_timestamp,
     'sign': lc_md5,
-    'staffno': 2016090007,
-    'token': 'A2FC2F70-20E1-CFA7-7C5B-08D3F0C31277|AD757BE8-0886-CA9F-FE83-08D5A43679ED|2016090007|0A0EA5B4-571E-4B4A-B9AC-0157CBA85942|3F4374B7-35CA-473F-A471-CF34B8333211',
+    // 'staffno': 2016090007, 
+    'staffno':staffNo,
+    'token': `A2FC2F70-20E1-CFA7-7C5B-08D3F0C31277|AD757BE8-0886-CA9F-FE83-08D5A43679ED|${staffNo}|0A0EA5B4-571E-4B4A-B9AC-0157CBA85942|3F4374B7-35CA-473F-A471-CF34B8333211`,
     'phoneId': localStorage.getItem('deviceCode') // brwser only code
   }
   //timeout: 5000 // request timeout
