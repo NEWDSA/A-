@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import getters from './modules/getters'
 import app from './modules/app'
 import authorize from './modules/authorize'
-import permission from './modules/permission'
 import bage from './modules/bage'
 
 Vue.use(Vuex)
@@ -18,7 +17,6 @@ const store = new Vuex.Store({
   modules: {
     app,
     authorize,
-    permission,
     bage
   },
   getters

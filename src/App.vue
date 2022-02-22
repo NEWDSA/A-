@@ -2,15 +2,20 @@
   <div id="app">
     <router-view />
     <!-- 对路由进行判断 -->
-    <!-- <div class="lc_bar"> -->
     <van-tabbar fixed route active-color="#ee0a24" v-if="show_bar">
-      <van-tabbar-item replace to="/House">
+      <van-tabbar-item replace to="/Home">
+        <template #icon="props">
+          <img :src="props.active ? icon_home.active : icon_home.inactive" />
+          <span class="lc_span">首頁</span>
+        </template>
+      </van-tabbar-item>
+      <van-tabbar-item replace to="/House" v-permission="['Property.war-zone']">
         <template #icon="props">
           <img :src="props.active ? icon_house.active : icon_house.inactive" />
           <span class="lc_span">樓盤管理</span>
         </template>
       </van-tabbar-item>
-      <van-tabbar-item replace to="/Customer">
+      <van-tabbar-item replace to="/Customer" v-permission="['Customer.all-customer']">
         <template #icon="props">
           <img
             :src="props.active ? icon_customer.active : icon_customer.inactive"
@@ -18,26 +23,19 @@
           <span class="lc_span">客戶管理</span>
         </template>
       </van-tabbar-item>
-      <van-tabbar-item replace to="/Home">
-        <template #icon="props">
-          <img :src="props.active ? icon_home.active : icon_home.inactive" />
-          <span class="lc_span">首頁</span>
-        </template>
-      </van-tabbar-item>
-      <!-- <van-badge :content="unread_message"> -->
+      
       <van-tabbar-item replace to="/Message" :badge="unread_message">
         <template #icon="props">
           <img :src="props.active ? icon_news.active : icon_news.inactive" />
           <span class="lc_span">消息</span>
         </template>
       </van-tabbar-item>
-      <!-- </van-badge> -->
-      <van-tabbar-item replace to="/Mine">
+      <!-- <van-tabbar-item replace to="/Mine">
         <template #icon="props">
           <img :src="props.active ? icon_mine.active : icon_mine.inactive" />
           <span class="lc_span">我的</span>
         </template>
-      </van-tabbar-item>
+      </van-tabbar-item> -->
     </van-tabbar>
     <!-- </div> -->
     <!-- end 对路由进行判断 -->
@@ -46,9 +44,7 @@
 
 <script>
 import aplush from "@/api/A+"; // 獲取樓詳情
-import Cookies from "js-cookie";
 import watermark from "./utils/watermark";
-// import user from 'mock/user';
 import {mapGetters} from "vuex";
 // import { getUserInfo } from "./api/authentication";
 export default {
@@ -82,6 +78,11 @@ export default {
       unread_message: "",
     };
   },
+  computed: {
+    ...mapGetters([
+      'userInfo',
+    ])
+  },
   watch: {
     $route(to, from) {
       console.log(to.path);
@@ -113,13 +114,9 @@ export default {
     );
   },
   mounted() {
-    // let userInfo = Cookies.get("userInfo");
-    // if (userInfo != null) {
-    //   userInfo = JSON.parse(userInfo);
-    //   watermark.set(userInfo.UserName + "" + userInfo.StaffNo);
-    // }
-    // userInfo.Mobile
-    
+    if (this.userInfo != null) {
+      watermark.set(this.userInfo.UserName + "" + this.userInfo.StaffNo);
+    }
   },
   methods: {
     more() {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height:100%;">
     <van-nav-bar title="" cross>
       <template #left>
         <van-icon class="cross" name="cross" size="18" @click="back" />
@@ -17,20 +17,24 @@
 
     <div class="lc_title">
       <van-grid>
-        <draggable v-model="HomeApp" :disabled="disabled" class="van-grid van-hairline--top" @change="dragChange">
+        <draggable
+          v-model="HomeApp"
+          :disabled="disabled"
+          class="van-grid van-hairline--top"
+          @change="dragChange"
+        >
           <template v-for="(item, index) in HomeApp">
             <van-grid-item
               class="lc_grid_item"
               id="lc_grid_item"
-              :icon="item.icon"
-              :text="item.title"
+              :icon="item.Icon"
+              :text="item.Name"
               :badge="item.bage"
               @click="RemoveApp(item)"
             ></van-grid-item>
           </template>
         </draggable>
       </van-grid>
-      
 
       <van-nav-bar title="" left-text="推薦應用" @click-right="onClickRight">
         <template #left>
@@ -43,14 +47,22 @@
         </template>
       </van-nav-bar>
       <van-grid>
-        <template v-for="(item, index) in RecoApplication">
-          <van-grid-item
-            class="lc_bage"
-            badge="+"
-            :icon="item.icon"
-            :text="item.title"
-            @click="AddAplicaton(item)"
-          />
+        <template v-if="RecoApplication.length > 0">
+          <template v-for="(item, index) in RecoApplication">
+            <van-grid-item
+              class="lc_bage"
+              badge="+"
+              :icon="item.Icon"
+              :text="item.Name"
+              @click="AddAplicaton(item)"
+            />
+          </template>
+        </template>
+        <template v-else>
+          <div style="width:100%;height:100%;">
+             <van-empty description="沒有推薦應用" />
+          </div>
+          
         </template>
       </van-grid>
     </div>
@@ -58,9 +70,9 @@
 </template>
 
 <script>
- export {default} from './index'
+export { default } from "./index";
 </script>
 
 <style lang="scss" scoped>
-@import './index.scss'
+@import "./index.scss";
 </style>

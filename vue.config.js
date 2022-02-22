@@ -32,6 +32,11 @@ module.exports = {
     assetsDir: 'static',
     lintOnSave: true,
     productionSourceMap: false,
+    // resolve:{
+    //     alias: {
+    //       'vue$': 'vue/dist/vue.esm.js',
+    //     }
+    // },
     // 配置vant 全局 css
     css: {
       loaderOptions: {
@@ -71,7 +76,7 @@ module.exports = {
           '/upload': {
             target: 'https://hqstatictest.centaline.com.cn:442/image/upload2',
             changeOrigin: true
-          }
+          },
         },
         after: require('./mock/mock-server.js')
       },
@@ -93,6 +98,9 @@ module.exports = {
         }
       },
       chainWebpack(config) {
+        // 設置 vue 運行時
+
+        config.resolve.alias.set('vue$', 'vue/dist/vue.esm.js')
         // 去除項目打包上線後，代碼中所有的 console.log()
         config.optimization.minimizer('terser').tap((args) => {
           args[0].terserOptions.compress.drop_console = true

@@ -3,7 +3,7 @@ import store from '@/store'
 function checkPermission(el, binding) {
   const { value } = binding
 
-  const Privileges = store.getters.loginUser.Privileges;
+  const Privileges = store.getters.userInfo.PermisstionCodes ?? [];
 
   if (value && value instanceof Array) {
     if (value.length > 0) {

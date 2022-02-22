@@ -86,6 +86,11 @@ export const constantRoutes = [
     }
   },
   {
+   path:'/EditHouse',
+   name:'EditHouse',  //編輯房源
+   component:()=>import('@/views/House/edit.vue'),
+  },
+  {
     path: '/House?from=home',
     component: () => import('@/views/Home'),
     meta: {

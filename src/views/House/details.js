@@ -2,13 +2,18 @@
  * @Author: luciano 
  * @Date: 2021-12-10 15:22:09 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-02-08 18:09:59
+ * @Last Modified time: 2022-02-17 20:09:20
  * 楼盘管理详情
  */
 import Cookies from 'js-cookie'
+import {
+  checkPermission
+} from '@/utils/permission' // 权限判断函数
 import aplush from "@/api/A+"; // 獲取樓詳情
 //mapgetters
-import { mapGetters } from 'vuex';
+import {
+  mapGetters
+} from 'vuex';
 
 import {
   title
@@ -18,7 +23,7 @@ import {
   Toast
 } from "vant";
 export default {
-  computed:{
+  computed: {
     ...mapGetters([
       'userInfo'
     ])
@@ -43,9 +48,9 @@ export default {
     // this.M_live_Pohto();
     //獲取系統類型
     this.base_system();
-    console.log('this userinfo',this.userInfo.StaffNo);
-    
-    this.signature=this.userInfo.StaffNo;
+    console.log('this userinfo', this.userInfo.StaffNo);
+
+    this.signature = this.userInfo.StaffNo;
 
     //  TODO:缺少通过员工工号查询员工姓名接口
 
@@ -78,26 +83,32 @@ export default {
       ],
       // 通过 actions 属性来定义菜单选项
       actions: [{
-          text: "新增現場相"
+          text: "編輯房源",
+          disabled: !checkPermission(['Property.BasicInformation.Modify-All', 'Property.BasicInformation.Modify-MySelf', 'Property.BasicInformation.Modify-MyDepartment'])
         },
         {
-          text: "新增查冊"
+          text: "現場相",
+          disabled: !checkPermission(['Property.RealSurvey.Add-All'])
         },
         {
-          text: "新增放盤紙"
+          text: "查冊",
+          disabled: !checkPermission(['Property.RealSurvey.Add-All'])
         },
         {
-          text: "新增鑰匙"
+          text: "放盤紙",
+          disabled: !checkPermission(['Property.OnlyTrust.Add-All'])
         },
         {
-          text: "編輯房源"
+          text: "鑰匙",
+          disabled: !checkPermission(['Property.Key.Add-All'])
         },
         {
           text: "中原成交"
-        },
-        {
-          text: "發佈房源"
-        },
+        }
+        // ,
+        // {
+        //   text: "發佈房源"
+        // },
       ],
       //
       bool_collect: true,
@@ -197,13 +208,13 @@ export default {
       ContactList: [],
       exclusive_type: "", //獨家類型
       Rent_Start: "", // 租金開始
-      Rent_End: "",// 租金結束
+      Rent_End: "", // 租金結束
       lc_AttachmentPath: "", // 附件路徑
-      imgSize:Number, // 图片高度
+      imgSize: Number, // 图片高度
       //图片总数
-      imgCount:0,
-      imgWidth:0
-      
+      imgCount: 0,
+      imgWidth: 0
+
     };
   },
   filters: {
@@ -214,16 +225,15 @@ export default {
     console.log(document.documentElement.clientWidth);
     console.log('宽度测试宽度测试')
     // this.nextTick(() => {
-      this.$nextTick(() => {
-        this.imgWidth = document.documentElement.clientWidth;
-      });
-    
+    this.$nextTick(() => {
+      this.imgWidth = document.documentElement.clientWidth;
+    });
+
   },
   methods: {
     // 加载图片
-    loadingImg(){
+    loadingImg() {
       console.log('加载图片高度');
-      // console.log(this.imgSize= this.$refs.img.$el.clientHeight)
     },
     back() {
       this.$router.push("/House");
@@ -233,12 +243,12 @@ export default {
       this.$router.push("/Scene");
     },
     // 放盤紙
-    putPaper(){
+    putPaper() {
       // 路由傳參
       this.$router.push({
         path: "PutPaper",
         query: {
-          keyId:this.$route.query.KeyId
+          keyId: this.$route.query.KeyId
         }
       });
     },
@@ -275,26 +285,26 @@ export default {
       });
     },
     onChange(index) {
-      
+
       this.current = index;
     },
     collect_i() {
       this.bool_collect = !this.bool_collect;
       if (this.bool_collect) {
-      
-      aplush.apis
-        .AddCollection({
-          KeyId: this.$route.query.KeyId,
-        })
-        .then((res) => {
-          if (res.Flag) {
 
-            this.$toast("添加收藏成功");
-          } else {
-            this.$toast("添加收藏失败");
-          }
-        });}
-      else {
+        aplush.apis
+          .AddCollection({
+            KeyId: this.$route.query.KeyId,
+          })
+          .then((res) => {
+            if (res.Flag) {
+
+              this.$toast("添加收藏成功");
+            } else {
+              this.$toast("添加收藏失败");
+            }
+          });
+      } else {
         aplush.apis.CancelCollection({
           KeyId: this.$route.query.KeyId,
         }).then((res) => {
@@ -379,7 +389,7 @@ export default {
       aplush.apis.ListingDetail(keyId).then((res) => {
         this.House_detail = res;
         this.imgCount = res.Photos.length;
-        this.bool_collect=this.House_detail.IsFavorite
+        this.bool_collect = this.House_detail.IsFavorite
         console.log("打印房源详情");
         console.log(this.House_detail);
       });
@@ -426,42 +436,6 @@ export default {
           this.KeyList = res.PropKeys;
         });
     },
-    // lc_vant_click(name, title) {
-    //   console.log("現場相復合內容");
-    //   // console.log(name);
-    //   console.log(title);
-    //   title == "現場相" ?
-    //     this.M_live_Pohto() :
-    //     title == "放盤紙" ?
-    //     this.Get_Paper() :
-    //     title == "鑰匙" ?
-    //     this.Get_Key() :
-    //     "";
-    // },
-    // beforeClose({
-    //   position,
-    //   instance
-    // }) {
-    //   switch (position) {
-    //     case "left":
-    //     case "cell":
-    //     case "outside":
-    //       instance.close();
-    //       // 跳轉到編輯頁面
-    //       this.$router.push({
-    //         path: "/EditScene",
-    //       });
-    //       break;
-    //     case "right":
-    //       Dialog.confirm({
-    //         message: "确定删除吗？",
-    //       }).then(() => {
-    //         instance.close();
-    //         // 刪除對應頁面
-    //       });
-    //       break;
-    //   }
-    // },
     getTypeSelected() {
       switch (this.selected) {
         case 56:
@@ -494,8 +468,6 @@ export default {
       this.Pic_base();
     },
     other_change() {
-      console.log("其他選項改變");
-      // console.log(this.other_select);
       this.Scene_keyId = this.other_select;
       this.Pic_base();
     },
@@ -505,16 +477,7 @@ export default {
       this.lc_Type = "添加聯繫人";
       this.contact_Type = true;
       this.lc_recevier = false;
-
-      // this.$set(this.lc_Type,)
-      // this.$nextTick(()=>{
-      //   this.lc_Type="添加聯繫人";
-      // })
-      // this.$nextTick(()=>{
-      //   this.Type="添加聯繫人";
-      // })
       this.KeyReceiverShow = true;
-      // this.SearchPerson=[];
       this.SearchPersonList = [];
       this.Base_Key_Person(this.lc_Type);
       console.log("this.Type");
@@ -542,8 +505,8 @@ export default {
         SalePriceStart: this.Saeles_Start, //售價起
         SalePriceEnd: this.Saeles_End, //售價止
         RentPriceStart: this.Rent_Start, //租價起  
-        RentPriceEnd:this.Rent_End, //租價至
-        Attachments:'', //附件集合
+        RentPriceEnd: this.Rent_End, //租價至
+        Attachments: '', //附件集合
         AttachmentName: "", //附件名稱
         AttachmentPath: this.lc_AttachmentPath, //附件路徑
         ContactPersons: this.ContactList, //聯繫人集合
@@ -563,7 +526,7 @@ export default {
       fd.append("fileType", "file");
       console.log(file.name);
       aplush.apis.UploadFile(fd).then((res) => {
-        this.lc_AttachmentPath=res;
+        this.lc_AttachmentPath = res;
       });
     },
     // 鑰匙箱點擊事件
@@ -625,7 +588,6 @@ export default {
             break;
         }
 
-        // this.title === "放盤時間起" ? this.PaperTime = this.lc_KeyBoxReceivedTime : this.title === "放盤時間止" ? this.PaperEndTime = this.lc_KeyBoxReceivedTime : "";
       }
       this.KeyBoxReceivedTimeShow = false;
     },
@@ -731,12 +693,6 @@ export default {
           console.log('this.ContactList');
           console.log(this.ContactList);
         }
-        // if (index == e) {
-        //   this.lc_Type==="添加聯繫人" ? this.ContactList.push(item.ResultName):this.KeyReceiver = item.ResultName;
-        //   this.KeyReceiver=item.ResultName;
-        // }
-        // console.log('打印item')
-        // console.log(this.ContactList);
       });
       //移除選中
 
@@ -834,8 +790,12 @@ export default {
     },
     //編輯房源
     Edit_House() {
-      //TODO:編輯房源接口暫缺
-      Toast('編輯房源接口暫缺')
+      this.$router.push({
+        path: '/EditHouse',
+        query: {
+          HouseKeyId: this.$route.query.KeyId,
+        }
+      })
     },
     // 中原成交
     Add_Deal() {

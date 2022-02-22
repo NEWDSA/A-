@@ -101,7 +101,6 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
 // 使用 localStorage 存取
 
 import aplush from "@/api/A+";
@@ -114,7 +113,8 @@ export default {
     };
   },
   mounted() {
-    let _temp_Option = Cookies.get("SearchCookies");
+    // let _temp_Option = Cookies.get("SearchCookies");
+    let _temp_Option = localStorage.getItem("SearchCookies");
     if (_temp_Option) {
       this.SearchOption = JSON.parse(_temp_Option);
       // 設置默認選中的值
@@ -134,7 +134,8 @@ export default {
     //保存搜索項
     move_search() {
       this.SearchOption.pop(); //移除保存內容
-      Cookies.set("SearchCookies", JSON.stringify(this.SearchOption));
+      // Cookies.set("SearchCookies", JSON.stringify(this.SearchOption));
+      localStorage.setItem("SearchCookies", JSON.stringify(this.SearchOption));
     },
     select_save(e) {
       // console.log("点击事件", e);
@@ -148,7 +149,8 @@ export default {
           this.SearchOption[index].isdefault = false;
         }
       });
-      Cookies.set("SearchCookies", JSON.stringify(this.SearchOption));
+      // Cookies.set("SearchCookies", JSON.stringify(this.SearchOption));
+      localStorage.setItem("SearchCookies", JSON.stringify(this.SearchOption));
     },
   },
 };

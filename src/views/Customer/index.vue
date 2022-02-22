@@ -1,9 +1,9 @@
 <template>
   <div id="cus">
     <div class="fixed">
-      <img src="@/assets/icon/new-customers_icon.png" @click="AddCustomer()" alt="" />
-      <img src="@/assets/icon/poll_float_icon.png" alt="" />
-      <img src="@/assets/icon/look_icon.png" @click="AddLook()" alt="" />
+      <img src="@/assets/icon/new-customers_icon.png" @click="AddCustomer()" v-permission="['Customer.Inquiry.Add-All']"/>
+      <!-- <img src="@/assets/icon/poll_float_icon.png" alt="" /> -->
+      <img src="@/assets/icon/look_icon.png" @click="AddLook()" v-permission="['Customer.take']" />
     </div>
     <div
       style="

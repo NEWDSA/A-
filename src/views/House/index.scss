@@ -3,7 +3,7 @@
  * @Date: 2021-11-25 17:40:25 
  * @Last Modified by: luciano
  *  楼盘管理
- * @Last Modified time: 2022-02-09 12:13:00
+ * @Last Modified time: 2022-02-11 16:49:42
  */
 
 
@@ -231,12 +231,9 @@
   background-color: #f12945;
 }
 
-.sort_btn{
-  // position: fixed;
+.sort_btn {
   position: absolute;
-  // add conditions
   bottom: 0;
-  // height: 100px;
   margin-top: -5px;
   line-height: 100px;
   background: #ffffff;
@@ -244,7 +241,6 @@
 
   .btn {
     display: flex;
-    // height: 70px;
     justify-content: space-around;
     margin: 13px;
 
@@ -261,6 +257,28 @@
       height: 35px;
       background-color: #f12945;
     }
+  }
+}
+
+.lc_tags_height {
+  height: 228px;
+  overflow-y: scroll;
+
+  ::v-deep .van-cell {
+    padding: 16px !important;
+
+    &::after {
+      border-bottom: 0;
+    }
+  }
+  .lc_tags_hover{
+    color: #f12945;;
+  }
+  ::v-deep .van-cell__value--alone {
+    color: #333333;
+    padding-left: 16px;
+    padding-top: 5px;
+
   }
 }
 
@@ -504,13 +522,15 @@
 }
 
 .lc_rr {
+
   //  height: 300px !important;
-  ::v-deep .van-dropdown-item__content{
+  ::v-deep .van-dropdown-item__content {
     height: 300px;
     // overflow-y: hidden;
     //蘋果手機滾動條
     -webkit-overflow-scrolling: touch;
   }
+
   ::v-deep .van-cell-group {
     // height: 300px;
     overflow: auto;
@@ -522,21 +542,7 @@
   height: 300px !important;
 }
 
-//手機橫屏css
-//手機高度css
-
-
-
-
-
-// @media screen and(min-width: 900px){
-//   .van-dropdown-item__content{
-//     .van-tree-select{
-//       height: 400px !important;
-//     }
-//   }
-// }
-// // 媒體查詢處於某個區間 700 ~ 800
+//體查詢處於某個區間 700 ~ 800
 @media screen and (min-width: 600px) and (max-width: 700px) {
   .van-dropdown-item__content {
     .van-tree-select {
@@ -544,13 +550,3 @@
     }
   }
 }
-
-
-
-// @media screen and(max-width: 900px){
-//   .van-dropdown-item__content{
-//     .van-tree-select{
-//       height: 400px !important;
-//     }
-//   }
-// }

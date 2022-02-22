@@ -3,7 +3,7 @@
  * 消息
  * @Date: 2021-12-17 16:16:48 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-02-07 15:41:48
+ * @Last Modified time: 2022-02-11 14:11:07
  */
 import aplush from "@/api/A+";
 export default {
@@ -48,7 +48,7 @@ export default {
       this.$router.push({
         path: '/Message/details',
         query: {
-          id: item.KeyId,
+          id: item.KeyId, //消息對象KeyID
           name: item.SecondMessagerName
         }
       })

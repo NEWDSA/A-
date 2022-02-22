@@ -2,23 +2,29 @@
  * @Author: luciano 
  * @Date: 2021-12-17 11:19:15 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-02-09 10:10:03
+ * @Last Modified time: 2022-02-17 14:53:13
  */
 
-//配置請求基準url
-let baseUrl = 'http://10.1.31.83:22061'
-
 import lc_request from '@/utils/request'
-import axios from 'axios'
 // 引入 qs 模块，用来序列化 post 的数据
 // import qs from 'qs'
-import {
-  data,
-  param
-} from 'jquery'
-
 export default {
   apis: {
+    //获取金刚区菜单
+    getMenu: () => {
+      return lc_request({
+        url: '/moaplusapi/System/GetStaffMenus',
+        method: 'get'
+      })
+    },
+    //設置金刚区菜单
+    editMenu: (data) => {
+      return lc_request({
+        url: '/moaplusapi/System/SetStaffMenus',
+        method: 'post',
+        data
+      })
+    },
     //獲取未讀消息數量
     unReaderMsg(params) {
       return lc_request({
@@ -38,10 +44,7 @@ export default {
     //  企業微信登錄
     workChatLogin(params) {
       return lc_request({
-        headers:{
-          'Content-Type':'application/json'
-        },
-        url: '/MoAplusApi/User/Login',
+        url: '/moaplusapi/User/Login',
         method: 'post',
         data: params
       })
@@ -78,21 +81,14 @@ export default {
     // 首页轮播
     getBanner() {
       return lc_request({
-
         url: '/moaplusapi/System/GetSystemBannerList',
         method: 'get',
-        headers: {
-
-          'Content-Type': 'application/json;charset=UTF-8'
-        },
-
       })
     },
     //降價房源
     getPriceDown(params) {
       return lc_request({
         url: '/api/System/get-reduce-price-property',
-
         method: 'post',
         data: params
       })
@@ -112,6 +108,14 @@ export default {
         method: 'get'
       })
 
+    },
+    // 編輯房源
+    editListing(params) {
+      return lc_request({
+        url:`/api/Property/edit-property`,
+        method: 'post',
+        data: params
+      })
     },
     // 房源狀態篩選
     ListingStatus(params) {

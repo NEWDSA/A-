@@ -20,7 +20,6 @@
     </van-sticky>
     <!-- 下拉框 -->
     <van-dropdown-menu class="lc_str" :close-on-click-outside="false">
-      <!-- 區域設定 main-active-index左侧选中项的索引、active-id右側選中的id支持傳入數組[] -->
       <van-dropdown-item @open="show_area" title="區域" ref="lc_item">
         <van-tree-select
           class="lc_tree-select"
@@ -147,18 +146,16 @@
         </div>
       </van-dropdown-item>
       <van-dropdown-item title="標簽" @open="show_tag" ref="lc_items_tags">
-        <van-tree-select
-          class="lc_tree-select"
-          :items="item_t"
-          :main-active-index.sync="active"
-          :active-id.sync="activeId"
-          @click-nav="left_c"
-          @click-item="right_c"
-        >
-        </van-tree-select>
-        <div class="sort_btn">
+        <van-cell-group>
+          <div class="lc_tags_height">
+            <van-cell  @click="tags_Click(index,item.KeyId)" v-for="(item, index) in item_t">
+              <span :class="tagsindex==index?'lc_tags_hover':''">{{ item.text }}</span>
+            </van-cell>
+          </div>
+        </van-cell-group>
+        <div class="lc_sort_btn">
           <div class="btn">
-            <van-button type="warning" class="btn_reset">重置</van-button>
+            <van-button type="warning" class="btn_reset" @click="reset_tags" >重置</van-button>
             <van-button type="danger" class="btn_confrim" @click="sure"
               >確定</van-button
             >
@@ -754,9 +751,6 @@ export default {
       build_name: "", //建築類型名稱
       unlimited: "", //不限條件搜索
       show_type: false, //類型選擇框
-
-      // price_low: "",
-      // price_max: "",
       lc_districtKey: "",
       price_disabled: false,
       click_count: 0,
@@ -777,6 +771,7 @@ export default {
       RoomTypeList: [], //房型
       HouseListIndex: [],
       lc_price_input: "",
+      lc_area_left: 0,
       priceList: [],
       saler_price_min: "",
       saler_price_max: "",
@@ -818,6 +813,7 @@ export default {
       lc_floor_min: "",
       lc_floor_max: "",
       save_cookies: false, // 保存cookies
+      tagsindex: -1
     };
   },
   created() {
@@ -831,38 +827,38 @@ export default {
       this.ck_house_status();
     });
     this.house_sort();
-    // this.baseData();
-    //獲取查詢條件
-    
-    if(Cookies.get("SearchCookies")!=undefined){
-      let SearchObject = Cookies.get("SearchCookies");
-      this.lc_saveSearch = JSON.parse(SearchObject);
-      //獲取默認選中
-      let lc_default_result = this.lc_saveSearch.find(
-        (item) => (item.isdefault =='true')
+    if (localStorage.getItem("SearchCookies") != undefined) {
+      this.SearchObject = JSON.parse(localStorage.getItem("SearchCookies"));
+      let lc_default_result = this.SearchObject.find(
+        (item) => item.isdefault === true
       );
-      aplush.apis
-        .Listinglist({
-          PageIndex: this.pageIndex,
-          PageSize: 20,
-          PropType: 1, //查詢類型
-          EstateSelectType: lc_default_result.EstateSelectType, //房源查詢類型
-          AreaKeyIdStr: lc_default_result.AreaKeyIdStr, //區域選中的keyId
-          SalePriceFrom: lc_default_result.SalePriceFrom, //
-          SalePriceTo: lc_default_result.SalePriceTo,
-          HouseDirection: lc_default_result.HouseDirection,
-          RentPriceFrom: lc_default_result.RentPriceFrom,
-          RentPriceTo: lc_default_result.RentPriceTo,
-          SortField: lc_default_result.SortField, // 排序條件
-        })
-        .then((res) => {
-          let _temp = res.PropertysModel;
-          this.HouseList = _temp;
-        });
-    }else{
+      //判斷是否有默認查詢條件
+      if (lc_default_result != undefined) {
+        console.log("this result is true??");
+        aplush.apis
+          .Listinglist({
+            PageIndex: this.pageIndex,
+            PageSize: 20,
+            PropType: 1, //查詢類型
+            EstateSelectType: lc_default_result.EstateSelectType, //房源查詢類型
+            AreaKeyIdStr: lc_default_result.AreaKeyIdStr, //區域選中的keyId
+            SalePriceFrom: lc_default_result.SalePriceFrom, //
+            SalePriceTo: lc_default_result.SalePriceTo,
+            HouseDirection: lc_default_result.HouseDirection,
+            RentPriceFrom: lc_default_result.RentPriceFrom,
+            RentPriceTo: lc_default_result.RentPriceTo,
+            SortField: lc_default_result.SortField, // 排序條件
+          })
+          .then((res) => {
+            let _temp = res.PropertysModel;
+            this.HouseList = _temp;
+          });
+      } else {
+        this.baseData();
+      }
+    } else {
       this.baseData();
     }
-    
   },
   methods: {
     // search 區域
@@ -910,6 +906,7 @@ export default {
 
       this.save_cookies = true;
       this.SaveCookies();
+      this.has_search_result = false;
     },
     // 跳轉房源詳情
     detail(item, keyId) {
@@ -918,23 +915,21 @@ export default {
     },
     //標籤
     sure() {
-      this.$refs.lc_items_tags.toggle();
+     this.$refs.lc_items_tags.toggle();
       this.baseData();
       this.has_search_result = true;
+    },
+    reset_tags(){
+      console.log('reset_tags');
+      console.log('重置內容');
+      //將所選內容設置為空
+      this.tagsindex =-1;
     },
     //更多
     more() {
       this.$refs.item.toggle();
       this.baseData();
       this.has_search_result = true;
-      // this.SaveCookies();
-    },
-    // 排序確認
-    left_c(e) {
-      //通過index獲取排序條件
-      // this.sort_name = this.sort_list[e].sort_name;
-      console.log(this.item_t);
-      this.lc_Tag_KeyId = this.item_t[this.active].KeyId;
     },
     // 點擊顯示區域
     show_area() {},
@@ -1169,14 +1164,15 @@ export default {
     },
     // 保存Cookies
     SaveCookies() {
+      console.log("保存Cookies");
+
+      console.log(this.items[this.lc_area_left]);
       var _temp_tages_name = [];
       let _temp_items = null;
       if (this.items.length > 0)
         //通過下標查找符合條件的集合
-        this.lc_area_left.length > 0
-          ? (this.lc_area_left = this.lc_area_left)
-          : (this.lc_area_left = 0);
-      _temp_items = this.items[this.lc_area_left].children;
+
+        _temp_items = this.items[this.lc_area_left].children;
       let _temp_districtKey = this.lc_districtKey.split(",");
       if (_temp_districtKey.length > 0) {
         _temp_districtKey.forEach((lcitem) => {
@@ -1201,10 +1197,7 @@ export default {
         AreaKeyIdStr: this.lc_districtKey, //區域選中的keyId
         //保存區域
         TagsName: _temp_tages_name,
-        areaName:
-          this.lc_area_left.length <= 0
-            ? "澳門"
-            : this.items[this.lc_area_left].Name,
+        areaName: this.items[this.lc_area_left].Name,
         // 下標, //區域名稱
         HouseDirection:
           this.lc_orentation_keyId.length > 0 ? this.lc_orentation_keyId : "", // 朝向
@@ -1213,6 +1206,7 @@ export default {
         RentPriceFrom: this.lc_price_select_rent.startPrice,
         RentPriceTo: this.lc_price_select_rent.endPrice,
         SortField: this.sort_name, // 排序條件
+        isdefault: false,
       };
 
       // 限制添加條數
@@ -1224,14 +1218,12 @@ export default {
       // if (this.lc_saveSearch == -1) {
       this.lc_saveSearch.unshift(SearchObject);
       // }
-      //保存Cookies
-
       //保存搜索條件
       if (this.save_cookies) {
-        console.log("enter this result");
-        Cookies.set("SearchCookies", JSON.stringify(this.lc_saveSearch), {
-          expires: 365,
-        });
+        localStorage.setItem(
+          "SearchCookies",
+          JSON.stringify(this.lc_saveSearch)
+        );
       }
     },
     //篩選條件使用
@@ -1406,12 +1398,13 @@ export default {
     // 價格重置
     price_reset() {
       this.lc_price_activeId = "";
-      this.lc_price_acitve = "";
+      this.lc_price_acitve =-1;
       this.lc_price_acitve_two = "";
       this.saler_price_min = "";
       this.saler_price_max = "";
       this.rent_price_min = "";
       this.rent_price_max = "";
+
     },
     price_confirm_click() {
       this.$refs.lc_item_price.toggle();
@@ -1437,7 +1430,7 @@ export default {
       });
       this.baseData();
       this.has_search_result = true;
-      this.SaveCookies();
+      // this.SaveCookies();
     },
     price_confirm_click2() {
       this.$refs.lc_item_price.toggle();
@@ -1528,14 +1521,12 @@ export default {
           });
         });
         this.items = lc_Districts;
-        console.log("this.items");
-        console.log(this.items);
       });
     },
     //通過標籤搜索
     tags_Search(tags_index) {
       let lc_default_result = this.lc_saveSearch.find(
-        (item,index) => (index == tags_index)
+        (item, index) => index == tags_index
       );
       aplush.apis
         .Listinglist({
@@ -1556,6 +1547,13 @@ export default {
           this.HouseList = _temp;
         });
     },
+    // 標籤點擊
+    tags_Click(index,keyId) {
+      this.tagsindex = index;
+      // tags_Click
+       this.lc_Tag_KeyId = keyId;
+      //PropertyboolTag
+    },
     // 聯繫人列表
     contact_list(item, index) {
       console.log("聯繫人類型");
@@ -1571,6 +1569,8 @@ export default {
       } else {
         this.RoomTypeList.push(index);
       }
+      console.log('this.RoomTypeList');
+      console.log(this.RoomTypeList);
     },
     change_HouseUse(index) {
       var idx = this.lc_use_index.indexOf(index);

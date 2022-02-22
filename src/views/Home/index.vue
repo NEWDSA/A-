@@ -5,7 +5,7 @@
       <van-swipe class="my-swipe" indicator-color="#f12945">
         <van-swipe-item v-for="(item, index) in Banner" :key="index">
           <div style="width: 100%; height: 0; padding-bottom: 56.25%">
-            <img style="width: 100%;" :src="item.url" alt="" />
+            <img style="width: 100%" :src="item.url" alt="" />
           </div>
         </van-swipe-item>
       </van-swipe>
@@ -13,99 +13,25 @@
     <!-- end 轮播图 -->
     <div class="lc_gap">
       <div class="gap1"></div>
+      <!-- 設置菜單 -->
       <div style="border: none !important" class="van-grid van-hairline--top">
-        <div class="van-grid-item" style="flex-basis: 25%">
-          <div
-            style="border: none !important"
-            class="
-              van-grid-item__content van-grid-item__content--center
-              van-hairline
-            "
-            @click="house"
-          >
-            <i class="van-icon van-grid-item__icon"
-              ><img
-                src="@/assets/icon/building_icon.png"
-                class="van-icon__image"
-              /><!----></i
-            ><span class="van-grid-item__text">樓盤管理</span>
+        <template v-for="item in defaultMenu.HasMenus">
+          <div class="van-grid-item" style="flex-basis: 25%">
+            <div
+              style="border: none !important"
+              class="
+                van-grid-item__content van-grid-item__content--center
+                van-hairline
+              "
+              @click="house(item)"
+            >
+              <i class="van-icon van-grid-item__icon"
+                ><img :src="item.Icon" class="van-icon__image" /><!----></i
+              ><span class="van-grid-item__text">{{ item.Name }}</span>
+            </div>
           </div>
-        </div>
-        <div class="van-grid-item" @click="Customer" style="flex-basis: 25%">
-          <div
-            class="
-              van-grid-item__content van-grid-item__content--center
-              van-hairline
-            "
-          >
-            <i class="van-icon van-grid-item__icon"
-              ><img
-                src="@/assets/icon/custome_icon.png"
-                class="van-icon__image"
-              /><!----></i
-            ><span class="van-grid-item__text">客戶管理</span>
-          </div>
-        </div>
-        <div class="van-grid-item" style="flex-basis: 25%">
-          <div
-            class="
-              van-grid-item__content van-grid-item__content--center
-              van-hairline
-            "
-          >
-            <i class="van-icon van-grid-item__icon"
-              ><img
-                src="@/assets/icon/poll_icon.png"
-                class="van-icon__image"
-              /><!----></i
-            ><span class="van-grid-item__text">公客池</span>
-          </div>
-        </div>
-        <div class="van-grid-item" style="flex-basis: 25%">
-          <div
-            class="
-              van-grid-item__content van-grid-item__content--center
-              van-hairline
-            "
-          >
-            <i class="van-icon van-grid-item__icon"
-              ><img
-                src="@/assets/icon/collection_icon.png"
-                class="van-icon__image"
-              /><!----></i
-            ><span class="van-grid-item__text">我的收藏</span>
-          </div>
-        </div>
-        <div class="van-grid-item" style="flex-basis: 25%">
-          <div
-            class="
-              van-grid-item__content van-grid-item__content--center
-              van-hairline
-            "
-          >
-            <i class="van-icon van-grid-item__icon"
-              ><img
-                src="@/assets/icon/work-icon.png"
-                class="van-icon__image"
-              /><!----></i
-            ><span class="van-grid-item__text">工作量化</span>
-          </div>
-        </div>
-        <div data-v-fae5bece="" class="van-grid-item" style="flex-basis: 25%">
-          <div
-            class="
-              van-grid-item__content van-grid-item__content--center
-              van-hairline
-            "
-          >
-            <i class="van-icon van-grid-item__icon"
-              ><img
-                src="@/assets/icon/deal_icon.png"
-                class="van-icon__image"
-              /><!----></i
-            ><span class="van-grid-item__text">成交報告</span>
-          </div>
-        </div>
+        </template>
+        <!-- 點擊添加金剛區 -->
         <div
           data-v-fae5bece=""
           class="van-grid-item"
@@ -127,9 +53,10 @@
           </div>
         </div>
       </div>
+
       <!-- 錄帶看 and 錄客戶box -->
       <div class="custom_box">
-        <nav class="bg1" @click="" >
+        <nav class="bg1" @click="">
           <div class="container">
             <div class="main_title">錄帶看</div>
             <div class="oth_container">
@@ -202,7 +129,16 @@ export default {
       ReduceHouse: [],
       Banner: [],
       loading: true,
+      defaultMenu: [],
     };
+  },
+  beforeMount() {
+    //獲取菜單
+    aplus.apis.getMenu().then((res) => {
+      console.log("打印菜單選項");
+      this.defaultMenu = res;
+      console.log(this.defaultMenu);
+    });
   },
   mounted() {
     this.getBanner(); //輪播圖
@@ -212,11 +148,25 @@ export default {
     more() {
       this.$router.push("More");
     },
-    house() {
-      this.$router.push("House?from=home");
+    // 頁面跳轉
+    house(tags) {
+      // 判斷標籤
+      tags.Name=="樓盤管理"
+        ? router.push("/House")
+        : tags.Name=="客戶管理"
+        ? router.push("/Customer")
+        : tags.Name=="公客池"
+        ? router.push("/Lounge")
+        : tags.url=="我的收藏"
+        ? router.push("/Wardrobe")
+        : tags.url=="工作量化"
+        ? router.push("/Work")
+        : tags.url=="成交報告"
+        ? router.push("/Deal")
+        : "";
     },
-    Customer(){
-      this.$router.push("/Customer")
+    Customer() {
+      this.$router.push("/Customer");
     },
     async getBanner() {
       aplus.apis.getBanner().then((res) => {
@@ -235,9 +185,9 @@ export default {
         });
     },
     // 新增客戶
-    AddCustomer(){
-      this.$router.push('AddCustomer')
-    }
+    AddCustomer() {
+      this.$router.push("AddCustomer");
+    },
   },
 };
 </script>
@@ -253,7 +203,7 @@ export default {
     font-size: 20px;
     line-height: 150px;
     text-align: center;
-    img{
+    img {
       height: 200px;
     }
   }
@@ -286,9 +236,8 @@ export default {
       display: flex;
       margin: 0 10px;
       .bg1 {
-  
         flex: 1;
-        background:url(~@/assets/icon/bg_one_pic.png);
+        background: url(~@/assets/icon/bg_one_pic.png);
         height: 54px;
         background-size: 100% 100%;
         display: flex;

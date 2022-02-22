@@ -14,9 +14,6 @@
         <span class="msg_box">{{ item.MsgContent }} </span>
         <van-image round class="message_head" :src="item.SenderPhotoPath" />
       </div>
-      <!-- <template v-slot:loading>
-        <van-loading type="spinner" size="20" /> 
-      </template> -->
     </template>
     <div class="lc_footer">
       <van-field
@@ -76,13 +73,14 @@ export default {
     send_msg() {
       aplush.apis
         .sendMsg({
-          ContactsKeyId: this.msg_details[0].SenderKeyId,
+          ContactsKeyId: this.msg_details[0].SenderKeyId,  //写反了
           Content: this.msg_content,
         })
         .then((res) => {
           console.log(res);
-          // this.msg_content = "";
           this.getMsgDetails();
+          this.msg_content='';
+
         });
     },
   },

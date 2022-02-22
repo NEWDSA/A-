@@ -3,7 +3,7 @@
  * 添加客户
  * @Date: 2021-12-17 16:03:15 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-30 15:41:44
+ * @Last Modified time: 2022-02-22 15:47:56
  */
 import aplush from "@/api/A+";
 import pinyin from "js-pinyin";
@@ -66,12 +66,12 @@ export default {
       prefix_phone2: "", // 座機前綴
       phone2: "", // 座機
       roomTypeKeyId: "", // 房型keyId
-      area_code:[],// 區號
+      area_code: [], // 區號
       area_show: false,
       username: "", //姓名
       gender: "",
       attribute: "",
-      attributeCode:"",
+      attributeCode: "",
       phone: "",
       phone2: "",
       birthday: "",
@@ -91,13 +91,14 @@ export default {
       room_type: "",
       floor_show: false, // 樓層顯隱
       floor_list: [], // 樓層
-      floorKeyId:"", // 樓層keyId
+      floorKeyId: "", // 樓層keyId
       decoration_show: false, // 裝修情況顯隱
       decoration_list: [], // 裝修情況
-      subjectKeyId: "",// 主體類型keyId
-      customerStatusId:"",//客戶狀態keyId
-      decorationKeyId :"",// 裝修情況keyId
-      buy_show: false// 購房原因顯隱
+      subjectKeyId: "", // 主體類型keyId
+      customerStatusId: "", //客戶狀態keyId
+      decorationKeyId: "", // 裝修情況keyId
+      buy_show: false, // 購房原因顯隱
+      CustomerContacts: [], // 客戶聯繫人
     };
   },
   mounted() {
@@ -269,7 +270,7 @@ export default {
     aplush.apis.SystemType({
       Type: "125",
     }).then(res => {
-      let _temp=res.Result.Items;
+      let _temp = res.Result.Items;
       _temp.forEach(item => {
         this.area_code.push({
           text: item.ItemName,
@@ -283,7 +284,7 @@ export default {
     aplush.apis.SystemType({
       Type: "46",
     }).then(res => {
-      let _temp=res.Result.Items;
+      let _temp = res.Result.Items;
       _temp.forEach(item => {
         this.buy_reasonList.push({
           text: item.ItemName,
@@ -296,13 +297,13 @@ export default {
   },
   methods: {
     // 顯示輸入內容只能為整數
-    UpNumber(e){
+    UpNumber(e) {
       // 開頭不為零、且不包含小數點
       e.target.value = e.target.value.replace(/^0+/g, '').replace(/\./g, '');
     },
     // 性別切換
     gender_change(e) {
-      this.subjectKeyId=e;
+      this.subjectKeyId = e;
     },
     toogle_gender(index) {
       this.gender = this.gender_title[index].ItemName;
@@ -328,7 +329,7 @@ export default {
     // 改變區號
     area_change(picker, value, index) {
       this.attribute = value.text;
-      this.attributeCode=value.value;
+      this.attributeCode = value.value;
     },
     area_cancel() {
       this.area_show = false;
@@ -377,17 +378,14 @@ export default {
     },
     // 添加客戶
     AddCustomer() {
-      aplush.apis.AddCustom({
+      this.CustomerContacts.push({
+        Mobile:this.phone,
+        InquiryTradeTypeCode:this.source_typeKeyId,
+        ContactTypeKeyId: "e7e4f668-dedd-411b-8d4c-7b9ea6a8c4a4",
         ContactName:this.username,
         GenderKeyId:this.subjectKeyId,
-        Mobile:this.phone,
-        InquiryTradeTypeCode:this.radio, //客户类型
-        SalePriceFrom:this.mind_buy_price_start,
-        SalePriceTo:this.mind_buy_price_end,
-        RentPriceFrom:this.mind_rent_price_start,
-        RentPriceTo:this.mind_rent_price_end,
-        InquiryStatusKeyId:this.customerStatusId,
         MobileAttribution:this.attributeCode,
+        Mobile:this.phone,
         QQ:this.QQ,
         Wechat:this.Wechat,
         DoB:this.birthday,
@@ -395,6 +393,8 @@ export default {
         HouseTypeKeyId:this.HouseTypeKeyId,
         AreaFrom:this.area_start,
         AreaTo:this.area_end,
+        InquiryStatusKeyId:this.customerStatusId,
+        MobileAttribution:this.attributeCode,
         HouseDirectionKeyId:this.orientation_radio,
         HouseFloorKeyId:this.floorKeyId,
         DecorationSituationKeyId:this.decorationKeyId,
@@ -402,12 +402,49 @@ export default {
         InquirySourceKeyId:this.source_typeKeyId, // 來源keyId //客户来源
         ContactTypeKeyId:this.customerKeyId,
         Tel:this.phone2
+
+        
+      })
+      aplush.apis.AddCustom({
+        InquiryTradeTypeCode:this.radio, //客户类型
+        RentPriceFrom:this.mind_rent_price_start,
+        RentPriceFrom:this.mind_rent_price_start,
+        SalePriceFrom:this.mind_buy_price_start,
+        SalePriceTo:this.mind_buy_price_end,
+
+        InquirySourceKeyId:this.source_typeKeyId,
+        CustomerContacts:this.CustomerContacts
+
+        // ContactName:this.username,
+        // GenderKeyId:this.subjectKeyId,
+        // Mobile:this.phone,
+        // InquiryTradeTypeCode:this.radio, //客户类型
+        // SalePriceFrom:this.mind_buy_price_start,
+        // SalePriceTo:this.mind_buy_price_end,
+        // RentPriceFrom:this.mind_rent_price_start,
+        // RentPriceTo:this.mind_rent_price_end,
+        // InquiryStatusKeyId:this.customerStatusId,
+        // MobileAttribution:this.attributeCode,
+        // QQ:this.QQ,
+        // Wechat:this.Wechat,
+        // DoB:this.birthday,
+        // Remark:this.remark,
+        // HouseTypeKeyId:this.HouseTypeKeyId,
+        // AreaFrom:this.area_start,
+        // AreaTo:this.area_end,
+        // HouseDirectionKeyId:this.orientation_radio,
+        // HouseFloorKeyId:this.floorKeyId,
+        // DecorationSituationKeyId:this.decorationKeyId,
+        // BuyReasonKeyId:this.buyReasonKeyId,
+        // InquirySourceKeyId:this.source_typeKeyId, // 來源keyId //客户来源
+        // ContactTypeKeyId:this.customerKeyId,
+        // Tel:this.phone2
       }).then(res => {
         console.log(res);
-        if (res.ErrorMsg =="" || (res.ErrorMsg == null)) {
+        if (res.ErrorMsg == "" || (res.ErrorMsg == null)) {
           this.$toast("添加成功");
-           
-        }else{
+
+        } else {
           this.$toast(res.ErroMsg);
         }
       });
@@ -472,7 +509,7 @@ export default {
     orientation_change(e) {
       console.log('orientation change')
       console.log(e);
-    
+
     },
     // 获取选中的房型
     roomType_confirm() {
@@ -518,13 +555,13 @@ export default {
       this.buy_show = false;
     },
     // 購房原因取消選擇
-    buy_cancel(){
+    buy_cancel() {
       this.buy_show = false;
     },
     // 改變選擇購房原因
-    buy_change(picker,value,index){
-      this.buy_reason=value.text;
-      this.buyReasonKeyId=value.KeyId;
+    buy_change(picker, value, index) {
+      this.buy_reason = value.text;
+      this.buyReasonKeyId = value.KeyId;
     }
 
   }

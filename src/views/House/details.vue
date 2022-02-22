@@ -30,15 +30,24 @@
             </template>
           </van-popover>
           <!-- 點讚 -->
+          <!-- 经理或区经推荐房源权限 -->
           <img
             v-if="bool_good"
             @click="good_i"
+            v-permission="[
+              'Property.DistrictRecommend.Other',
+              'Property.BranchRecommend.Other',
+            ]"
             src="@/assets/icon/nav_good_transparent_icon.png"
             alt=""
           />
           <img
             v-else
             @click="good_i"
+            v-permission="[
+              'Property.DistrictRecommend.Other',
+              'Property.BranchRecommend.Other',
+            ]"
             src="@/assets/icon/nav_good_collected_icon.png"
             alt=""
           />
@@ -80,7 +89,7 @@
             :src="item.ImgPath + `?w=${imgWidth}&watermark=smallgroup_center`"
           />
         </van-swipe-item>
-        <van-swipe-item v-if="House_detail.Photos.length==0">
+        <van-swipe-item v-if="House_detail.Photos.length == 0">
           <van-image
             @load="loadingImg"
             ref="img"
@@ -186,6 +195,7 @@
               >放盤紙</van-button
             >
             <van-button
+              @click="AddKeyShow = true"
               class="lc_btn3"
               :icon="require('@/assets/icon/key_icon.png')"
               >鑰匙</van-button
@@ -296,6 +306,11 @@
           size="small"
           color="#f12945"
           @click="addFollow"
+          v-permission="[
+            'Property.FollowInformation.Add',
+            'Property.FollowNewContact.Add',
+            'Property.FollowClean.Add',
+          ]"
           >新增跟進</van-button
         >
         <!-- <van-button type="info" size="small" color="#54bd46" @click="call"
@@ -610,6 +625,8 @@
               label="收匙時間"
               placeholder="請選擇收匙時間"
               right-icon="arrow-down"
+              readonly
+              @click="KeyBoxReceivedTimeShow = true"
               @click-right-icon="KeyBoxReceivedTimeShow = true"
             />
             <van-field
@@ -618,7 +635,9 @@
               label="鑰匙數量"
               placeholder="請選擇鑰匙數量"
               right-icon="arrow-down"
-              @click-right-icon="Ke_CollectTime"
+              readonly
+              @click="KeyBoxKeyCountShow=true"
+              @click-right-icon="KeyBoxKeyCountShow=true"
             />
             <van-field
               v-model="KeyBoxNo"
@@ -677,18 +696,33 @@
               show-word-limit
             />
             <!-- 收匙人 -->
-            <van-field
-              v-model="KeyReceiver"
-              label="收匙人"
-              round
-              @input="Get_KeyReceiver"
-              placeholder="請輸入收匙人"
-            />
-            <!-- 確定 -->
-            <van-button type="primary" @click="Add_Key" block>
-              確認新增
-            </van-button>
+            <div style="margin-bottom:5%;">
+              <van-field
+                v-model="KeyReceiver"
+                label="收匙人"
+                round
+                @input="Get_KeyReceiver"
+                placeholder="請輸入收匙人"
+              />
+            </div>
           </van-cell-group>
+          <!-- 確定 -->
+
+          <div
+            style="
+              position: fixed;
+              bottom: 5px;
+              left: 50%;
+              width: 95%;
+              transform: translateX(-50%);
+            "
+          >
+            <div style="position: relative; height: 50px">
+              <van-button type="primary" @click="Add_Key" block>
+                確認新增
+              </van-button>
+            </div>
+          </div>
         </div>
       </div>
     </van-popup>
@@ -722,6 +756,7 @@
     <!-- 鑰匙數量選取彈窗 -->
     <van-popup
       position="bottom"
+      closeable
       :style="{ height: '30%', overflow: 'hidden' }"
       v-model="KeyBoxKeyCountShow"
     >

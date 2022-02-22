@@ -441,7 +441,7 @@
       <van-col span="20">
         
           <van-button style="width:100% !important;"  block color="#f12945" native-type="submit"
-           
+            @click="AddCustomer"
             >提交</van-button
           >
         

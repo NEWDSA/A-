@@ -2,81 +2,29 @@
  * @Author: luciano 
  * @Date: 2021-12-17 16:17:49 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-01-20 10:02:32
+ * @Last Modified time: 2022-02-14 16:46:59
  */
-import { Toast } from "vant";
+import {
+  Toast
+} from "vant";
 import Draggable from "vuedraggable"; //使用自由拖拽組件
+import aplus from '@/api/A+';
 export default {
   name: "Home",
   data() {
     return {
-      HomeApp: [
-        {
-          title: "樓盤管理",
-          icon:require("@/assets/icon/building_icon.png"),
-          bage: "",
-          sort: 1,
-        },
-        {
-          title: "客戶管理",
-          icon: require("@/assets/icon/custome_icon.png"),
-          bage: "",
-          sort: 2,
-        },
-        {
-          title: "公客池",
-          icon: require("@/assets/icon/poll_icon.png"),
-          bage: "",
-          sort: 3,
-        },
-        {
-          title: "我的收藏",
-          icon: require("@/assets/icon/collection_icon.png"),
-          bage: "",
-          sort: "4",
-        },
-        {
-          title: "工作量化",
-          icon: require("@/assets/icon/work-icon.png"),
-          bage: "",
-          sort: "5",
-        },
-        {
-          title: "成交報告",
-          icon: require("@/assets/icon/deal_icon.png"),
-          bage: "",
-          sort: "6",
-        },
-      ],
-      RecoApplication: [
-        {
-          title: "集團資訊",
-          icon: require("@/assets/icon/group_icon.png"),
-          sort: "1",
-        },
-        {
-          title: "每日推薦",
-          icon: require("@/assets/icon/group_icon.png"),
-          sort: "2",
-        },
-        {
-          title: "粵港澳資訊",
-          icon: require("@/assets/icon/group_icon.png"),
-          sort: "3",
-        },
-        {
-          title: "蘋果日報",
-          icon: require("@/assets/icon/group_icon.png"),
-          sort: "4",
-        },
-      ],
+      HomeApp: [],
+      RecoApplication: [],
       AppStatus: "編輯",
       index: 0,
-      disabled:true
+      disabled: true
     };
   },
   components: {
     Draggable,
+  },
+  beforeMount() {
+    this.getApp();
   },
   methods: {
     back() {
@@ -91,17 +39,31 @@ export default {
     onClickRight() {
       Toast("按钮");
     },
+    //獲取應用
+    getApp() {
+      aplus.apis.getMenu().then(res => {
+        this.HomeApp = res.HasMenus;
+        this.HomeApp.forEach((item) => {
+          item.bage = "-";
+        });
+        this.RecoApplication = res.NotHasMenus;
+        console.log('this.HomeApp');
+      })
+    },
     // 編輯應用
     EditApplication(item) {
       if (this.index === 0) {
         this.AppStatus = "編輯";
+        if (this.AppStatus == "編輯") {
+          this.disabled = false;
+        }
       }
       ++this.index;
       if (this.AppStatus == "編輯") {
-        this.HomeApp.forEach((item) => {
-          item.bage = "-";
-        });
-        this.disabled=false;
+        // this.HomeApp.forEach((item) => {
+        //   item.bage = "-";
+        // });
+        this.disabled = false;
       }
       // 給應用添加移除標籤
       if (this.index === 2) {
@@ -110,15 +72,23 @@ export default {
           item.bage = "";
         });
         this.index = 0;
-        this.disabled=true;
+        this.disabled = true;
       }
-      // end 給應用添加移除標籤
     },
-    // end 編輯應用
     //拖拽應用
     dragChange(e) {
       console.log("觸發事件");
-      console.log(e);
+      console.log(e.movedoldIndex);
+      //使用 e.moved.newIndex 、 e.moved.oldIndex  
+      //得到更新後的新位置
+      this.HomeApp.forEach((item, index) => {
+        if (index === e.moved.newIndex) {
+          item.index = e.moved.newIndex;
+        }
+      });
+      this.EditApi();
+
+
     },
     // end 拖拽應用
     // 添加應用
@@ -137,22 +107,35 @@ export default {
             item.bage = "-";
           }
         });
+        this.EditApi();
       }
     },
-    // end 添加應用
     // 移除應用
     RemoveApp(item) {
       let _temp = item;
       //移除數組單個項目
       if (this.index == 1) {
-        this.HomeApp.splice(
-          this.HomeApp.findIndex((item) => item === _temp),
-          1
-        );
-      }
+        //移除的時候至少要有一個應用
+        if (this.HomeApp.length > 1) {
+          //刷新視圖
+          this.$nextTick(() => {
+            this.HomeApp.splice(
+              this.HomeApp.findIndex((item) => item === _temp),
+              1
+            );
+            this.EditApi();
+            this.getApp();
+          });
 
-      //end 移除數組單個項目
+        }
+
+      }
     },
-    // end 移除應用
+    // App接口
+    EditApi() {
+      aplus.apis.editMenu(this.HomeApp).then(res => {
+        res == true ? Toast.success('操作成功') : Toast.fail('操作失敗');
+      })
+    }
   },
 };

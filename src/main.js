@@ -3,11 +3,14 @@ import App from './App'
 import store from './store'
 import router from './router'
 import '@/permission' // permission control
+import permission from '@/directive/permission/index.js' // 权限判断指令
+// import permission from './directive/permission/index.js'
 import vant from 'vant' // 引入Vant
 import "./utils/auflex.js";
 import 'vant/lib/index.css';
 import './assets/css/iconfont.css';
 import '@vant/touch-emulator';
+
 import {
   Toast
 } from 'vant';
@@ -15,7 +18,7 @@ import {
   PullRefresh
 } from 'vant';
 
- 
+
 
 // console.log(`%cSometime problems is not difficult like you imagine`,"color:red;font-size:20px;font-weight:bold;text-decoration:underline;cursor:pointer");
 /**
@@ -44,7 +47,7 @@ import {
 Vue.use(Swipe);
 Vue.use(SwipeItem);
 // 全局注册权限控制Permission指令
-// Vue.directive('permission', permission)
+Vue.directive('permission', permission)
 // 全局引入jquery
 Vue.config.productionTip = false
 //Vue.prototype.$arrow = true
