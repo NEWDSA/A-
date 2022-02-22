@@ -2,7 +2,7 @@
  * @Author: luciano 
  * @Date: 2021-12-10 15:22:09 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-02-17 20:09:20
+ * @Last Modified time: 2022-02-22 17:32:19
  * 楼盘管理详情
  */
 import Cookies from 'js-cookie'
@@ -51,6 +51,9 @@ export default {
     console.log('this userinfo', this.userInfo.StaffNo);
 
     this.signature = this.userInfo.StaffNo;
+    this.getArea()//手机号地区
+    this.callShow()//称呼
+    this.identityType()//联系人类型
 
     //  TODO:缺少通过员工工号查询员工姓名接口
 
@@ -160,6 +163,48 @@ export default {
       lc_paper: [],
       remark: "", //備註
       signature: "", // 簽署人
+      ZYVolShow: false, //中原成交
+      ZYVol: {
+        active: '1', //默认选中售成交
+        Volume: "1", //一手二手
+        truckSpace: false, //連車位
+        Space: '', //车位
+        VOLPeople: "", //成交人
+        dialogVOLPeople: false, //成交人彈窗
+        KeyWords: "",
+        date: '', //成交日期
+        showCalendar: false, //成交日期彈窗
+        price: "", //成交價格
+        identityType: "", //聯係人類型
+        showTypePicker: false, //联系人类型彈窗
+        name: "", //聯係人姓名
+        call: "", //稱呼
+        showCallPicker: false, //稱呼彈窗
+        phoneAddress: "", //手機號碼地區
+        showPhonePicker: false, //手機號碼地址彈窗
+        phoneNumber: "", //電話號碼
+        telephone: "", //座機
+        weiXin: "", //微信
+        VOLrentPeople: "", //租成交人
+        rentdate: "", //租成交日期
+        showCalendarRent: false, //租成交日期彈窗
+        rentprice: "", //租成交價
+        rent_Date: "", //租期至
+        showRentDate: false //租期彈窗
+      },
+      loading: false,
+      finish: true,
+      showcell: false, //成交人輸入提示
+      typeList: [], //聯係人類型數組
+      callList: [], //称呼
+      PhoneList: [], //手机号码地区
+      celllist: [], //搜索智能提示
+      nameID: "", //称呼Id
+      identityTypeId: "", //联系人类型id
+      phoneNo: "", //电话号码前缀
+      ResultKeyId: "", //成交人id
+      DepartmentKeyId: "", //成交人部门id
+      // TrustType: "", //房源详情租售类型
       KeyList: [], // 鑰匙
       AddKeyShow: false, //添加鑰匙
       KeyBoxName: "", //鑰匙箱
@@ -217,6 +262,14 @@ export default {
 
     };
   },
+  watch: {
+    'ZYVol.VOLPeople': {
+      handler: function (newval, oldVal) {
+        this.ZYVol.VOLPeople = newval
+      },
+      deep: true
+    }
+  },
   filters: {
     formatt: function (value) {},
   },
@@ -241,6 +294,9 @@ export default {
     // 查看現場相
     look_Scene() {
       this.$router.push("/Scene");
+    },
+    e_key(){  
+      this.AddKeyShow=true;
     },
     // 放盤紙
     putPaper() {
@@ -287,13 +343,16 @@ export default {
     onChange(index) {
 
       this.current = index;
+
     },
     collect_i() {
       this.bool_collect = !this.bool_collect;
+      // this.TrustType = res.TrustType
       if (this.bool_collect) {
 
         aplush.apis
           .AddCollection({
+
             KeyId: this.$route.query.KeyId,
           })
           .then((res) => {
@@ -344,7 +403,7 @@ export default {
         case "新增放盤紙":
           this.AddPaperShow = true;
           break;
-        case "新增鑰匙":
+        case "鑰匙":
           this.AddKeyShow = true;
           break;
         case "編輯房源":
@@ -800,12 +859,192 @@ export default {
     // 中原成交
     Add_Deal() {
       // todo:中原成交接口暫缺
-      Toast('中原成交');
+      // Toast('中原成交');
+      this.ZYVolShow = true
+      
     },
     //發佈房源
     Publish_House() {
       // TODO:發佈房源接口暫缺
       Toast('發佈房源')
+    },
+
+
+    formatDate(date) {
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    },
+    // 售成交日期
+    confirmDate(date) {
+      this.ZYVol.showCalendar = false;
+      this.ZYVol.date = this.formatDate(date);
+    },
+    // 请求联系人类型
+    identityType() {
+      aplush.apis.SystemType({
+        Type: "21"
+      }).then((res) => {
+        console.log('res2', res)
+        res.Result.Items.forEach((item) => {
+          if (item.ItemName) {
+            this.typeList.push({
+              'text': item.ItemName,
+              keyId: item.KeyId
+            })
+          }
+        })
+      })
+    },
+    // 联系人类型
+    ConfirmType(value) {
+      console.log('value', value)
+      this.ZYVol.identityType = value.text;
+      this.identityTypeId = value.keyId;
+      this.ZYVol.showTypePicker = false;
+    },
+    // 称呼
+    callShow() {
+      aplush.apis.SystemType({
+        Type: "23"
+      }).then((res) => {
+        console.log('res1', res)
+        res.Result.Items.forEach((item) => {
+          if (item.ItemName) {
+            this.callList.push({
+              'text': item.ItemName,
+              keyId: item.KeyId
+            })
+
+          }
+        })
+      })
+    },
+    // 聯係人名字後綴
+    ConfirmCall(value) {
+      this.ZYVol.call = value.text;
+      this.nameID = value.keyId
+      this.ZYVol.showCallPicker = false;
+    },
+    // 手機號碼地區
+    ConfirmPhone(value) {
+      this.ZYVol.phoneAddress = value.text;
+      this.phoneNo = value.phoneNo;
+      this.ZYVol.showPhonePicker = false;
+    },
+    // 租成交日期
+    confirmrentDate(date) {
+      this.ZYVol.showCalendarRent = false;
+      this.ZYVol.rentdate = this.formatDate(date);
+    },
+    // 租期至
+    confirm_rent(date) {
+      this.ZYVol.showRentDate = false;
+      this.ZYVol.rent_Date = this.formatDate(date);
+    },
+    // 提交售表单
+    submitSellFrom() {
+      this.$refs.SellFrom.validate().then(() => {
+        this.ZYVolShow = false
+        aplush.apis.propertyManualover({
+          KeyID: this.$route.query.KeyId, //房源编号
+          TransactionType: '1', //租售类型
+          TransactionDate: this.ZYVol.date, //售成交日期
+          TransactionType2: this.ZYVol.Volume, //一手二手
+          OwnerName: this.ZYVol.name, //联系人名字
+          GenderKeyId: this.nameID, //称呼ID
+          TrustorTypeKeyId: this.identityTypeId, //联系人类型
+          MobileAttribution: this.phoneNo, //手机号码归属地
+          Mobile: this.ZYVol.phoneNumber, //手机号
+          Tel: this.ZYVol.telephone, //座机
+          WeChat: this.ZYVol.weiXin, //微信
+          CarNo: this.ZYVol.Space, //连车位号
+          Pric: this.ZYVol.price, //成交价
+          TargetContractorKeyId: this.ResultKeyId, //成交人id
+          TargetContractorDeptKeyId: this.DepartmentKeyId //成交人部门id
+        })
+        Object.assign(this.$data.ZYVol, this.$options.data().ZYVol) // 这里重置 ZYVol 数据，其他不受影响
+      }).catch(() => {
+        //验证失败
+        console.log("验证失败")
+      })
+
+    },
+    submitRentFrom() {
+      this.$refs.rentFrom.validate().then(() => {
+        this.ZYVolShow = false
+        aplush.apis.propertyManualover({
+          KeyID: this.$route.query.KeyId, //房源编号
+          TransactionType: '2', //租售类型
+          TransactionDate: this.ZYVol.rentdate, //租成交日期
+          RentToDate: this.ZYVol.rent_Date, //租期至
+          Pric: this.ZYVol.rentprice, //租成交價
+          TargetContractorKeyId: this.ResultKeyId, //成交人id
+          TargetContractorDeptKeyId: this.DepartmentKeyId //成交人部門id
+        }).then(res=>{
+          res.Flag==true?Toast('中原成交修改成功'):Toast(res.ErrorMsg);
+        })
+        Object.assign(this.$data.ZYVol, this.$options.data().ZYVol) // 这里重置 ZYVol 数据，其他不受影响
+      }).catch(() => {
+        //验证失败
+        console.log("验证失败")
+      })
+    },
+    // 獲取手機號地區
+    getArea() {
+      let Type = 125
+      aplush.apis.chooseArea({
+        Type
+      }).then((res) => {
+        console.log('resArea', res)
+        res.Result.Items.forEach((item) => {
+          if (item.ItemName) {
+            this.PhoneList.push({
+              text: item.ItemName,
+              phoneNo: item.ItemNo
+            })
+          }
+        })
+      })
+    },
+    // 搜索成交人
+    onchangeVOLPeople() {
+      this.showcell = true
+      aplush.apis.SelectPerson({
+        "KeyWords": this.ZYVol.KeyWords,
+        "AutoCompleteType": 1,
+      }).then((res) => {
+        console.log('celllist', res)
+        // res.UserDepartmentDatas.forEach((item)=>{
+        //   if(item.ResultName){
+        //     this.celllist.push(item.ResultName)
+        //   }
+        // })
+
+        this.celllist = res.UserDepartmentDatas
+      })
+    },
+    closeDialogVOLPeople() {
+      this.ZYVol.dialogVOLPeople = false;
+    },
+    confirmVOLPeople() {
+      this.ZYVol.dialogVOLPeople = false;
+      this.ZYVol.VOLPeople = this.ZYVol.KeyWords
+      this.celllist = []
+      this.ZYVol.KeyWords = ''
+      this.showcell = false
+    },
+    chooseName(item) {
+      console.log("item", item)
+      this.ZYVol.KeyWords = item.ResultName
+      this.DepartmentKeyId = item.DepartmentKeyId
+      this.ResultKeyId = item.ResultKeyId
+      this.showcell = false
+    },
+    confirmPeople() {
+      this.ZYVol.dialogVOLPeople = false;
+      this.ZYVol.VOLrentPeople = this.ZYVol.KeyWords
+      this.celllist = []
+      this.ZYVol.KeyWords = ''
+      this.showcell = false
     }
 
 

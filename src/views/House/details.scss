@@ -837,3 +837,32 @@
   width: 100%;
   padding-bottom:100%;
 }
+
+.ZYVol{
+  .van-field{
+    padding-left: 10px;
+  }
+  .checkName{
+    display: flex;
+    .van-field{
+      width: 50%;
+    }
+  }
+  .phone{
+    display: flex;
+    .address{
+      width: 45%;
+    }
+  }
+
+}
+::v-deep .van-tab--active{
+  color: orange;
+}
+.showVOLPeople{
+  height: 118px;
+  overflow-y: scroll;
+  .van-cell{
+    padding-left: 12px;
+  }
+}

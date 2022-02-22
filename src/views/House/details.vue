@@ -588,6 +588,298 @@
         <!-- 上傳附件 上傳文件支持格式 jpeg，jpg,gif,png,pdf -->
       </div>
     </van-popup>
+     <!-- 中原成交 -->
+    <van-popup
+      v-model="ZYVolShow"
+      closeable
+      position="bottom"
+      :style="{ height: '60%' }"
+      get-container="body"
+      class="ZYVol"
+    >
+      <van-tabs v-model="ZYVol.active">
+        <van-tab title="售成交" :disabled="House_detail.TrustType != 1">
+          <van-form @submit="submitSellFrom" ref="SellFrom">
+            <van-field name="business" label="成交業務">
+              <template #input>
+                <van-radio-group v-model="ZYVol.Volume" direction="horizontal">
+                  <van-radio name="1">一手成交</van-radio>
+                  <van-radio name="2">二手成交</van-radio>
+                </van-radio-group>
+              </template>
+            </van-field>
+            <van-field name="truckSpace" label="連車位">
+              <template #input>
+                <van-checkbox v-model="ZYVol.truckSpace" shape="square" />
+              </template>
+            </van-field>
+            <van-field
+              v-model="ZYVol.Space"
+              v-show="this.ZYVol.truckSpace"
+              label="車位"
+            />
+            <van-field
+              readonly
+              clickable
+              v-model="ZYVol.VOLPeople"
+              label="成交人"
+              placeholder="成交人"
+              @click="ZYVol.dialogVOLPeople = true"
+              :rules="[{ required: true, message: '成交人不能爲空' }]"
+            />
+
+            <van-dialog
+              v-model="ZYVol.dialogVOLPeople"
+              show-cancel-button
+              @cancel="closeDialogVOLPeople"
+              @confirm="confirmVOLPeople"
+              style="height: 250px"
+            >
+              <van-sticky>
+                <van-search
+                  v-model="ZYVol.KeyWords"
+                  placeholder="请输入搜索关键词"
+                  @search="onchangeVOLPeople"
+                />
+              </van-sticky>
+              <div class="showVOLPeople">
+                <van-list v-model="loading" :finished="finish">
+                  <van-cell
+                    v-for="(item, index) in celllist"
+                    :title="item.ResultName"
+                    :key="item.ResultKeyId"
+                    v-show="showcell"
+                    @click="chooseName(item)"
+                  >
+                  </van-cell>
+                </van-list>
+              </div>
+            </van-dialog>
+            <van-field
+              readonly
+              clickable
+              name="calendar"
+              :value="ZYVol.date"
+              label="成交日期"
+              placeholder="点击选择日期"
+              @click="ZYVol.showCalendar = true"
+              :rules="[{ required: true, message: '成交日期不能爲空' }]"
+            />
+            <van-popup
+              position="bottom"
+              :style="{ height: '30%', overflow: 'hidden' }"
+              v-model="ZYVol.showCalendar"
+            >
+              <van-datetime-picker
+                v-model="ZYVol.chooseDate"
+                type="date"
+                :title="title"
+                placeholder="請選擇成交日期"
+                @confirm="confirmDate"
+                @cancel="ZYVol.showCalendar = false"
+              />
+            </van-popup>
+            <van-field
+              v-model="ZYVol.price"
+              label="成交價"
+              placeholder="請輸入成交價"
+              :rules="[{ required: true, message: '成交價不能爲空' }]"
+            >
+              <template #extra>
+                <span>萬</span>
+              </template>
+            </van-field>
+            <van-field
+              readonly
+              clickable
+              label="聯係人類型"
+              :value="ZYVol.identityType"
+              @click="ZYVol.showTypePicker = true"
+            />
+            <van-popup v-model="ZYVol.showTypePicker" round position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="typeList"
+                :default-index="0"
+                @cancel="ZYVol.showTypePicker = false"
+                @confirm="ConfirmType"
+              />
+            </van-popup>
+
+            <div class="checkName">
+              <van-field
+                label="聯係人名字"
+                v-model="ZYVol.name"
+                :rules="[{ required: true, message: '必填' }]"
+              >
+              </van-field>
+              <van-field
+                readonly
+                clickable
+                label="稱呼"
+                :value="ZYVol.call"
+                @click="ZYVol.showCallPicker = true"
+                placeholder="請選擇"
+              />
+            </div>
+            <van-popup v-model="ZYVol.showCallPicker" round position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="callList"
+                @cancel="ZYVol.showCallPicker = false"
+                @confirm="ConfirmCall"
+              />
+            </van-popup>
+            <div class="phone">
+              <van-field
+                readonly
+                clickable
+                label="地區"
+                :value="ZYVol.phoneAddress"
+                @click="ZYVol.showPhonePicker = true"
+                label-width="2.2em"
+                class="address"
+              />
+              <van-field
+                label="手機號碼"
+                v-model="ZYVol.phoneNumber"
+                label-width="4.2em"
+                type="tel"
+                :rules="[{ required: true, message: '必填' }]"
+              />
+            </div>
+            <van-popup v-model="ZYVol.showPhonePicker" round position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="PhoneList"
+                @cancel="ZYVol.showPhonePicker = false"
+                @confirm="ConfirmPhone"
+              />
+            </van-popup>
+            <van-field
+              label="座機"
+              v-model="ZYVol.telephone"
+              label-width="4.2em"
+            />
+            <van-field
+              label="微信"
+              v-model="ZYVol.weiXin"
+              label-width="4.2em"
+            />
+            <div style="margin: 16px">
+              <van-button round block type="info" native-type="submit"
+                >提交</van-button
+              >
+            </div>
+          </van-form>
+        </van-tab>
+        <van-tab title="租成交" :disabled="House_detail.TrustType != 2">
+          <van-form @submit="submitRentFrom" ref="rentFrom">
+            <van-field
+              v-model="ZYVol.VOLrentPeople"
+              label="成交人"
+              placeholder="成交人"
+              @click="ZYVol.dialogVOLPeople = true"
+              :rules="[{ required: true, message: '成交人不能爲空' }]"
+            />
+            <van-dialog
+              v-model="ZYVol.dialogVOLPeople"
+              show-cancel-button
+              @cancel="closeDialogVOLPeople"
+              @confirm="confirmPeople"
+              style="height: 250px"
+            >
+              <van-sticky>
+                <van-search
+                  v-model="ZYVol.KeyWords"
+                  placeholder="请输入搜索关键词"
+                  @search="onchangeVOLPeople"
+                />
+              </van-sticky>
+              <div class="showVOLPeople">
+                <van-list v-model="loading" :finished="finish">
+                  <van-cell
+                    v-for="(item, index) in celllist"
+                    :title="item.ResultName"
+                    :key="index"
+                    v-show="showcell"
+                    @click="chooseName(item)"
+                  >
+                  </van-cell>
+                </van-list>
+              </div>
+            </van-dialog>
+            <van-field
+              readonly
+              clickable
+              name="calendar"
+              :value="ZYVol.rentdate"
+              label="成交日期"
+              placeholder="点击选择日期"
+              @click="ZYVol.showCalendarRent = true"
+              :rules="[{ required: true, message: '成交日期不能爲空' }]"
+            />
+            <van-popup
+              position="bottom"
+              :style="{ height: '30%', overflow: 'hidden' }"
+              v-model="ZYVol.showCalendarRent"
+            >
+              <van-datetime-picker
+                v-model="ZYVol.chooseDate"
+                type="date"
+                :title="title"
+                placeholder="請選擇成交日期"
+                @confirm="confirmrentDate"
+                @cancel="ZYVol.showCalendarRent = false"
+              />
+            </van-popup>
+            <van-field
+              v-model="ZYVol.rentprice"
+              label="成交價"
+              placeholder="請輸入成交價"
+              :rules="[{ required: true, message: '成交價不能爲空' }]"
+            >
+              <template #extra>
+                <span>萬</span>
+              </template>
+            </van-field>
+            <van-field
+              readonly
+              clickable
+              name="calendar"
+              :value="ZYVol.rent_Date"
+              label="租期至"
+              placeholder="点击选择日期"
+              @click="ZYVol.showRentDate = true"
+            />
+            <van-popup
+              position="bottom"
+              :style="{ height: '30%', overflow: 'hidden' }"
+              v-model="ZYVol.showRentDate"
+            >
+              <van-datetime-picker
+                v-model="ZYVol.chooseDate"
+                type="date"
+                :title="title"
+                placeholder="請選擇成交日期"
+                @confirm="confirm_rent"
+                @cancel="ZYVol.showRentDate = false"
+              />
+            </van-popup>
+            <div style="margin: 16px">
+              <van-button
+                round
+                block
+                type="info"
+                native-type="submit"
+                @click="submitRentFrom"
+                >提交</van-button
+              >
+            </div>
+          </van-form>
+        </van-tab>
+      </van-tabs>
+    </van-popup>
     <!-- 添加鑰匙 -->
     <van-popup
       position="center"
