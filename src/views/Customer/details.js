@@ -3,7 +3,7 @@
  * 客戶詳情
  * @Date: 2021-12-17 16:06:16 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-01-19 15:28:59
+ * @Last Modified time: 2022-02-23 17:19:49
  */
 
 import formattime from "@/utils/format_time";
@@ -85,7 +85,7 @@ export default {
     // 新增跟進
     onClickFollowUp() {
       this.$router.push({
-        path: "/follow_up",
+        path: "/AddFollow",
         query: {
           id: this.$route.query.id,
         },

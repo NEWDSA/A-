@@ -7,52 +7,55 @@
         left-arrow
         title="放盤紙"
         @click-left="handleClickLeft"
-        right-text="新增"
+        
         @click-right="handleClickRight"
       />
     </div>
+    <template v-if="PaperList.length >0">
+      <van-swipe-cell
+        :before-close="beforeClose"
+        v-if="PaperList.length > 0"
+        v-for="(item, index) in PaperList"
+      >
+        <template #left>
+          <van-button square type="primary" text="编辑" />
+        </template>
 
-    <van-swipe-cell
-      :before-close="beforeClose"
-      v-if="PaperList.length > 0"
-      v-for="(item, index) in PaperList"
-    >
-      <template #left>
-        <van-button square type="primary" text="编辑" />
-      </template>
-
-      <div class="collapse">
-        <div class="other_collapse" v-if="item.DepartmentName">
-          <span class="first">部門:</span>
-          <span>{{ item.DepartmentName }}</span>
+        <div class="collapse">
+          <div class="other_collapse" v-if="item.DepartmentName">
+            <span class="first">部門:</span>
+            <span>{{ item.DepartmentName }}</span>
+          </div>
+          <div class="other_collapse" v-if="item.OnlyTrustPerson">
+            <span class="first">簽署人:</span>
+            <span>{{ item.OnlyTrustPerson }}</span>
+          </div>
+          <div class="other_collapse" v-if="item.papertype">
+            <span class="first">放盤類型:</span>
+            <span>{{ item.papertype }}</span>
+          </div>
+          <div class="other_collapse" v-if="item.EffectiveDate">
+            <span class="first">放盤日期起:</span>
+            <span>{{ item.EffectiveDate }}</span>
+          </div>
+          <div class="other_collapse" v-if="item.EffectiveDate">
+            <span class="first">放盤日期止:</span>
+            <span>{{ item.EffectiveDate }}</span>
+          </div>
+          <div class="other_collapse" v-if="item.TrustBookNo">
+            <span class="first">放盤紙編號:</span>
+            <span>{{ item.TrustBookNo }}</span>
+          </div>
         </div>
-        <div class="other_collapse" v-if="item.OnlyTrustPerson">
-          <span class="first">簽署人:</span>
-          <span>{{ item.OnlyTrustPerson }}</span>
-        </div>
-        <div class="other_collapse" v-if="item.papertype">
-          <span class="first">放盤類型:</span>
-          <span>{{ item.papertype }}</span>
-        </div>
-        <div class="other_collapse" v-if="item.EffectiveDate">
-          <span class="first">放盤日期起:</span>
-          <span>{{ item.EffectiveDate }}</span>
-        </div>
-        <div class="other_collapse" v-if="item.EffectiveDate">
-          <span class="first">放盤日期止:</span>
-          <span>{{ item.EffectiveDate }}</span>
-        </div>
-        <div class="other_collapse" v-if="item.TrustBookNo">
-          <span class="first">放盤紙編號:</span>
-          <span>{{ item.TrustBookNo }}</span>
-        </div>
-      </div>
-      <template #right>
-        <van-button square type="danger" text="删除" />
-      </template>
-    </van-swipe-cell>
+        <template #right>
+          <van-button square type="danger" text="删除" />
+        </template>
+      </van-swipe-cell>
+    </template>
+    <template v-else>
+       <van-empty description="沒有數據" />
+    </template>
     <!-- 顯示沒有數據樣式 -->
-    
   </div>
 </template>
 
@@ -73,7 +76,12 @@ export default {
       this.$router.go(-1);
     },
     handleClickRight() {
-      this.$router.push("AddPutPaper");
+      // this.$router.push({
+      //   path: "/AddPutPaper",
+      //   query: {
+      //     keyId: this.$route.query.keyId,
+      //   },
+      // });
     },
     // 獲取放盤紙
     Get_Paper() {
@@ -155,23 +163,23 @@ export default {
       }
 
       .other_collapse {
-       display:flex;
-       justify-content:center;
-       align-items:center;
-       position:relative;
-       margin-bottom:10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        margin-bottom: 10px;
 
         .first {
           // font-size: 14px;
           color: #333;
-        //   padding: 8px;
-        padding: 10px 0 0 20px;
+          //   padding: 8px;
+          padding: 10px 0 0 20px;
         }
 
         span {
           font-size: 14px;
           font-weight: 700;
-        //   margin: 5px;
+          //   margin: 5px;
           padding: 10px 0 0 5px;
           // width: 40%;
           // display: inline-block;

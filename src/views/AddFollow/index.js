@@ -3,7 +3,7 @@
  * 新增跟進方法
  * @Date: 2021-12-29 16:37:27 
  * @Last Modified by: luciano
- * @Last Modified time: 2021-12-30 15:57:43
+ * @Last Modified time: 2022-02-24 15:21:36
  */
 // 引入api接口
 import aplush from "@/api/A+";
@@ -21,62 +21,25 @@ export default {
       price_text: "",
       content: "",
       Follow_Content: "", //跟進內容
-      Expertdeal:[], //行家成交
-      Expertdeal_Status:"", //行家成交狀態
+      Expertdeal: [], //行家成交
+      Expertdeal_Status: "", //行家成交狀態
       lc_DealType: "", //成交方式
       lc_TransactionType: "", //交易類型
       lc_Carport: "", //車位
       Deal_Price: "", //成交價
-    //   Deal_Time: "", //成交時間
+      //   Deal_Time: "", //成交時間
       Show_Deal_Time: false, //是否顯示成交時間
-      Deal_Time:new Date(),//成交時間
+      Deal_Time: new Date(), //成交時間
       DealTime: "", //成交時間
       Rent_Time: "", //租期至
       Remind_TA: "", //提醒TA
-      NoticeList: [{
-          Name: "Lucinao",
-          Department: "IT",
-          icon: "https://img2.baidu.com/it/u=3279938379,2065999068&fm=26&fmt=auto",
-        },
-        {
-          Name: "Lily",
-          Department: "MTK",
-          icon: "https://img2.baidu.com/it/u=3279938379,2065999068&fm=26&fmt=auto",
-        },
-        {
-          Name: "Ken Lo",
-          Department: "MTK",
-          icon: "https://img2.baidu.com/it/u=3279938379,2065999068&fm=26&fmt=auto",
-        },
-        {
-          Name: "Ken Lo",
-          Department: "MTK",
-          icon: "https://img2.baidu.com/it/u=3279938379,2065999068&fm=26&fmt=auto",
-        },
-      ], //   提醒人
-      //   新增提醒人
-      AddNoticeList: [{
-          Name: "Lucinao",
-          Department: "IT",
-          icon: "https://img2.baidu.com/it/u=3279938379,2065999068&fm=26&fmt=auto",
-        },
-        {
-          Name: "Lily",
-          Department: "MTK",
-          icon: "https://img2.baidu.com/it/u=3279938379,2065999068&fm=26&fmt=auto",
-        },
-        {
-          Name: "Ken Lo",
-          Department: "MTK",
-          icon: "https://img2.baidu.com/it/u=3279938379,2065999068&fm=26&fmt=auto",
-        },
-        {
-          Name: "Ken Lo",
-          Department: "MTK",
-          icon: "https://img2.baidu.com/it/u=3279938379,2065999068&fm=26&fmt=auto",
-        },
-      ],
-      // end 新增提醒人
+      show_remind: false, //是否顯示提醒TA
+      remind_List: [], //提醒TA列表
+      Remind_Ta_Text: "", //提醒TA文字
+      SearchPerson: [], //搜索人
+      SearchType: '1',
+      PeopleInfo: [],
+      Remind_TA_Date: "", //提醒TA日期
       status_text: "",
       status_keyId: ""
     };
@@ -143,10 +106,39 @@ export default {
         1
       );
     },
-    // 添加提醒人
-    selectPerson() {
-      this.$router.push("SelectPerson");
-      console.log("gggg");
+    // 查詢提醒事項
+    search_remind_ta() {
+      aplush.apis.SelectPerson({
+        AutoCompleteType: this.SearchType,
+        KeyWords: this.Remind_Ta_Text,
+      }).then((res) => {
+        this.PeopleInfo = res;
+        console.log('this.PeopleInfo');
+        console.log(this.PeopleInfo);
+      }).catch((err) => {
+
+        console.log("出現錯誤");
+        console.log(err);
+      });
+    },
+    // 取消提醒
+    Cancel_remind_ta() {
+      this.show_remind = false;
+    },
+    e_Remind_Select(index) {
+      this.$refs.checkboxes[index].toggle();
+    },
+    Remind_item_change(e) {
+      this.remind_List = e;
+    },
+    //取消提醒
+    cancel_remind() {
+      this.show_remind = false;
+      this.remind_List = [];
+    },
+    //確認提醒
+    confrim_remind() {
+      this.show_remind = true;
     },
     Listing_Change() {},
     // 確認選擇房源狀態
@@ -160,6 +152,9 @@ export default {
     // 取消選擇房源狀態
     Listing_Cancel() {
       this.Show_Listing_Status = false;
+    },
+    remove_remind(index) {
+      this.remind_List.splice(index, 1);
     },
     ChangeCheck(e) {
       console.log("選中的值");
@@ -180,18 +175,54 @@ export default {
       console.log(value);
       this.Deal_Time = value;
       this.Show_Deal_Time = false;
-      this.DealTime=formattime.format_time(value);
+      this.DealTime = formattime.format_time(value);
     },
     //取消確定成交時間
-    Deal_Time_Cancel(){
-        this.Show_Deal_Time = false;
+    Deal_Time_Cancel() {
+      this.Show_Deal_Time = false;
     },
     // 返回
     onClickLeft() {
-        this.$router.go(-1);
+      this.$router.go(-1);
     },
     // 提交
-    onClickRight() {
+    onClickRight() {},
+    // 增加提醒
+    Remind_TA_Click() {
+      this.show_remind = true;
+
+    },
+    // 新增跟進
+    submit_Click() {
+      aplush.apis.ListiongFollowAdd({
+        // InquiryKeyId: "0c0b57fa-d2da-cac7-6dcd-08d85ea268e3", //客戶ID
+        // FollowTypeKeyId: this.exclusive, //跟進類型Id
+        // FollowTypeCode: "", //跟進類型
+        // "MsgUserKeyIds": "", //提醒人Id
+        // "MsgDeptKeyIds": "", //提醒部門Id
+        // "MsgTime": this.Remind_TA_Date, // 提醒時間
+        // "Content": this.Follow_Content //提醒內容
+
+
+        FollowType: this.exclusive,
+        PropertyKeyId: "9f910425-b9de-c3bf-4703-08d7faf80b49",
+        TargetPropertyStatusKeyId: "",
+        ExpertTransactionKeyId: "",
+        DealType: "",
+        TransactionType: "",
+        CarNo: "",
+        TransactionSalePrice: "",
+        TransactionRentPrice: "",
+        TransactionDate: "",
+        TransactionRentToDate: "",
+        FollowContent: "",
+        MsgUserKeyIds: "",
+        MsgDeptKeyIds: "",
+        MsgTime: ""
+
+      }).then(res => {
+
+      })
     }
   },
 };

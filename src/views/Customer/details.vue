@@ -216,7 +216,9 @@
     </van-tabs>
     <!-- 新增跟進、錄入帶看 -->
     <div class="lc_follow">
-      <img src="@/assets/icon/float_follow-up_icon.png" />
+      <img src="@/assets/icon/float_follow-up_icon.png"
+       @click="onClickFollowUp"
+      />
       <img
         src="@/assets/icon/float_seeing-look_icon.png"
         @click="onClickLookRecord"

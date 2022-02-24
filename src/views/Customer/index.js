@@ -1,7 +1,7 @@
 /*
- * @Author: luciano 
+ * @Author: luciano
   客戶管理 操作
- * @Date: 2021-12-17 11:38:35 
+ * @Date: 2021-12-17 11:38:35
  * @Last Modified by: luciano
  * @Last Modified time: 2022-02-09 11:20:26
  */
@@ -202,6 +202,7 @@ export default {
         })
         .then((res) => {
           this.CustomList = res.Inquirys;
+          console.log('CustomList',this.CustomList)
         });
     },
     // 过滤
@@ -231,6 +232,7 @@ export default {
           console.log(res);
           // 查看是否有结果
           this.CustomList = res.Inquirys;
+          console.log('CustomList',this.CustomList)
           this.show_filter = false;
           // end 查看是否有结果
         });
@@ -321,7 +323,15 @@ export default {
 
     },
     // 設置VIP
-    Settings_VIP(keyId) {
+    setVIP(IsVip,keyId) {
+      if(IsVip){
+        this.cancel_Vip(keyId)
+      }else{
+      this.Settings_VIP(keyId)
+      }
+
+    },
+    Settings_VIP(keyId){
       let keyId_arr=[]
       keyId_arr.push(keyId)
       aplush.apis.AddVip(
@@ -330,6 +340,14 @@ export default {
         console.log('打印最終結果');
         console.log(res);
         res.flag===1?Toast('設置成功'):Toast(res.ErrorMsg);
+      })
+    },
+    // 取消VIP
+    cancel_Vip(keyId){
+      let keyId_arr=[]
+      keyId_arr.push(keyId)
+      aplush.apis.cancelVip(keyId_arr).then((res)=>{
+        res.flag===1?Toast('已取消'):Toast(res.ErrorMsg);
       })
     },
     // 重置查詢條件
@@ -344,7 +362,7 @@ export default {
       this.sales_man='';
       this.FloorIndex='';
       // this.get_suggest('');
-     
+
     },
     // 客戶詳情
     Customer_Details(val) {

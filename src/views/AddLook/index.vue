@@ -35,7 +35,7 @@
 
     <div class="lc_others_sales">
       <span class="lc_sales">售價</span>
-      <van-field type="text" placeholder="請輸入"></van-field>
+      <van-field v-model="sale_price" type="text" placeholder="請輸入"></van-field>
       <span>萬元</span>
     </div>
     <div class="lc_take">
@@ -546,6 +546,8 @@ export default {
       lc_house_type: "", //房型
       take_time: false, //帶看時間布爾
       take_time_data: "", //帶看時間
+      sale_price: "", //售價
+      lc_file_path:""
     };
   },
   mounted() {},
@@ -558,13 +560,13 @@ export default {
       aplush.apis
         .AddLookRecord({
           HouseType: this.lc_radio,
-          SeePropertyType: this.type,
+          SeePropertyType: this.type, //帶看類型
           SrouceKeyId: "", //樓盤id
-          ReserveTime: this.take_time_data,
-          InquiryKeyId: "", //
+          ReserveTime: this.take_time_data, //看樓時間
+          InquiryKeyId: "", //客戶Id
           FollowTypeKeyId: "", //跟進類型Id
           FollowTypeCode: "", //跟進類型Code
-          Content: this.lc_feedback,
+          Content: this.lc_feedback, // 反饋內容
           ContentNext: this.lc_next_plan,
           AttachmentName: "", //附件名稱
           AttachmentPath: "", //附件路徑
@@ -596,7 +598,7 @@ export default {
         minute = `0${minute}`;
       }
       // 適配蘋果
-      
+
       this.lc_data = `${year}-${month}-${day} ${hour}:${minute}`;
 
       this.notice_time = false;
@@ -607,10 +609,10 @@ export default {
       //   console.log('你點擊了我');
       //   console.log(this.notice_time);
     },
-    onClickSave(e) {
-      console.log("彈出時間");
-      console.log(e);
-    },
+    // onClickSave(e) {
+    //   console.log("彈出時間");
+    //   console.log(e);
+    // },
     //獲取一手樓盤 0:二手樓盤 1:一手房源
     get_one_house() {
       // 搜索帶看樓盤
@@ -836,6 +838,7 @@ export default {
       fd.append("fileType", "file");
       console.log(file.name);
       aplush.apis.UploadFile(fd).then((res) => {
+        this.lc_file_path =window.location.host+res;
         console.log(res);
       });
     },
@@ -873,6 +876,8 @@ export default {
 .container {
   height: 100%;
   width: 100%;
+  background-color: #fff;
+  overflow-x: hidden;
   .lc_mian_title {
     position: relative;
     display: flex;

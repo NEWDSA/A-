@@ -47,7 +47,7 @@ export const constantRoutes = [
     component: () => import('@/views/Message/details.vue'),
   },
   {
-    path: '/Customer', 
+    path: '/Customer',
     component: () => import('@/views/Customer/index.vue'),
   },
 
@@ -82,19 +82,19 @@ export const constantRoutes = [
     name: 'House',
     component: () => import('@/views/House'),
     meta: {
-      showTab: false//如果需要显示就加上这个
+      showTab: false //如果需要显示就加上这个
     }
   },
   {
-   path:'/EditHouse',
-   name:'EditHouse',  //編輯房源
-   component:()=>import('@/views/House/edit.vue'),
+    path: '/EditHouse',
+    name: 'EditHouse', //編輯房源
+    component: () => import('@/views/House/edit.vue'),
   },
   {
     path: '/House?from=home',
     component: () => import('@/views/Home'),
     meta: {
-      showTab: true//如果需要显示就加上这个
+      showTab: true //如果需要显示就加上这个
     }
   },
   {
@@ -175,12 +175,26 @@ export const constantRoutes = [
     path: '/AddPutPaper',
     name: 'AddPutPaper',
     component: () => import('@/views/PutPaper/add.vue')
+  },
+  // 查冊
+  {
+    path: '/SeeBook',
+    name: 'SeeBook',
+    component: () => import('@/views/SeeBook/index.vue')
+  },
+  // 新增查冊
+  {
+    path: '/AddSeeBook',
+    name: 'AddSeeBook',
+    component: () => import('@/views/SeeBook/add.vue')
   }
 
 ]
 const createRouter = () => new Router({
   // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({
+    y: 0
+  }),
   routes: constantRoutes
 })
 

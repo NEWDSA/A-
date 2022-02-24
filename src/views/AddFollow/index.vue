@@ -1,18 +1,50 @@
 <template>
   <div class="container">
     <!-- navbar 導航 -->
-    <van-nav-bar @click-left="onClickLeft" @click-right="" class="lc_bar" title="新增跟進" right-text="提交" left-arrow />
-    <!-- 跟進類型 -->
+    <div class="lc_navbar">
+      <van-nav-bar
+        fixed
+        @click-left="onClickLeft"
+        @click-right=""
+        class="lc_bar"
+        title="新增跟進"
+        right-text="提交"
+        left-arrow
+      />
+    </div>
     <van-radio-group @change="ChangeCheck" v-model="exclusive">
       <span class="lc_title_">跟進類型:</span>
       <van-cell-group>
-        <template v-for="(item, index) in Follow_Type">
-          <van-cell :title="item.text">
-            <template #right-icon>
-              <van-radio :name="item.value" />
-            </template>
-          </van-cell>
-        </template>
+        <van-cell title="信息補充">
+          <template #right-icon>
+            <van-radio name="2" />
+          </template>
+        </van-cell>
+        <van-cell title="申請轉盤">
+          <template #right-icon>
+            <van-radio name="1" />
+          </template>
+        </van-cell>
+        <van-cell title="洗盤">
+          <template #right-icon>
+            <van-radio name="3" />
+          </template>
+        </van-cell>
+        <van-cell title="新開盤">
+          <template #right-icon>
+            <van-radio name="4" />
+          </template>
+        </van-cell>
+        <van-cell title="新增聯繫人">
+          <template #right-icon>
+            <van-radio name="5" />
+          </template>
+        </van-cell>
+        <van-cell title="叫價">
+          <template #right-icon>
+            <van-radio name="6" />
+          </template>
+        </van-cell>
       </van-cell-group>
     </van-radio-group>
     <!-- 信息補充為真則顯示房源狀態 -->
@@ -29,6 +61,7 @@
           type="text"
           placeholder="請選擇房源狀態"
           right-icon="arrow-down"
+          @click="Show_Listing_Status = true"
           @click-right-icon="Show_Listing_Status = true"
         />
       </van-cell>
@@ -40,8 +73,8 @@
         title="租價"
         v-show="
           status_keyId == '61748b2a-79f2-4482-98fb-ab331c6614fe' ||
-          status_keyId === '43d15344-a09d-48c9-af93-b244a68b8247'
-          || status_keyId==='d1cb2c72-4c6e-4f5c-a9e3-b763cefa87b8'
+          status_keyId === '43d15344-a09d-48c9-af93-b244a68b8247' ||
+          status_keyId === 'd1cb2c72-4c6e-4f5c-a9e3-b763cefa87b8'
         "
       >
         <van-field v-model="price_text" type="text" placeholder="請輸入" />
@@ -173,7 +206,13 @@
       <!-- 租期至 -->
       <van-cell-group>
         <van-cell center title="租期至">
-          <van-field v-model="Rent_Time" readonly type="text" placeholder="請選擇租期至" right-icon="arrow-down"  />
+          <van-field
+            v-model="Rent_Time"
+            readonly
+            type="text"
+            placeholder="請選擇租期至"
+            right-icon="arrow-down"
+          />
         </van-cell>
       </van-cell-group>
     </template>
@@ -216,33 +255,39 @@
       </div>
     </div>
     <!-- 提醒TA -->
-    <!-- <van-cell-group>
+    <van-cell-group>
       <van-cell center title="提醒TA">
-        <div class="lc_other_paper">
-              <div
-                style="
-                  width: 70%;
-                  margin-top: 5%;
-                  margin-bottom: 5%;
-                  margin-left: -5%;
-                "
-              >
-                <van-uploader
-                  v-model="lc_paper"
-                  :max-count="1"
-                  :after-read="afterRead"
-                >
-                  <div class="lc_box">
-                    <div class="lc_upload"></div>
-                    <div class="lc_house">上傳看房單</div>
-                  </div>
-                </van-uploader>
-              </div>
-            </div>
-        <!-- <van-field v-model="Remind_TA" type="text" placeholder="請輸入" /> -->
-
+        <van-button type="primary" @click="Remind_TA_Click">增加 </van-button>
+      </van-cell>
+      <van-cell>
+        <van-field
+          type="date"
+          v-model="Remind_TA_Date"
+          placeholder="請選擇提醒日期"
+        />
+      </van-cell>
+      <van-cell>
+        <div class="lc_foll_contianer">
+          <template v-for="(item, index) in remind_List">
+            <span @click="remove_remind(index)" class="lc_foll_person"
+              >{{ item }}<van-icon size="14" class="lc_remove" name="cross"
+            /></span>
+          </template>
+        </div>
       </van-cell>
     </van-cell-group>
+    <div style="position: rlative; height: 70px"></div>
+    <div class="lc_submit">
+      <van-button
+        type="primary"
+        color="#f12945"
+        size="small"
+        @click="submit_Click"
+      >
+        提交
+      </van-button>
+    </div>
+
     <!-- 更改房源狀態彈窗 -->
     <van-popup
       v-model="Show_Listing_Status"
@@ -252,6 +297,7 @@
       <van-picker
         show-toolbar
         v-model="Listing_Text"
+        上
         title="更改房源狀態"
         :columns="Listing_Stauts"
         @change="Listing_Change"
@@ -273,6 +319,90 @@
         @cancel="Deal_Time_Cancel"
       />
     </van-popup>
+    <!-- 部門提醒 -->
+    <!-- <van-popup v-model="show_remind" position="bottom" :style="{height:'auto'}">
+      <van-search
+        v-model="Remind_TA_Text"
+        placeholder="請輸入"
+        @search="Remind_TA_Search"
+      />
+      <template>
+        <van-cell-group>
+          <van-cell
+            v-for="(item, index) in Remind_TA_List"
+            :key="index"
+            @click="Remind_TA_Click(item)"
+            center
+            title="{{ item.name }}"
+          >
+            <van-radio name="2" ref="radio_keybox" />
+          </van-cell>
+        </van-cell-group>
+      </template>
+
+    </van-popup> -->
+    <van-dialog
+      @cancel="cancel_remind"
+      @confirm="confrim_remind"
+      show-cancel-button
+      v-model="show_remind"
+      closeable
+    >
+      <van-sticky>
+        <form action="/">
+          <div
+            style="
+              position: relative;
+              top: 40px;
+              margin-bottom: 30px;
+              z-index: 3333;
+            "
+          >
+            <div style="display: flex; justify-content: center">
+              <span style="padding-left: 5%; padding-right: 5%"
+                >選擇搜索類型</span
+              >
+              <van-radio-group direction="horizontal" v-model="SearchType">
+                <van-radio name="1">聯繫人</van-radio>
+                <van-radio name="2">部門</van-radio>
+              </van-radio-group>
+            </div>
+
+            <van-search
+              class="lc_search_person"
+              v-model="Remind_Ta_Text"
+              show-action
+              placeholder="请输入搜索关键词"
+              @search="search_remind_ta"
+              @cancel="Cancel_remind_ta"
+            />
+          </div>
+        </form>
+      </van-sticky>
+      <!-- 多選 -->
+      <!-- 單選 -->
+      <template>
+        <div class="lc_contact_scroll">
+          <van-checkbox-group
+            v-model="SearchPerson"
+            @change="Remind_item_change"
+          >
+            <van-cell-group>
+              <van-cell
+                v-for="(item, index) in PeopleInfo.UserDepartmentDatas"
+                :title="item.ResultName"
+                :key="index"
+                @click="e_Remind_Select(index)"
+              >
+                <template #right-icon>
+                  <van-checkbox :name="item.ResultName" ref="checkboxes" />
+                </template>
+              </van-cell>
+            </van-cell-group>
+          </van-checkbox-group>
+        </div>
+      </template>
+    </van-dialog>
   </div>
 </template>
 <script>

@@ -105,7 +105,7 @@
                 type="primary"
                 class="btn_s"
                 size="mini"
-                @click="Settings_VIP(item.InquiryKeyId)"
+                @click="setVIP(item.IsVip,item.InquiryKeyId)"
               >
                 {{ item.IsVip ? '取消VIP' : '設置VIP' }}
               </van-button>

@@ -2,7 +2,7 @@
  * @Author: luciano 
  * @Date: 2021-12-10 15:22:09 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-02-22 17:32:19
+ * @Last Modified time: 2022-02-24 15:22:19
  * 楼盘管理详情
  */
 import Cookies from 'js-cookie'
@@ -51,9 +51,9 @@ export default {
     console.log('this userinfo', this.userInfo.StaffNo);
 
     this.signature = this.userInfo.StaffNo;
-    this.getArea()//手机号地区
-    this.callShow()//称呼
-    this.identityType()//联系人类型
+    this.getArea() //手机号地区
+    this.callShow() //称呼
+    this.identityType() //联系人类型
 
     //  TODO:缺少通过员工工号查询员工姓名接口
 
@@ -275,9 +275,6 @@ export default {
   },
   //获取 clientwidth
   beforeMount() {
-    console.log(document.documentElement.clientWidth);
-    console.log('宽度测试宽度测试')
-    // this.nextTick(() => {
     this.$nextTick(() => {
       this.imgWidth = document.documentElement.clientWidth;
     });
@@ -295,8 +292,8 @@ export default {
     look_Scene() {
       this.$router.push("/Scene");
     },
-    e_key(){  
-      this.AddKeyShow=true;
+    e_key() {
+      this.AddKeyShow = true;
     },
     // 放盤紙
     putPaper() {
@@ -318,7 +315,6 @@ export default {
         Type: this.Type
       }).then((res) => {
         this.House_Type.push(res.Result);
-        console.log("打印戶型圖");
         console.log(this.House_Type);
         this.Type = 2; //室內圖
         aplush.apis.SystemType({
@@ -341,15 +337,11 @@ export default {
       });
     },
     onChange(index) {
-
       this.current = index;
-
     },
     collect_i() {
       this.bool_collect = !this.bool_collect;
-      // this.TrustType = res.TrustType
       if (this.bool_collect) {
-
         aplush.apis
           .AddCollection({
 
@@ -357,7 +349,6 @@ export default {
           })
           .then((res) => {
             if (res.Flag) {
-
               this.$toast("添加收藏成功");
             } else {
               this.$toast("添加收藏失败");
@@ -377,7 +368,6 @@ export default {
     },
     good_i() {
       this.bool_good = !this.bool_good;
-      console.log("as");
     },
     // 撥打電話
     call() {
@@ -397,10 +387,10 @@ export default {
         case "新增現場相":
           this.Add_Scene();
           break;
-        case "新增查冊":
+        case "查冊":
           this.Add_Register();
           break;
-        case "新增放盤紙":
+        case "放盤紙":
           this.AddPaperShow = true;
           break;
         case "鑰匙":
@@ -454,7 +444,6 @@ export default {
       });
     },
     getOwner() {
-
       this.Get_Owner_Detail();
     },
     // 獲取業主信息
@@ -471,19 +460,6 @@ export default {
           console.log(this.House_Owner);
         });
     },
-    // 獲取放盤紙
-    // Get_Paper() {
-    //   let keyId = this.$route.query.KeyId;
-    //   aplush.apis
-    //     .ListingPaper({
-    //       keyId: keyId,
-    //     })
-    //     .then((res) => {
-    //       this.PaperList = res.PropOnlyTrusts;
-    //       console.log("打印放盤紙");
-    //       console.log(res);
-    //     });
-    // },
     //獲取鑰匙
     Get_Key() {
       let keyId = this.$route.query.KeyId;
@@ -574,7 +550,6 @@ export default {
       }).then(res => {
 
       })
-      console.log("添加放盤紙");
 
     },
     // 上傳文件至服務器
@@ -664,11 +639,9 @@ export default {
           PropertyKeyID: this.$route.query.KeyId //房源KeyID
         })
         .then((res) => {
-          console.log("鑰匙箱編號");
           this.KeyBoxNo = res.Result.KeyNumber;
         })
         .catch((err) => {
-          console.log("出現錯誤");
           console.log(err);
         });
     },
@@ -737,9 +710,6 @@ export default {
     },
     // 收匙人選中事件
     KeyReceiver_change(e) {
-      console.log('打印e')
-      console.log(e);
-
       //改為多選
       this.lc_Type === "添加聯繫人" ? this.KeyReceiver = "" : this.KeyReceiver = e;
       this.PeopleInfo.UserDepartmentDatas.forEach((item, index) => {
@@ -844,8 +814,14 @@ export default {
     },
     // 新增查冊
     Add_Register() {
-      //TODO:新增查冊,暫時缺少接口
-      Toast('新增查冊')
+      // Toast('新增查冊')
+      this.$router.push({
+        path: '/SeeBook',
+        query: {
+          HouseKeyId: this.$route.query.KeyId
+        }
+      });
+
     },
     //編輯房源
     Edit_House() {
@@ -858,10 +834,7 @@ export default {
     },
     // 中原成交
     Add_Deal() {
-      // todo:中原成交接口暫缺
-      // Toast('中原成交');
       this.ZYVolShow = true
-      
     },
     //發佈房源
     Publish_House() {
@@ -979,8 +952,8 @@ export default {
           Pric: this.ZYVol.rentprice, //租成交價
           TargetContractorKeyId: this.ResultKeyId, //成交人id
           TargetContractorDeptKeyId: this.DepartmentKeyId //成交人部門id
-        }).then(res=>{
-          res.Flag==true?Toast('中原成交修改成功'):Toast(res.ErrorMsg);
+        }).then(res => {
+          res.Flag == true ? Toast('中原成交修改成功') : Toast(res.ErrorMsg);
         })
         Object.assign(this.$data.ZYVol, this.$options.data().ZYVol) // 这里重置 ZYVol 数据，其他不受影响
       }).catch(() => {

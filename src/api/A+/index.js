@@ -1,8 +1,8 @@
 /* 數據請求接口
- * @Author: luciano 
- * @Date: 2021-12-17 11:19:15 
+ * @Author: luciano
+ * @Date: 2021-12-17 11:19:15
  * @Last Modified by: luciano
- * @Last Modified time: 2022-02-17 14:53:13
+ * @Last Modified time: 2022-02-24 15:08:03
  */
 
 import lc_request from '@/utils/request'
@@ -10,11 +10,25 @@ import lc_request from '@/utils/request'
 // import qs from 'qs'
 export default {
   apis: {
+    // 查冊
+    seeBook: (params) => lc_request({
+      url: '/api/Property/get_all_chace_photos',
+      method: 'post',
+      data: params
+    }),
+    // 新增查冊
+    addSeeBook: (params) => lc_request({
+     // http://10.1.31.83:22061/api/Property/upload_real
+      url: '/api/Property/upload_real',
+      method: 'post',
+      data: params
+    }),
     //获取金刚区菜单
     getMenu: () => {
       return lc_request({
         url: '/moaplusapi/System/GetStaffMenus',
         method: 'get'
+
       })
     },
     //設置金刚区菜单
@@ -109,14 +123,6 @@ export default {
       })
 
     },
-    // 編輯房源
-    editListing(params) {
-      return lc_request({
-        url:`/api/Property/edit-property`,
-        method: 'post',
-        data: params
-      })
-    },
     // 房源狀態篩選
     ListingStatus(params) {
       return lc_request({
@@ -160,6 +166,14 @@ export default {
           IsDetails: params.IsDetails,
           PropertyKeyId: params.PropertyKeyId
         }
+      })
+    },
+    //添加跟进
+    ListiongFollowAdd(params) {
+      return lc_request({
+        url: '/api/Property/add-follow',
+        method: 'post',
+        data: params
       })
     },
     // 獲取房源現場相
@@ -237,7 +251,7 @@ export default {
     //添加放盤紙
     AddPaper(params) {
       return lc_request({
-        url: '/api/Property/add_only_trust',
+        url: '/api/Property/add_property_trust',
         method: 'post',
         data: params
       })
@@ -270,6 +284,14 @@ export default {
     AddVip(params) {
       return lc_request({
         url: '/api/Customer/set-inquiry-vip',
+        method: 'post',
+        data: params
+      })
+    },
+    // 取消VIP
+    cancelVip(params){
+      return lc_request({
+        url: '/api/Customer/cancel-inquiry-vip',
         method: 'post',
         data: params
       })
@@ -360,6 +382,22 @@ export default {
         url: '/upload',
         method: 'post',
         data: params
+      })
+    },
+    // 獲取手機號地區
+    chooseArea(Type) {
+      return lc_request({
+        url: '/api/System/find-sys-items',
+        method: 'get',
+        params: Type,
+      })
+    },
+    // 中原成交
+    propertyManualover(data){
+      return lc_request({
+        url: '/api/Property/property-manualover',
+        method: 'post',
+        data: data
       })
     }
   }
