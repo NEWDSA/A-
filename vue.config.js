@@ -65,7 +65,8 @@ module.exports = {
             changeOrigin: true
           },
           '/api/': {
-            target: 'http://10.1.31.83:22061',
+            //target: 'http://10.1.31.83:22061',
+            target:'http://10.68.2.9:8021',
             // 替換
             changeOrigin: true
           },

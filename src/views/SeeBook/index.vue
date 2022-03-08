@@ -27,24 +27,23 @@
         </van-col>
       </van-row>
     </van-cell-group>
-    <div
-      v-for="(item, index) in lc_seebook"
-      style="display: flex; justify-content: center; margin-bottom: 10px"
-    >
-      <van-image width="90%" :src="item.ImgPath">
+    <van-list v-model="loading" finished-text="没有更多了">
+      <van-cell v-for="(item,index) in lc_seebook" :key="item.ImgPath" @click.stop="preview_show=true;change_preview(index);">
+        <van-image width="90%" :src="item.ImgPath">
         <template v-slot:default>
           <div class="lc_pic_footer">
             <span>{{ item.CreateUserName }}</span>
             <span>{{ item.CreateTime }}</span>
-            <van-icon @click="show_preview" name="search" />
           </div>
         </template>
       </van-image>
-    </div>
+      </van-cell>
+    </van-list>
     <!-- 圖片預覽組件 -->
     <van-image-preview
       @change="change_preview"
       v-model="preview_show"
+      :start-position="lc_index"
       :images="images"
     >
       <template v-slot:cover>
@@ -94,7 +93,9 @@ export default {
       // 文件上傳
       fd: "",
       pic_reload:[],
-      lc_AttachmentPath:""
+      lc_AttachmentPath:"",
+      loading: false,
+      finished: false,
     };
   },
   beforeMount() {
@@ -115,19 +116,17 @@ export default {
           CreateTimeEnd: this.UploadTimeEnd,
         })
         .then((res) => {
-          console.log((this.lc_seebook = res.Photos));
+          this.lc_seebook = res.Photos;
+          this.show_preview();
         });
     },
     e_addseebook() {
       this.lc_add_seebook = true;
     },
     show_preview() {
-      this.preview_show = true;
-      let _temp_pic = [];
       this.lc_seebook.forEach((item) => {
-        this.images.push(item.ImgPath, item.CreateUserName, item.CreateTime);
+        this.images.push(item.ImgPath);
       });
-      console.log(this.images);
     },
     change_preview(index) {
       this.lc_index = index;
@@ -194,7 +193,6 @@ export default {
   }
   ::v-deep .van-image-preview__cover {
     .lc_pic_footer {
-      position: relative;
       top: 40px;
       padding: 5px;
       left: 50%;

@@ -2,8 +2,8 @@
  * @Author: luciano 
  * 客户详情
  * @Date: 2021-12-17 16:00:12 
- * @Last Modified by: luciano
- * @Last Modified time: 2022-01-20 08:54:34
+ * @Last Modified by: Abner
+ * @Last Modified time: 2022-03-04 09:27:30
  */
 .customer-detail {
   position: relative;
@@ -34,10 +34,13 @@
       font-size: 14px;
       color: #333333;
       margin-left: 20px;
+      line-height: 36px;
+      display: flex;
 
       .lc_trans {
         font-size: 14px;
         color: #999999;
+        width: 80px;text-align: right;
       }
     }
   }

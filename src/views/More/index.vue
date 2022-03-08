@@ -51,7 +51,7 @@
           <template v-for="(item, index) in RecoApplication">
             <van-grid-item
               class="lc_bage"
-              badge="+"
+              :badge="item.bage"
               :icon="item.Icon"
               :text="item.Name"
               @click="AddAplicaton(item)"

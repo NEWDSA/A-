@@ -2,22 +2,17 @@
   <div style="background: #ffffff">
     <!-- 搜索區域 -->
     <van-sticky>
-      <div class="lc_search">
-        <div class="lc_back" v-if="$route.meta.showTab">
-          <van-icon @click="back" name="arrow-left" />
-        </div>
-
-        <div class="search_setting">
-          <van-search
-            class="search"
-            style="width: 100%"
-            v-model="lc_Keywords"
-            placeholder="樓盤名稱 | 棟座單元 | 房號"
-            @search="onSearch(lc_Keywords)"
-          />
-        </div>
-      </div>
+      <van-nav-bar title="我的收藏" left-arrow @click-left="$router.go(-1)"></van-nav-bar>
     </van-sticky>
+    <div class="searchNameForm">
+      <van-form @submit="onSearch()">
+        <van-field size="small" name="lc_Keywords" placeholder="請輸入樓盤名稱" v-model="lc_Keywords">
+          <template #button>
+            <van-button size="small" type="danger" native-type="submit">搜索</van-button>
+          </template>
+        </van-field>
+      </van-form>
+    </div>
     <!-- 下拉框 -->
     <van-dropdown-menu class="lc_str" :close-on-click-outside="false">
       <van-dropdown-item @open="show_area" title="區域" ref="lc_item">
@@ -48,22 +43,26 @@
         >
           <template slot="content">
             <ul>
-              <li
-                v-if="lc_price_left == 0"
-                @click="price_click(item, index)"
-                :class="
-                  lc_price_acitve == index ? 'lc_ul_li_active' : 'lc_ul_li'
-                "
-                v-for="(item, index) in priceList"
-              >{{ item.text }}</li>
-              <li
-                v-if="lc_price_left == 1"
-                @click="price_click(item, index)"
-                :class="
-                  lc_price_acitve_two == index ? 'lc_ul_li_active' : 'lc_ul_li'
-                "
-                v-for="(item, index) in priceList"
-              >{{ item.text }}</li>
+              <template v-if="lc_price_left == 0">
+                <li
+                  @click="price_click(item, index)"
+                  :class="
+                    lc_price_acitve == index ? 'lc_ul_li_active' : 'lc_ul_li'
+                  "
+                  v-for="(item, index) in priceList"
+                  :key="index"
+                >{{ item.text }}</li>
+              </template>
+              <template v-if="lc_price_left == 1">
+                <li
+                  @click="price_click(item, index)"
+                  :class="
+                    lc_price_acitve_two == index ? 'lc_ul_li_active' : 'lc_ul_li'
+                  "
+                  v-for="(item, index) in priceList"
+                  :key="index"
+                >{{ item.text }}</li>
+              </template>
             </ul>
             <template v-if="lc_price_activeId == '0'">
               <div
@@ -129,7 +128,11 @@
       <van-dropdown-item title="標簽" @open="show_tag" ref="lc_items_tags">
         <van-cell-group>
           <div class="lc_tags_height">
-            <van-cell @click="tags_Click(index, item.KeyId)" v-for="(item, index) in item_t">
+            <van-cell
+              @click="tags_Click(index, item.KeyId)"
+              v-for="(item, index) in item_t"
+              :key="index"
+            >
               <span :class="tagsindex == index ? 'lc_tags_hover' : ''">{{ item.text }}</span>
             </van-cell>
           </div>
@@ -153,19 +156,24 @@
           <template #content>
             <div id="lc_drop_title" class="lc_drop_title">聯繫人類型</div>
             <div style="display: flex; flex-wrap: wrap">
-              <template v-for="(item, index) in lc_CustomType.Items">
-                <span
-                  @click="contact_list(item, index)"
-                  :class="
-                    lc_CustomIndex === index ? 'lc_box_selected' : 'lc_box'
-                  "
-                >{{ item.ItemName }}</span>
-              </template>
+              <span
+                v-for="(item, index) in lc_CustomType.Items"
+                :key="index"
+                @click="contact_list(item, index)"
+                :class="
+                  lc_CustomIndex === index ? 'lc_box_selected' : 'lc_box'
+                "
+              >{{ item.ItemName }}</span>
             </div>
             <!-- 選擇類型 -->
-            <!-- <van-row>
+            <van-row>
               <van-col type="flex" justify="center" span="22">
                 <van-field
+                  style="
+                    background-color: #f1f1f1;
+                    border: 0.025rem solid #696969;
+                    margin-left: 10px;
+                  "
                   readonly
                   v-model="Type_Text"
                   placeholder="請選擇類型"
@@ -173,16 +181,7 @@
                   @click-right-icon="Search_Type_event"
                 />
               </van-col>
-            </van-row>-->
-            <div class="lc_field">
-              <van-field
-                readonly
-                v-model="Type_Text"
-                placeholder="請選擇類型"
-                right-icon="arrow-down"
-                @click-right-icon="Search_Type_event"
-              />
-            </div>
+            </van-row>
             <template>
               <div class="lc_field">
                 <van-field
@@ -212,12 +211,13 @@
                       ? 'lc_status_active'
                       : 'lc_stauts_container'
                   "
+                  :key="index"
                 >{{ item.Name }}</span>
               </template>
             </div>
             <span class="lc_status_txt lc_stauts_house">房型</span>
-            <div class="lc_status">
-              <template v-show="RoomType" v-for="(item, index) in RoomType">
+            <div class="lc_status" v-show="RoomType">
+              <template v-for="(item, index) in RoomType">
                 <span
                   v-if="item"
                   @click="change_roomtype(index)"
@@ -226,6 +226,7 @@
                       ? 'lc_status_active'
                       : 'lc_stauts_container'
                   "
+                  :key="index"
                 >{{ item.ItemName }}</span>
               </template>
             </div>
@@ -239,6 +240,7 @@
                       ? 'lc_status_active'
                       : 'lc_stauts_container'
                   "
+                  :key="index"
                 >{{ item.ItemName }}</span>
               </template>
             </div>
@@ -254,11 +256,12 @@
                       ? 'lc_status_active'
                       : 'lc_stauts_container'
                   "
+                  :key="index"
                 >{{ item.ItemName }}</span>
               </template>
             </div>
             <!-- 建築面積、建築類型 -->
-            <!-- <van-row class="lc_area_cc">
+            <van-row class="lc_area_cc">
               <van-col type="flex" justify="center" span="22">
                 <van-field
                   style="
@@ -273,16 +276,7 @@
                   @click-right-icon="BuildingType_event"
                 />
               </van-col>
-            </van-row>-->
-            <div class="lc_field">
-              <van-field
-                readonly
-                v-model="build_name"
-                placeholder="請選擇建築類型"
-                right-icon="arrow-down"
-                @click-right-icon="BuildingType_event"
-              />
-            </div>
+            </van-row>
             <div class="lc_field">
               <van-field v-model="lc_area_min" placeholder="请输入" size="mini" />
             </div>
@@ -299,6 +293,7 @@
                       ? 'lc_status_active'
                       : 'lc_stauts_container'
                   "
+                  :key="index"
                 >{{ item.ItemName }}</span>
               </template>
             </div>
@@ -313,9 +308,11 @@
             <!-- 樓齡 -->
             <span v-show="lc_BuildingAge.length > 0" class="lc_status_txt lc_house_year">樓齡</span>
             <div v-show="lc_BuildingAge.length > 0" class="lc_status">
-              <template v-for="item in lc_BuildingAge">
-                <span class="lc_status_container">{{ item.ItemName }}</span>
-              </template>
+              <span
+                v-for="item in lc_BuildingAge"
+                :key="item.ItemName"
+                class="lc_status_container"
+              >{{ item.ItemName }}</span>
             </div>
           </template>
         </van-tree-select>
@@ -327,19 +324,19 @@
         </div>
       </van-dropdown-item>
       <!-- 排序 -->
-      <van-dropdown-item style="overflow: hidden" @open="show_sort" class="lc_rr" ref="sort_item">
+      <van-dropdown-item style="overflow: hidden" class="lc_rr" ref="sort_item">
         <template #title>
           <van-icon color="#666666" size="20" name="sort" />
         </template>
-        <van-cell-group class="lc_sort_items">
-          <div class="lc_items">
-            <template v-for="(item, index) in HouseSort">
-              <van-cell
-                :class="{ lc_active_in: sortIndex === index }"
-                @click="sort_event(index)"
-                :title="item.text"
-              ></van-cell>
-            </template>
+        <van-cell-group>
+          <div style="height: 300px">
+            <van-cell
+              v-for="(item, index) in HouseSort"
+              :key="index"
+              :class="{ lc_active_in: sortIndex === index }"
+              @click="sort_event(index)"
+              :title="item.text"
+            ></van-cell>
           </div>
 
           <div id="sort_btn" class="sort_btn" ref="lc_sort">
@@ -351,32 +348,6 @@
         </van-cell-group>
       </van-dropdown-item>
     </van-dropdown-menu>
-    <!-- 搜索歷史區域 -->
-    <div class="lc_hisotry_contianer">
-      <!-- tags 需要滿足如下條件 區域 才進行保存 -->
-      <div class="lc_pills">
-        <template v-for="(item, index) in SearchObject">
-          <van-button
-            @click="tags_Search(index)"
-            type="default"
-            size="small"
-            class="lc_button"
-          >{{ item.areaName }}</van-button>
-        </template>
-      </div>
-      <van-button
-        v-show="has_search_result"
-        type="default"
-        size="small"
-        style="color: blue !important; border: 0px !important"
-        @click="saveSearch"
-      >保存記錄</van-button>
-      <span @click="search_record" style="margin-right: 5px">
-        {{
-          "已保存" + `${SearchObject.length}` + "記錄"
-        }}
-      </span>
-    </div>
     <van-pull-refresh v-model="pullLoading" @refresh="onPullRefresh" success-text="刷新成功">
       <van-list
         :immediate-check="false"
@@ -432,6 +403,14 @@
               <div>租{{ item.RentPrice }}</div>
             </template>
           </template>
+          <template #footer>
+            <van-button
+              size="mini"
+              icon="star-o"
+              @click.stop="cancelCollect(item.KeyId)"
+              color="#f12945"
+            >取消收藏</van-button>
+          </template>
         </van-card>
       </van-list>
     </van-pull-refresh>
@@ -471,6 +450,7 @@ import Cookies from "js-cookie";
 export default {
   data() {
     return {
+      pageSize: 20, //每頁顯示數據條數
       index_l: 0,
       index_r: 0,
       radio: "1",
@@ -735,7 +715,6 @@ export default {
       lc_floor_max: "",
       save_cookies: false, // 保存cookies
       tagsindex: -1,
-      SearchObject: []
     };
   },
   created() {
@@ -752,26 +731,11 @@ export default {
     if (localStorage.getItem("SearchCookies") != undefined) {
       this.SearchObject = JSON.parse(localStorage.getItem("SearchCookies"));
       let lc_default_result = this.SearchObject.find(
-        (item) => item.isdefault == true
+        (item) => item.isdefault === true
       );
       //判斷是否有默認查詢條件
       if (lc_default_result != undefined) {
-        console.log("this result is true??");
-        console.log(lc_default_result);
-        aplush.apis
-          .Listinglist({
-            PageIndex: this.pageIndex,
-            PageSize: 20,
-            PropType: 1, //查詢類型
-            EstateSelectType: lc_default_result.EstateSelectType, //房源查詢類型
-            AreaKeyIdStr: lc_default_result.AreaKeyIdStr, //區域選中的keyId
-            SalePriceFrom: lc_default_result.SalePriceFrom, //
-            SalePriceTo: lc_default_result.SalePriceTo,
-            HouseDirection: lc_default_result.HouseDirection,
-            RentPriceFrom: lc_default_result.RentPriceFrom,
-            RentPriceTo: lc_default_result.RentPriceTo,
-            SortField: lc_default_result.SortField, // 排序條件
-          })
+        aplush.apis.Listinglist(this.getSearchParam())
           .then((res) => {
             let _temp = res.PropertysModel;
             this.HouseList = _temp;
@@ -784,40 +748,94 @@ export default {
     }
   },
   methods: {
+    getSearchParam() {
+      let temParam = {
+        PageIndex: this.pageIndex,
+        PageSize: this.pageSize,
+        PropType: 5, //查詢類型
+        Keywords: this.lc_Keywords, //查詢內容
+        EstateSelectType: 3, //房源查詢類型
+        AreaKeyIdStr: this.lc_districtKey, //區域選中的keyId
+        PropStatusStr: this.lc_status, //房源狀態
+        TrustorTypeKeyId: this.lc_trustorType, //聯繫人類型
+        PropertyTypes: this.lc_PropertyTypes, //房源戶型KeyId
+        PropertyUseKeyId: this.lc_PropertyUse, //物業用途KeyId
+        HouseDirection:
+          this.lc_orentation_keyId.length > 0
+            ? this.lc_orentation_keyId.join(",")
+            : this.lc_orentation_keyId.join(""), //朝向KeyId
+        PropertySquareType: this.lc_build_index, // 面積查詢類型
+        SquareFrom: this.lc_area_min, //面積起始值
+        SquareTo: this.lc_area_max, //面積結束值
+        BulidTypes:
+          this.lc_BuildingType_KeyId.length > 0
+            ? this.lc_BuildingType_KeyId.join(",")
+            : this.lc_BuildingType_KeyId.join(""), //建築類型
+        FilterType: this.lc_saveSearch_index, //篩選類型
+        Filter: this.lc_filter, //不限條件搜索關鍵詞
+        FloorFrom: this.lc_floor_min, //樓層起始值
+        FloorTo: this.lc_floor_max, //樓層結束值
+        IsOnlyTrust: "", // 是否獨家
+        SalePriceFrom:
+          this.lc_price_select.startPrice == ""
+            ? this.saler_price_min
+            : this.lc_price_select.startPrice,
+        SalePriceTo:
+          this.lc_price_select.endPrice == ""
+            ? this.saler_price_max
+            : this.lc_price_select.endPrice,
+        RentPriceFrom:
+          this.lc_price_select_rent.startPrice == ""
+            ? this.rent_price_min
+            : this.lc_price_select_rent.startPrice,
+        RentPriceTo:
+          this.lc_price_select_rent.endPrice == ""
+            ? this.rent_price_max
+            : this.lc_price_select_rent.endPrice,
+        PropertyboolTag: this.lc_Tag_KeyId, //標籤類型
+        SortField: this.sort_name, // 排序條件
+      }
+      return temParam;
+    },
+    cancelCollect(temKeyId) {
+      //取消收藏
+      aplush.apis.CancelCollection({ KeyId: temKeyId })
+        .then((res) => {
+          if (res.Flag) {
+            let temIndex = this.HouseList.findIndex(v => v.KeyId == temKeyId);
+            if (temIndex > -1) {
+              this.HouseList.splice(temIndex, 1);
+            }
+            this.$toast("取消收藏成功");
+          } else {
+            this.$toast("取消收藏失败");
+          }
+        });
+    },
     // search 區域
-    onSearch(word) {
-      this.$router.push({
-        path: "/Search",
-        query: {
-          word: this.lc_Keywords,
-        },
-      });
+    onSearch() {
+      this.pageIndex = 1;
+      this.baseData();
     },
     //下拉加載
     onPullRefresh() {
-      console.log("下拉加載");
-
-      aplush.apis
-        .Listinglist({
-          PageIndex: this.pageIndex,
-          PageSize: 20,
-          PropType: 1,
-          EstateSelectType: 4,
-        })
+      this.pageIndex = 1;
+      aplush.apis.Listinglist(this.getSearchParam())
         .then((res) => {
           // 判斷數據是否已經加載完畢
           // end 判斷數據是否已經加載完畢
-          // ++this.pageIndex;
           this.pullLoading = false;
           if (res.PropertysModel == []) {
             this.finishedList = 0;
             this.pullLoading = this.listLoading = false;
             return;
           }
+          this.HouseList = [];
           let temp_data = res.PropertysModel;
           temp_data.forEach((item) => {
             this.HouseList.push(item);
           });
+          this.pageIndex++;
         });
     },
     // 保存搜索
@@ -844,6 +862,9 @@ export default {
       this.has_search_result = true;
     },
     reset_tags() {
+      console.log("reset_tags");
+      console.log("重置內容");
+      //將所選內容設置為空
       this.tagsindex = -1;
     },
     //更多
@@ -954,6 +975,8 @@ export default {
     },
     //搜索類型點擊確認事件
     SearchType_confirm(value, index) {
+      // 獲取選中的值
+      // console.log(value, index);
       this.lc_saveSearch_index = value.value;
       console.log(value);
       console.log(this.lc_saveSearch_index);
@@ -1001,17 +1024,9 @@ export default {
       this.lc_floor_index = [];
       console.log(this.lc_floor_index);
     },
-    // 排序右侧点击
-    Sort_right_Click(e) {
-      console.log(e);
-    },
-    onClickLeft() {
-      Toast("返回");
-    },
-    onClickRight() {
-      Toast("按钮");
-    },
     show_more() {
+      console.log("更多");
+      console.log(document.querySelector(".lc_drop_title"));
       aplush.apis
         .SystemType({
           Type: "41",
@@ -1068,10 +1083,6 @@ export default {
             });
         });
     },
-    show_sort() {
-      console.log("this is lc sort");
-      console.log(document.querySelector(".sort_btn"));
-    },
     back() {
       this.$router.push("/Home");
     },
@@ -1080,9 +1091,9 @@ export default {
     },
     // 保存Cookies
     SaveCookies() {
+      console.log(this.items[this.lc_area_left]);
       var _temp_tages_name = [];
       let _temp_items = null;
-      console.log(this.items.length);
       if (this.items.length > 0)
         //通過下標查找符合條件的集合
 
@@ -1090,13 +1101,9 @@ export default {
       let _temp_districtKey = this.lc_districtKey.split(",");
       if (_temp_districtKey.length > 0) {
         _temp_districtKey.forEach((lcitem) => {
-          console.log("lcitem");
-          console.log(lcitem);
-          _temp_items
-            .filter((item) => item.KeyId == lcitem)
-            .forEach((item) => {
-              _temp_tages_name.push(item.text);
-            });
+          _temp_items.filter((item) => item.KeyId == lcitem).forEach((item) => {
+            _temp_tages_name.push(item.text);
+          });
         });
       } else {
         _temp_items.filter((item) => {
@@ -1107,7 +1114,7 @@ export default {
       }
 
       let SearchObject = {
-        EstateSelectType: this.QueryType, //房源查詢類型
+        EstateSelectType: 3, //房源查詢類型
         AreaKeyIdStr: this.lc_districtKey, //區域選中的keyId
         //保存區域
         TagsName: _temp_tages_name,
@@ -1120,150 +1127,65 @@ export default {
         RentPriceFrom: this.lc_price_select_rent.startPrice,
         RentPriceTo: this.lc_price_select_rent.endPrice,
         SortField: this.sort_name, // 排序條件
-        isdefault: true,
+        isdefault: false,
       };
 
       // 限制添加條數
       if (this.lc_saveSearch.length >= 3) {
-        //禁止添加條數
-        this.lc_saveSearch.splice(0, 1);
-        // this.lc_saveSearch.forEach((item, index) => {
-        //   if (index == 2) {
-        //     this.lc_saveSearch.splice(index, 1);
-        //   }
-        // });
-
+        this.lc_saveSearch.pop();
       }
+      console.log(SearchObject);
+      //去除重複內容
+      // if (this.lc_saveSearch == -1) {
       this.lc_saveSearch.unshift(SearchObject);
+      // }
       //保存搜索條件
       if (this.save_cookies) {
         localStorage.setItem(
           "SearchCookies",
           JSON.stringify(this.lc_saveSearch)
         );
-        this.SearchObject = JSON.parse(localStorage.getItem("SearchCookies"));
       }
-
     },
     //篩選條件使用
     baseData() {
       this.loading = true;
-      aplush.apis
-        .Listinglist({
-          PageIndex: this.pageIndex,
-          PageSize: 20,
-          PropType: 1, //查詢類型
-          Keywords: this.lc_Keywords, //查詢內容
-          EstateSelectType: this.QueryType, //房源查詢類型
-          AreaKeyIdStr: this.lc_districtKey, //區域選中的keyId
-          PropStatusStr: this.lc_status, //房源狀態
-          TrustorTypeKeyId: this.lc_trustorType, //聯繫人類型
-          PropertyTypes: this.lc_PropertyTypes, //房源戶型KeyId
-          PropertyUseKeyId: this.lc_PropertyUse, //物業用途KeyId
-          HouseDirection:
-            this.lc_orentation_keyId.length > 0
-              ? this.lc_orentation_keyId.join(",")
-              : this.lc_orentation_keyId.join(""), //朝向KeyId
-          PropertySquareType: this.lc_build_index, // 面積查詢類型
-          SquareFrom: this.lc_area_min, //面積起始值
-          SquareTo: this.lc_area_max, //面積結束值
-          BulidTypes:
-            this.lc_BuildingType_KeyId.length > 0
-              ? this.lc_BuildingType_KeyId.join(",")
-              : this.lc_BuildingType_KeyId.join(""), //建築類型
-          FilterType: this.lc_saveSearch_index, //篩選類型
-          Filter: this.lc_filter, //不限條件搜索關鍵詞
-          FloorFrom: this.lc_floor_min, //樓層起始值
-          FloorTo: this.lc_floor_max, //樓層結束值
-          IsOnlyTrust: "", // 是否獨家
-          SalePriceFrom:
-            this.lc_price_select.startPrice == ""
-              ? this.saler_price_min
-              : this.lc_price_select.startPrice,
-          SalePriceTo:
-            this.lc_price_select.endPrice == ""
-              ? this.saler_price_max
-              : this.lc_price_select.endPrice,
-          RentPriceFrom:
-            this.lc_price_select_rent.startPrice == ""
-              ? this.rent_price_min
-              : this.lc_price_select_rent.startPrice,
-          RentPriceTo:
-            this.lc_price_select_rent.endPrice == ""
-              ? this.rent_price_max
-              : this.lc_price_select_rent.endPrice,
-          PropertyboolTag: this.lc_Tag_KeyId, //標籤類型
-          SortField: this.sort_name, // 排序條件
-        })
+      this.pageIndex = 1;
+      this.finished = false;
+      aplush.apis.Listinglist(this.getSearchParam())
         .then((res) => {
           let _temp = res.PropertysModel;
           this.HouseList = _temp;
           this.loading = false;
+          this.pageIndex++;
+          //如果請求參數不為空則發送請求
+          //this.lc_Keywords=="" ? this.has_search_result = false : this.has_search_result = true;
+          // this.lc_districtKey=="" ? this.has_search_result = false : this.has_search_result = true;
+          // js 條件多選當有一個條件為真時都為真
+
+          // this.has_search_result =
+
+          //   // js 一個條件為真則結果為真
+
+          // js 一個條件為真則結果為真
+
+          // this.has_search_result=res.PropertysModel.length>0?true:false;
         });
     },
     onLoad() {
-      // this.pageIndex++;
-      aplush.apis
-        .Listinglist({
-          PageIndex: this.pageIndex,
-          PageSize: 20,
-          PropType: 1,
-          Keywords: this.lc_Keywords, //查詢內容
-          EstateSelectType: 4,
-          AreaKeyIdStr: this.lc_districtKey, //區域選中的keyId
-          PropStatusStr: this.lc_status, //房源狀態
-          TrustorTypeKeyId: this.lc_trustorType, //聯繫人類型
-          PropertyTypes: this.lc_PropertyTypes, //房源戶型KeyId
-          PropertyUseKeyId: this.lc_PropertyUse, //物業用途KeyId
-          HouseDirection:
-            this.lc_orentation_keyId.length > 0
-              ? this.lc_orentation_keyId.join(",")
-              : this.lc_orentation_keyId.join(""), //朝向KeyId
-          PropertySquareType: this.lc_build_index, // 面積查詢類型
-          SquareFrom: this.lc_area_min, //面積起始值
-          SquareTo: this.lc_area_max, //面積結束值
-          BulidTypes:
-            this.lc_BuildingType_KeyId.length > 0
-              ? this.lc_BuildingType_KeyId.join(",")
-              : this.lc_BuildingType_KeyId.join(""), //建築類型
-          FilterType: this.lc_saveSearch_index, //篩選類型
-          Filter: this.lc_filter, //不限條件搜索關鍵詞
-          FloorFrom: this.lc_floor_min, //樓層起始值
-          FloorTo: this.lc_floor_max, //樓層結束值
-          IsOnlyTrust: "", // 是否獨家
-          SalePriceFrom:
-            this.lc_price_select.startPrice == ""
-              ? this.saler_price_min
-              : this.lc_price_select.startPrice,
-          SalePriceTo:
-            this.lc_price_select.endPrice == ""
-              ? this.saler_price_max
-              : this.lc_price_select.endPrice,
-          RentPriceFrom:
-            this.lc_price_select_rent.startPrice == ""
-              ? this.rent_price_min
-              : this.lc_price_select_rent.startPrice,
-          RentPriceTo:
-            this.lc_price_select_rent.endPrice == ""
-              ? this.rent_price_max
-              : this.lc_price_select_rent.endPrice,
-          PropertyboolTag: this.lc_Tag_KeyId, //標籤類型
-          SortField: this.sort_name, // 排序條件
-        })
+      aplush.apis.Listinglist(this.getSearchParam())
         .then((res) => {
           let _temp = res.PropertysModel;
           _temp.forEach((item) => {
             this.HouseList.push(item);
           });
 
-          this.loading = false;
 
+          this.loading = false;
           if (_temp == null || _temp == "" || _temp == 0) {
             this.finished = true;
           }
-          if (this.finished) {
-            this.pageIndex++;
-          }
+          this.pageIndex++;
         });
     },
     // 區域左側選擇
@@ -1275,8 +1197,9 @@ export default {
     // 區域點擊
     area_click(result_item) {
       //通過下標獲取keyId
-      console.log("打印選中的結果");
-      console.log(this.lcactiveId);
+      //console.log("打印選中的結果");
+      //console.log(this.lcactiveId);
+      //this.baseData();
     },
     // 價格左側選擇
     price_left_click(left_click) {
@@ -1316,7 +1239,7 @@ export default {
     //區域重置
     reset_area() {
       this.active = "";
-      this.lcactiveId = "";
+      this.lcactiveId = [];
     },
     // 區域確認選擇
     area_confrim_click() {
@@ -1327,11 +1250,13 @@ export default {
       let lc_index = this.lc_area_left; //左側選中的
       this.items.forEach((item, index) => {
         item.children.forEach((item2) => {
-          this.lcactiveId.forEach((item3) => {
-            if (item3 == item2.id) {
-              this.lct_area.push(item2.KeyId);
-            }
-          });
+          if (this.lcactiveId?.length > 0) {
+            this.lcactiveId.forEach((item3) => {
+              if (item3 == item2.id) {
+                this.lct_area.push(item2.KeyId);
+              }
+            });
+          }
         });
       });
 
@@ -1352,7 +1277,6 @@ export default {
       this.saler_price_max = "";
       this.rent_price_min = "";
       this.rent_price_max = "";
-
     },
     price_confirm_click() {
       this.$refs.lc_item_price.toggle();
@@ -1476,20 +1400,7 @@ export default {
       let lc_default_result = this.lc_saveSearch.find(
         (item, index) => index == tags_index
       );
-      aplush.apis
-        .Listinglist({
-          PageIndex: this.pageIndex,
-          PageSize: 20,
-          PropType: 1, //查詢類型
-          EstateSelectType: lc_default_result.EstateSelectType, //房源查詢類型
-          AreaKeyIdStr: lc_default_result.AreaKeyIdStr, //區域選中的keyId
-          SalePriceFrom: lc_default_result.SalePriceFrom, //
-          SalePriceTo: lc_default_result.SalePriceTo,
-          HouseDirection: lc_default_result.HouseDirection,
-          RentPriceFrom: lc_default_result.RentPriceFrom,
-          RentPriceTo: lc_default_result.RentPriceTo,
-          SortField: lc_default_result.SortField, // 排序條件
-        })
+      aplush.apis.Listinglist(this.getSearchParam())
         .then((res) => {
           let _temp = res.PropertysModel;
           this.HouseList = _temp;
@@ -1517,7 +1428,7 @@ export default {
       } else {
         this.RoomTypeList.push(index);
       }
-      console.log('this.RoomTypeList');
+      console.log("this.RoomTypeList");
       console.log(this.RoomTypeList);
     },
     change_HouseUse(index) {
@@ -1580,7 +1491,7 @@ export default {
       this.lc_BuildingType_index.push(index);
       this.lc_BuildingType_KeyId.push(item.KeyId);
     }
-  },
+  }
 };
 </script>
 
@@ -1606,6 +1517,16 @@ export default {
 }
 ::v-deep van-tree-select__content-text-hide {
   display: none;
+}
+::v-deep .van-pull-refresh {
+  width: 100%;
+  height: auto !important;
+  // height: calc(100vh - 200px);
+  overflow-y: scroll;
+}
+.searchNameForm {
+  background: #ffffff;
+  padding: 5px 10px;
 }
 </style>
 

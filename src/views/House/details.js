@@ -2,7 +2,7 @@
  * @Author: luciano 
  * @Date: 2021-12-10 15:22:09 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-02-24 15:22:19
+ * @Last Modified time: 2022-03-07 15:12:07
  * 楼盘管理详情
  */
 import Cookies from 'js-cookie'
@@ -32,7 +32,7 @@ export default {
     let keyId = this.$route.query.KeyId;
     // 房源详情接口
     this.Get_House_Detail(keyId);
-    this.House_detail;
+
     // 房源跟进接口
     let params = {
       PageIndex: this.pageIndex,
@@ -43,9 +43,7 @@ export default {
     };
     aplush.apis.ListiongFollow(params).then((res) => {
       this.FollowUp = res.PropFollows;
-    });
-    // end 房源跟进接口
-    // this.M_live_Pohto();
+    });;
     //獲取系統類型
     this.base_system();
     console.log('this userinfo', this.userInfo.StaffNo);
@@ -54,6 +52,8 @@ export default {
     this.getArea() //手机号地区
     this.callShow() //称呼
     this.identityType() //联系人类型
+    this.Get_Owner_Detail(); //获取业主信息
+    this.Get_Key();
 
     //  TODO:缺少通过员工工号查询员工姓名接口
 
@@ -90,7 +90,7 @@ export default {
           disabled: !checkPermission(['Property.BasicInformation.Modify-All', 'Property.BasicInformation.Modify-MySelf', 'Property.BasicInformation.Modify-MyDepartment'])
         },
         {
-          text: "現場相",
+          text: "新增現場相",
           disabled: !checkPermission(['Property.RealSurvey.Add-All'])
         },
         {
@@ -120,7 +120,7 @@ export default {
       loading: false,
       finished: false,
       House_detail: {},
-      current: 1,
+      current: 0,
       title: "", //title 標題
       FollowUp: [], //房源跟进
       pageIndex: 1, //起始页
@@ -130,6 +130,7 @@ export default {
       soucrce_keyId: "bb649e23-fcdf-44a1-9420-52769a129de1", //現場相圖片類型
       House_Owner: [], // 業主
       activeName: ["1"], // 業主信息
+      activeKey: ["1"], // 鑰匙信息
       active: "",
       // 业绩申明
       PaperName: ["1"], //放盤紙
@@ -258,8 +259,13 @@ export default {
       imgSize: Number, // 图片高度
       //图片总数
       imgCount: 0,
-      imgWidth: 0
-
+      imgWidth: 0,
+      active_key: false,
+      House_Owner_Loading:false,//加載業主信息
+      KeyList_Loading:false,//加載鑰匙信息
+      preview_show: false,//圖片預覽
+      images: [],//預覽圖片地址數組
+      preview_index: 0,//預覽圖片開始索引
     };
   },
   watch: {
@@ -280,17 +286,14 @@ export default {
     });
 
   },
+
   methods: {
-    // 加载图片
-    loadingImg() {
-      console.log('加载图片高度');
-    },
     back() {
       this.$router.push("/House");
     },
     // 查看現場相
     look_Scene() {
-      this.$router.push("/Scene");
+      this.$router.push({ path: "Scene", query: { KeyId: this.$route.query.KeyId } });
     },
     e_key() {
       this.AddKeyShow = true;
@@ -337,7 +340,9 @@ export default {
       });
     },
     onChange(index) {
-      this.current = index;
+      console.log('index');
+      console.log(index);
+      this.current = index + 1;
     },
     collect_i() {
       this.bool_collect = !this.bool_collect;
@@ -372,6 +377,28 @@ export default {
     // 撥打電話
     call() {
       this.show = true;
+      //Cookies
+      let usereinfo = JSON.parse(localStorage.getItem('AplusUserInfo'))
+      if (usereinfo) {
+        // 調用接口
+        aplush.apis.ListingOwnerPhone({
+
+          KeyId: this.$route.query.KeyId, //房源ID
+          TrustorKeyID: House_Owner.KeyId, //業主ID
+          EmployeeNo: usereinfo.StaffNo, //工號
+          PhoneType:1,//手機,座機
+          IsAdd0:true//是否加撥0
+
+
+        }).then((res) => {
+          if (res.Flag) {
+            this.$toast("撥打成功");
+          } else {
+            this.$toast("撥打失败");
+          }
+        });
+      }
+
     },
     // 收藏
     more_i() {
@@ -379,11 +406,9 @@ export default {
       this.$nextTick(() => {
         this.showPopover = !this.showPopover;
       });
-      console.log(this.showPopover);
     },
     onSelect(action) {
       switch (action.text) {
-
         case "新增現場相":
           this.Add_Scene();
           break;
@@ -394,7 +419,7 @@ export default {
           this.AddPaperShow = true;
           break;
         case "鑰匙":
-          this.AddKeyShow = true;
+          // this.AddKeyShow = true;
           break;
         case "編輯房源":
           this.Edit_House();
@@ -411,7 +436,12 @@ export default {
     },
     // 新增跟進
     addFollow() {
-      this.$router.push("AddFollow");
+      this.$router.push({
+        path: '/AddFollow',
+        query: {
+          KeyId: this.$route.query.KeyId
+        }
+      });
     },
     // 跟进详情
     FollowDetail(index) {},
@@ -437,38 +467,50 @@ export default {
     Get_House_Detail(keyId) {
       aplush.apis.ListingDetail(keyId).then((res) => {
         this.House_detail = res;
+        this.images=res.Photos.map(v=>v.ImgPath);
         this.imgCount = res.Photos.length;
+        this.current = this.imgCount;
         this.bool_collect = this.House_detail.IsFavorite
-        console.log("打印房源详情");
-        console.log(this.House_detail);
       });
     },
-    getOwner() {
-      this.Get_Owner_Detail();
+    PreviewImagesChange(index) {
+      this.preview_index = index;
     },
+    getOwner() {
+
+    },
+    // 獲取鑰匙信息
+    getKeys() {
+      if(!this.activeKey.includes(0)){
+        this.Get_Key();
+      }
+    },
+    //獲取鑰匙信息
     // 獲取業主信息
     Get_Owner_Detail() {
       let keyId = this.$route.query.KeyId;
+      this.House_Owner_Loading = true;
       aplush.apis
         .ListingOwner({
           keyId: keyId,
         })
         .then((res) => {
-          this.Owner_Info_Show = true;
+          this.House_Owner_Loading = false;
           this.House_Owner = res.Trustors;
-          console.log("打印業主信息");
-          console.log(this.House_Owner);
         });
     },
     //獲取鑰匙
     Get_Key() {
       let keyId = this.$route.query.KeyId;
+      this.KeyList_Loading=true;
       aplush.apis
         .ListingKey({
           keyId: keyId,
         })
         .then((res) => {
           this.KeyList = res.PropKeys;
+          console.log('打印鑰匙信息');
+          this.KeyList_Loading=false;
         });
     },
     getTypeSelected() {
@@ -510,13 +552,11 @@ export default {
     add_contact() {
       this.SearchType = 1;
       this.lc_Type = "添加聯繫人";
-      this.contact_Type = true;
+      // this.contact_Type = true;
       this.lc_recevier = false;
       this.KeyReceiverShow = true;
       this.SearchPersonList = [];
       this.Base_Key_Person(this.lc_Type);
-      console.log("this.Type");
-      console.log(this.Type);
     },
     // 添加放盤紙
     btn_AAddPaper() {
@@ -554,13 +594,13 @@ export default {
     },
     // 上傳文件至服務器
     afterRead(file) {
-      //改為文件流形式
       const fd = new FormData();
       fd.append("file", file.file);
       fd.append("fileType", "file");
       console.log(file.name);
       aplush.apis.UploadFile(fd).then((res) => {
-        this.lc_AttachmentPath = res;
+        this.lc_AttachmentPath = window.location.host + res;
+        console.log(document.querySelector('.van-uploader__preview-image').classList.remove('van-image'))
       });
     },
     // 鑰匙箱點擊事件
@@ -595,7 +635,6 @@ export default {
     Key_Box_Select(item) {
       this.KeyBoxShow = false;
       this.KeyBox_select = item;
-      console.log(item);
       this.KeyBoxName = item.text;
       this.KeyBoxSelectKeyId = item.KeyId;
       this.Get_KeyBox_Id();
@@ -627,7 +666,6 @@ export default {
     },
     // 鑰匙數量選中事件
     Key_Box_Key_Count_Select(item) {
-      console.log(item);
       this.KeyBoxKeyCount = item;
       this.KeyBoxKeyCountShow = false;
     },
@@ -646,7 +684,6 @@ export default {
         });
     },
     // 新增鑰匙
-    // todo: 新增鑰匙
     Add_Key() {
       aplush.apis.AddKey({
         PropertyKeyID: this.$route.query.KeyId,
@@ -664,8 +701,6 @@ export default {
         Mobile: this.Phone, //聯繫電話
         Remark: this.remark //備註
       }).then((res) => {
-        console.log('AddKey');
-        console.log(res);
         res.Flag === true ? Toast("新增鑰匙成功") : Toast(res.ErrorMsg);
       });
     },
@@ -680,8 +715,6 @@ export default {
         console.log('this.PeopleInfo');
         console.log(this.PeopleInfo);
       }).catch((err) => {
-
-        console.log("出現錯誤");
         console.log(err);
       });
     },
@@ -719,8 +752,6 @@ export default {
           }
         } else {
           this.ContactList = e;
-          console.log('this.ContactList');
-          console.log(this.ContactList);
         }
       });
       //移除選中
@@ -739,7 +770,6 @@ export default {
         1
       );
     },
-
     //收匙人
     KeyReceiver_Select(index) {
       this.KeyReceiver_keyId = this.PeopleInfo.UserDepartmentDatas[index].ResultKeyId; //收匙人keyId
@@ -752,7 +782,6 @@ export default {
       this.SearchType = 2;
       // this.SearchType="鑰匙箱位置";
       this.Base_Key_Person();
-
     },
     //鑰匙箱位置選中事件
     KeyBoxLocation_change_change(e) {
@@ -762,9 +791,6 @@ export default {
           this.KeyLocation = item.ResultName;
         }
       });
-      console.log(this.KeyBoxLocation);
-      console.log('鑰匙箱選中事件');
-      console.log(e);
     },
     // 獲取鑰匙箱位置
     Get_KeyBox_Location() {
@@ -781,7 +807,6 @@ export default {
     toogle_keybox(index) {
       this.$refs.radio_keybox[index].toggle();
     },
-
     // 收匙時間
     Ke_CollectTime() {
       this.title = "收匙時間"
@@ -809,8 +834,13 @@ export default {
     },
     //新增現場相
     Add_Scene() {
-      // TODO:新增現場相,暫時缺少接口
-      Toast('新增現場相');
+      // Toast('新增現場相');
+      this.$router.push({
+        path: '/AddScene',
+        query: {
+          keyId: this.$route.query.KeyId,
+        }
+      });
     },
     // 新增查冊
     Add_Register() {
@@ -841,8 +871,6 @@ export default {
       // TODO:發佈房源接口暫缺
       Toast('發佈房源')
     },
-
-
     formatDate(date) {
       return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     },
@@ -874,7 +902,6 @@ export default {
       this.identityTypeId = value.keyId;
       this.ZYVol.showTypePicker = false;
     },
-    // 称呼
     callShow() {
       aplush.apis.SystemType({
         Type: "23"
@@ -985,13 +1012,6 @@ export default {
         "KeyWords": this.ZYVol.KeyWords,
         "AutoCompleteType": 1,
       }).then((res) => {
-        console.log('celllist', res)
-        // res.UserDepartmentDatas.forEach((item)=>{
-        //   if(item.ResultName){
-        //     this.celllist.push(item.ResultName)
-        //   }
-        // })
-
         this.celllist = res.UserDepartmentDatas
       })
     },
@@ -1019,7 +1039,5 @@ export default {
       this.ZYVol.KeyWords = ''
       this.showcell = false
     }
-
-
-  },
+  }
 };

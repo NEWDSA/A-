@@ -500,6 +500,11 @@
         </van-button>
       </div>
     </div>
+    <van-overlay :show="loading" @click="loading = false">
+    <div style="display: flex;align-items: center;justify-content: center;height: 100%;" @click.stop>
+      <van-loading style="width: 80px;height: 80px;display: flex;align-items: center;justify-content: center;background-color: #fff;border-radius: 5px;" color="#1989fa" />
+    </div>
+  </van-overlay>
   </div>
 </template>
 
@@ -651,6 +656,7 @@ export default {
       Show_pay_type: false,
       // 房屋現狀
       Show_Property_Situation: false,
+      loading:true
     };
   },
   beforeMount() {
@@ -661,15 +667,19 @@ export default {
   },
   methods: {
     onClickLeft() {
-      this.$router.go(-1);
+      this.$router.push({
+        path: '/details',
+        query: {
+          KeyId: this.$route.query.HouseKeyId
+        }
+      });
     },
     // 基礎數據
     baseData() {
       aplush.apis.ListingDetail(this.$route.query.HouseKeyId).then((res) => {
         this.house_detail = res;
         //過濾字符萬
-        console.log("this.house_detail");
-        console.log(this.house_detail);
+
         // this.house_detail.SalePrice = this.house_detail.SalePrice.replace(
         //   "萬",
         //   ""
@@ -692,9 +702,7 @@ export default {
               "元/月",
               ""
             ));
-        console.log(this.house_detail);
-        console.log("this.house_detail rentPrice");
-        console.log(this.house_detail.RentPrice == null);
+
         //過濾面積呎
         // this.house_detail.Square = this.house_detail.Square.replace("呎", "");
         this.house_detail.Square == null
@@ -719,138 +727,88 @@ export default {
           ? this.house_detail.TrustType
           : (this.house_detail.TrustType =
               this.house_detail.TrustType.toString());
-        console.log(res);
+        this.$nextTick(()=>{
+          this.loading=false;
+        })
       });
     },
     //類型選擇基本數據
     Choose_Base() {
-      //axios all 並發解決所有問題
       //來源
-      aplush.apis
-        .SystemType({
-          Type: "22",
-        })
-        .then((res) => {
+      aplush.apis.SystemType({Type: "22",}).then((res) => {
           this.sourcefrom = res.Result.Items;
-          console.log(this.sourcefrom);
-          //房屋現狀
-          aplush.apis
-            .SystemType({
-              Type: "24",
-            })
-            .then((res) => {
-              this.house_status = res.Result.Items;
-              console.log(this.house_status);
-              this.house_status.forEach((item) => {
-                this.column_house_status.push({
+        });
+        //房屋現狀
+        aplush.apis.SystemType({Type: "24",}).then((res) => {
+            this.house_status = res.Result.Items;
+            this.house_status.forEach((item) => {
+              this.column_house_status.push({
+                text: item.ItemName,
+                value: item.KeyId,
+                content: item.ItemValue,
+              });
+            });
+          });
+        //出售原因
+        aplush.apis.SystemType({Type: "31",}).then((res) => {
+            this.sale_reason = res.Result.Items;
+            this.sale_reason.forEach((item) => {
+              this.column_sale_reason.push({
+                text: item.ItemName,
+                value: item.KeyId,
+                content: item.ItemValue,
+              });
+            });
+          });
+        //方便睇樓時間
+        aplush.apis.SystemType({Type: "65",}).then((res) => {
+            this.look_time = res.Result.Items;
+          });
+        //房型
+        aplush.apis.SystemType({Type: "25",}).then((res) => {
+            this.house_type = res.Result.Items;
+          });
+        //註冊用途
+        aplush.apis.SystemType({Type: "26",}).then((res) => {
+            this.register_use = res.Result.Items;
+          });
+        // 房源屬性
+        aplush.apis.SystemType({Type: "107",}).then((res) => {
+            this.house_attribute = res.Result.Items;
+          });
+        // 车位类型
+        aplush.apis.SystemType({Type: "30",}).then((res) => {
+            this.car_stauts = res.Result.Items;
+          });
+        //標籤
+        aplush.apis.SystemType({Type: "27",}).then((res) => {
+          this.house_tags = res.Result.Items;
+        });
+        // 租賃方式
+        aplush.apis.SystemType({Type: "32",}).then((res) => {
+            this.column_rent_type =res.Result.Items;
+            this.column_rent_type.forEach((item) => {
+                this.column_rent.push({
                   text: item.ItemName,
                   value: item.KeyId,
                   content: item.ItemValue,
                 });
-              });
-              //出售原因
-              aplush.apis
-                .SystemType({
-                  Type: "31",
-                })
-                .then((res) => {
-                  this.sale_reason = res.Result.Items;
-                  this.sale_reason.forEach((item) => {
-                    this.column_sale_reason.push({
-                      text: item.ItemName,
-                      value: item.KeyId,
-                      content: item.ItemValue,
-                    });
-                  });
-                  //方便睇樓時間
-                  aplush.apis
-                    .SystemType({
-                      Type: "65",
-                    })
-                    .then((res) => {
-                      this.look_time = res.Result.Items;
-                      //房型
-                      aplush.apis
-                        .SystemType({
-                          Type: "25",
-                        })
-                        .then((res) => {
-                          this.house_type = res.Result.Items;
-                          //註冊用途
-                          aplush.apis
-                            .SystemType({
-                              Type: "26",
-                            })
-                            .then((res) => {
-                              this.register_use = res.Result.Items;
-                              // 房源屬性
-                              aplush.apis
-                                .SystemType({
-                                  Type: "107",
-                                })
-                                .then((res) => {
-                                  this.house_attribute = res.Result.Items;
-                                  // 车位类型
-                                  aplush.apis
-                                    .SystemType({
-                                      Type: "30",
-                                    })
-                                    .then((res) => {
-                                      this.car_stauts = res.Result.Items;
-                                      console.log("this.car_stauts");
-                                      console.log(this.car_stauts);
-                                      //標籤
-                                      aplush.apis
-                                        .SystemType({
-                                          Type: "27",
-                                        })
-                                        .then((res) => {
-                                          this.house_tags = res.Result.Items;
-                                          // 租賃方式
-                                          aplush.apis
-                                            .SystemType({
-                                              Type: "32",
-                                            })
-                                            .then((res) => {
-                                              this.column_rent_type =
-                                                res.Result.Items;
-                                              this.column_rent_type.forEach(
-                                                (item) => {
-                                                  this.column_rent.push({
-                                                    text: item.ItemName,
-                                                    value: item.KeyId,
-                                                    content: item.ItemValue,
-                                                  });
-                                                }
-                                              );
-                                              // 支付類型
-                                              aplush.apis
-                                                .SystemType({
-                                                  Type: "33",
-                                                })
-                                                .then((res) => {
-                                                  this.column_pay_type =
-                                                    res.Result.Items;
-                                                  this.column_pay_type.forEach(
-                                                    (item) => {
-                                                      this.column_pay.push({
-                                                        text: item.ItemName,
-                                                        value: item.KeyId,
-                                                        content: item.ItemValue,
-                                                      });
-                                                    }
-                                                  );
-                                                });
-                                            });
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                    });
+              }
+            );
+          });
+        // 支付類型
+        aplush.apis.SystemType({Type: "33",}).then((res) => {
+            this.column_pay_type =
+              res.Result.Items;
+            this.column_pay_type.forEach((item) => {
+                this.column_pay.push({
+                  text: item.ItemName,
+                  value: item.KeyId,
+                  content: item.ItemValue,
                 });
-            });
-        });
+              }
+            );
+          });
     },
     //改變狀態
     change_Trans(e) {

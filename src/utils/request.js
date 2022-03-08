@@ -35,7 +35,6 @@ const service = axios.create({
     'phoneId': localStorage.getItem('deviceCode') // brwser only code
 
   }
-  //timeout: 5000 // request timeout
 })
 
 
@@ -76,12 +75,18 @@ service.interceptors.request.use(
     } else if (config.method === 'get') {
       config.params = removeEmpty(config.params)
     }
+    // 設置請求超時
+    config.timeout = 10000
+
     return config
   },
   error => {
     // do something with request error
     console.log(error) // for debug
-    return Promise.reject(error)
+    return Promise.reject(error).then(err => {
+      Toast.fail(err.message)
+    })
+
   }
 )
 
@@ -107,11 +112,6 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
-    // Message({
-    //   message: error.message,
-    //   type: 'error',
-    //   duration: 5 * 1000
-    // })
     Toast.fail(error.message)
     return Promise.reject(error)
   }

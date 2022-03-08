@@ -2,8 +2,8 @@
  * @Author: luciano 
  * 添加客户
  * @Date: 2021-12-17 16:03:15 
- * @Last Modified by: luciano
- * @Last Modified time: 2022-02-22 15:47:56
+ * @Last Modified by: Abner
+ * @Last Modified time: 2022-03-04 08:50:52
  */
 import aplush from "@/api/A+";
 import pinyin from "js-pinyin";
@@ -445,7 +445,7 @@ export default {
           this.$toast("添加成功");
 
         } else {
-          this.$toast(res.ErroMsg);
+          this.$toast(res.ErrorMsg);
         }
       });
     },

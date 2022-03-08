@@ -3,11 +3,14 @@
  * 新增跟進方法
  * @Date: 2021-12-29 16:37:27 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-02-24 15:21:36
+ * @Last Modified time: 2022-03-04 15:34:11
  */
 // 引入api接口
 import aplush from "@/api/A+";
 import formattime from "@/utils/format_time";
+import {
+  Toast
+} from "vant";
 export default {
   data() {
     return {
@@ -15,9 +18,10 @@ export default {
       //是否顯示房源狀態彈窗
       Show_Listing_Status: false,
       Listing_Text: "",
-      exclusive: "",
+      exclusive: "2",
       Listing_Stauts: [],
       Follow_Type: [],
+      call: "", //稱呼
       price_text: "",
       content: "",
       Follow_Content: "", //跟進內容
@@ -41,7 +45,13 @@ export default {
       PeopleInfo: [],
       Remind_TA_Date: "", //提醒TA日期
       status_text: "",
-      status_keyId: ""
+      status_keyId: "",
+      lc_saler_price: "", //售價
+      lc_type: "", //聯繫人類型
+      lc_name: "",
+      show_call: false, //是否顯示稱呼
+      Call_Name: "", //稱呼
+      Call_Name_List: [], //稱呼列表
     };
   },
   mounted() {
@@ -52,19 +62,11 @@ export default {
       .then((res) => {
         let _temp = res.Result.Items;
         _temp.forEach((item) => {
-          if (
-            item.ItemName == "信息补充" ||
-            item.ItemName == "新增联系人" ||
-            item.ItemName == "代办手续" ||
-            item.ItemName == "新开盘" ||
-            item.ItemName == "监察"
-          ) {
-            this.Follow_Type.push({
-              text: item.ItemName,
-              value: item.KeyId,
-              content: item.ItemValue
-            });
-          }
+          this.Follow_Type.push({
+            text: item.ItemName,
+            value: item.KeyId,
+            content: item.ItemValue
+          });
         });
         //   房源狀態
         aplush.apis.SystemType({
@@ -113,8 +115,8 @@ export default {
         KeyWords: this.Remind_Ta_Text,
       }).then((res) => {
         this.PeopleInfo = res;
-        console.log('this.PeopleInfo');
-        console.log(this.PeopleInfo);
+        // console.log('this.PeopleInfo');
+        // console.log(this.PeopleInfo);
       }).catch((err) => {
 
         console.log("出現錯誤");
@@ -147,7 +149,6 @@ export default {
       this.status_text = value.text;
       this.status_keyId = value.value;
       this.Show_Listing_Status = false;
-
     },
     // 取消選擇房源狀態
     Listing_Cancel() {
@@ -157,13 +158,15 @@ export default {
       this.remind_List.splice(index, 1);
     },
     ChangeCheck(e) {
-      console.log("選中的值");
-      console.log(e);
       let _teme = e;
-      const _filter_result = this.Follow_Type.find((item) => item.value == _teme);
-      this.content = _filter_result.content.split("|");
-      console.log('打印過濾結果');
-      console.log(_filter_result);
+      console.log(this.Follow_Type);
+      this.Follow_Type.forEach(item => {
+        console.log(item.text == _teme);
+        if (item.text == _teme) {
+          console.log(item.text == _teme);
+          this.content = item.content.split("|");
+        };
+      });
     },
     //標籤選擇
     ChangeCheck_Tag(e) {
@@ -192,36 +195,66 @@ export default {
       this.show_remind = true;
 
     },
+    // 稱謂
+    e_show_call() {
+      this.show_call = true;
+      this.e_call_name();
+    },
+    //調用稱謂接口
+    e_call_name() {
+      aplush.apis.SystemType({
+        Type: "23",
+      }).then(res => {
+        let _temp = res.Result.Items;
+        _temp.forEach((item) => {
+          this.Call_Name_List.push({
+            text: item.ItemName,
+            value: item.KeyId,
+            content: item.ItemValue
+          });
+        });
+      })
+    },
+    //確認稱謂
+    Call_Name_Confirm(e) {
+      console.log('e');
+      console.log(e);
+      this.Call_Name = e.text;
+      this.show_call = false;
+    },
+    // 稱謂放棄選擇事件
+    Call_Name_Change(e) {
+
+    },
+    //稱謂放棄選擇事件
+    Call_Name_Cancel() {
+      //等於空
+      this.Call_Name = '';
+
+    },
     // 新增跟進
     submit_Click() {
       aplush.apis.ListiongFollowAdd({
-        // InquiryKeyId: "0c0b57fa-d2da-cac7-6dcd-08d85ea268e3", //客戶ID
-        // FollowTypeKeyId: this.exclusive, //跟進類型Id
-        // FollowTypeCode: "", //跟進類型
-        // "MsgUserKeyIds": "", //提醒人Id
-        // "MsgDeptKeyIds": "", //提醒部門Id
-        // "MsgTime": this.Remind_TA_Date, // 提醒時間
-        // "Content": this.Follow_Content //提醒內容
-
-
-        FollowType: this.exclusive,
-        PropertyKeyId: "9f910425-b9de-c3bf-4703-08d7faf80b49",
-        TargetPropertyStatusKeyId: "",
-        ExpertTransactionKeyId: "",
-        DealType: "",
-        TransactionType: "",
-        CarNo: "",
-        TransactionSalePrice: "",
-        TransactionRentPrice: "",
-        TransactionDate: "",
-        TransactionRentToDate: "",
-        FollowContent: "",
-        MsgUserKeyIds: "",
-        MsgDeptKeyIds: "",
-        MsgTime: ""
+        FollowType: this.exclusive == '信息補充' ? '2' : this.exclusive == '申請轉盤' ? '1' 
+        : this.exclusive == '洗盤' ? '3' : this.exclusive == '新開盤' ? '4' 
+        : this.exclusive == '新增聯繫人' ? '5' : this.exclusive == '叫價' ? '6' : '2', //跟進類型
+        PropertyKeyId: "9f910425-b9de-c3bf-4703-08d7faf80b49", //房源ID
+        TargetPropertyStatusKeyId: "", //变更房源状态Id
+        ExpertTransactionKeyId: "", //行家Id
+        DealType: this.lc_DealType, //資料來源
+        TransactionType: "", //交易類型
+        CarNo: "", //車位號
+        TransactionSalePrice: this.lc_saler_price, //成交售價
+        TransactionRentPrice: "", //成交租價
+        TransactionDate: "", //成交日期
+        TransactionRentToDate: "", //最後租期
+        FollowContent: "", //跟進內容
+        MsgUserKeyIds: "", //提醒人KeyId
+        MsgDeptKeyIds: "", //提醒部門KeyId
+        MsgTime: "" //提醒時間
 
       }).then(res => {
-
+        res.Flag == true ? Toast('新增成功') : Toast('新增失敗');
       })
     }
   },

@@ -5,10 +5,8 @@
       <van-nav-bar
         fixed
         @click-left="onClickLeft"
-        @click-right=""
         class="lc_bar"
         title="新增跟進"
-        right-text="提交"
         left-arrow
       />
     </div>
@@ -17,44 +15,39 @@
       <van-cell-group>
         <van-cell title="信息補充">
           <template #right-icon>
-            <van-radio name="2" />
+            <van-radio name="信息补充" />
           </template>
         </van-cell>
         <van-cell title="申請轉盤">
           <template #right-icon>
-            <van-radio name="1" />
+            <van-radio name="申请转盘" />
           </template>
         </van-cell>
         <van-cell title="洗盤">
           <template #right-icon>
-            <van-radio name="3" />
+            <van-radio name="洗盘" />
           </template>
         </van-cell>
         <van-cell title="新開盤">
           <template #right-icon>
-            <van-radio name="4" />
+            <van-radio name="新开盘" />
           </template>
         </van-cell>
         <van-cell title="新增聯繫人">
           <template #right-icon>
-            <van-radio name="5" />
+            <van-radio name="新增联系人" />
           </template>
         </van-cell>
         <van-cell title="叫價">
           <template #right-icon>
-            <van-radio name="6" />
+            <van-radio name="叫价" />
           </template>
         </van-cell>
       </van-cell-group>
     </van-radio-group>
     <!-- 信息補充為真則顯示房源狀態 -->
     <van-cell-group>
-      <van-cell
-        center
-        v-show="exclusive"
-        title="房源狀態"
-        v-if="exclusive == 'b83a80da-adaf-4eed-94ea-3534a3491a02'"
-      >
+      <van-cell center v-show="exclusive" title="房源狀態" v-if="exclusive == '2'">
         <van-field
           readonly
           v-model="status_text"
@@ -65,6 +58,25 @@
           @click-right-icon="Show_Listing_Status = true"
         />
       </van-cell>
+      <van-cell center v-show="exclusive" title="售價" v-if="exclusive == '2'">
+        <van-field v-model="lc_saler_price" type="text" placeholder="請輸入售價" />
+      </van-cell>
+      <van-cell center title="類型" v-show="exclusive" v-if="exclusive == '3'">
+        <van-field readonly right-icon="arrow" type="text" v-model="lc_type" />
+      </van-cell>
+      <div style="display:flex;">
+        <van-field label="姓名" v-model="lc_name" type="text" placeholder="請輸入姓名" />
+        <van-field
+          class="lc_call_name"
+          @click="e_show_call"
+          size="small"
+          readonly
+          v-model="Call_Name"
+          type="text"
+          right-icon="arrow-down"
+          placeholder="請選擇稱呼"
+        />
+      </div>
     </van-cell-group>
     <!-- 租價 -->
     <van-cell-group>
@@ -88,11 +100,7 @@
       <van-radio-group v-model="Expertdeal_Status">
         <van-cell-group>
           <span class="lc_title_">行家成交狀態:</span>
-          <van-cell
-            center
-            :title="item.text"
-            v-for="(item, index) in Expertdeal"
-          >
+          <van-cell center :title="item.text" v-for="(item, index) in Expertdeal">
             <template #right-icon>
               <van-radio :name="item.value" ref="radio_keybox" />
             </template>
@@ -240,8 +248,7 @@
               v-if="item != '0'"
               class="lc_block"
               style="flex: 20%; margin: 10px"
-              >{{ item }}</span
-            >
+            >{{ item }}</span>
           </template>
           <van-field
             v-model="Follow_Content"
@@ -257,43 +264,29 @@
     <!-- 提醒TA -->
     <van-cell-group>
       <van-cell center title="提醒TA">
-        <van-button type="primary" @click="Remind_TA_Click">增加 </van-button>
+        <van-button type="primary" @click="Remind_TA_Click">增加</van-button>
       </van-cell>
       <van-cell>
-        <van-field
-          type="date"
-          v-model="Remind_TA_Date"
-          placeholder="請選擇提醒日期"
-        />
+        <van-field type="date" v-model="Remind_TA_Date" placeholder="請選擇提醒日期" />
       </van-cell>
       <van-cell>
         <div class="lc_foll_contianer">
           <template v-for="(item, index) in remind_List">
-            <span @click="remove_remind(index)" class="lc_foll_person"
-              >{{ item }}<van-icon size="14" class="lc_remove" name="cross"
-            /></span>
+            <span @click="remove_remind(index)" class="lc_foll_person">
+              {{ item }}
+              <van-icon size="14" class="lc_remove" name="cross" />
+            </span>
           </template>
         </div>
       </van-cell>
     </van-cell-group>
     <div style="position: rlative; height: 70px"></div>
     <div class="lc_submit">
-      <van-button
-        type="primary"
-        color="#f12945"
-        size="small"
-        @click="submit_Click"
-      >
-        提交
-      </van-button>
+      <van-button type="primary" color="#f12945" size="small" @click="submit_Click">提交</van-button>
     </div>
 
     <!-- 更改房源狀態彈窗 -->
-    <van-popup
-      v-model="Show_Listing_Status"
-      position="bottom"
-      :style="{ height: 'auto' }"
-    >
+    <van-popup v-model="Show_Listing_Status" position="bottom" :style="{ height: 'auto' }">
       <van-picker
         show-toolbar
         v-model="Listing_Text"
@@ -306,11 +299,7 @@
       />
     </van-popup>
     <!-- 成交時間彈出窗 -->
-    <van-popup
-      v-model="Show_Deal_Time"
-      position="bottom"
-      :style="{ height: 'auto' }"
-    >
+    <van-popup v-model="Show_Deal_Time" position="bottom" :style="{ height: 'auto' }">
       <van-datetime-picker
         type="date"
         v-model="Deal_Time"
@@ -319,28 +308,17 @@
         @cancel="Deal_Time_Cancel"
       />
     </van-popup>
-    <!-- 部門提醒 -->
-    <!-- <van-popup v-model="show_remind" position="bottom" :style="{height:'auto'}">
-      <van-search
-        v-model="Remind_TA_Text"
-        placeholder="請輸入"
-        @search="Remind_TA_Search"
+    <!-- 稱呼彈窗 -->
+    <van-popup v-model="show_call" position="bottom" :style="{ height: 'auto' }">
+      <van-picker
+        show-toolbar
+        title="稱呼"
+        :columns="Call_Name_List"
+        @change="Call_Name_Change"
+        @confirm="Call_Name_Confirm"
+        @cancel="Call_Name_Cancel"
       />
-      <template>
-        <van-cell-group>
-          <van-cell
-            v-for="(item, index) in Remind_TA_List"
-            :key="index"
-            @click="Remind_TA_Click(item)"
-            center
-            title="{{ item.name }}"
-          >
-            <van-radio name="2" ref="radio_keybox" />
-          </van-cell>
-        </van-cell-group>
-      </template>
-
-    </van-popup> -->
+    </van-popup>
     <van-dialog
       @cancel="cancel_remind"
       @confirm="confrim_remind"
@@ -359,9 +337,7 @@
             "
           >
             <div style="display: flex; justify-content: center">
-              <span style="padding-left: 5%; padding-right: 5%"
-                >選擇搜索類型</span
-              >
+              <span style="padding-left: 5%; padding-right: 5%">選擇搜索類型</span>
               <van-radio-group direction="horizontal" v-model="SearchType">
                 <van-radio name="1">聯繫人</van-radio>
                 <van-radio name="2">部門</van-radio>
@@ -383,10 +359,7 @@
       <!-- 單選 -->
       <template>
         <div class="lc_contact_scroll">
-          <van-checkbox-group
-            v-model="SearchPerson"
-            @change="Remind_item_change"
-          >
+          <van-checkbox-group v-model="SearchPerson" @change="Remind_item_change">
             <van-cell-group>
               <van-cell
                 v-for="(item, index) in PeopleInfo.UserDepartmentDatas"

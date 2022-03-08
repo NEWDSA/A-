@@ -5,7 +5,7 @@
       <van-swipe class="my-swipe" indicator-color="#f12945">
         <van-swipe-item v-for="(item, index) in Banner" :key="index">
           <div style="width: 100%; height: 0; padding-bottom: 56.25%">
-            <img style="width: 100%" :src="item.url" alt="" />
+            <img style="width: 100%" :src="item.url" alt />
           </div>
         </van-swipe-item>
       </van-swipe>
@@ -15,55 +15,46 @@
       <div class="gap1"></div>
       <!-- 設置菜單 -->
       <div style="border: none !important" class="van-grid van-hairline--top">
-        <template v-for="item in defaultMenu.HasMenus">
-          <div class="van-grid-item" style="flex-basis: 25%">
+        <template v-if="defaultMenu.HasMenus && defaultMenu.HasMenus.length > 0">
+          <div
+            v-for="item in defaultMenu.HasMenus"
+            :key="item.name"
+            class="van-grid-item"
+            style="flex-basis: 25%"
+          >
             <div
               style="border: none !important"
-              class="
-                van-grid-item__content van-grid-item__content--center
-                van-hairline
-              "
+              class="van-grid-item__content van-grid-item__content--center van-hairline"
               @click="house(item)"
             >
-              <i class="van-icon van-grid-item__icon"
-                ><img :src="item.Icon" class="van-icon__image" /><!----></i
-              ><span class="van-grid-item__text">{{ item.Name }}</span>
+              <i class="van-icon van-grid-item__icon">
+                <img :src="item.Icon" class="van-icon__image" />
+                <!---->
+              </i>
+              <span class="van-grid-item__text">{{ item.Name }}</span>
             </div>
           </div>
         </template>
         <!-- 點擊添加金剛區 -->
-        <div
-          data-v-fae5bece=""
-          class="van-grid-item"
-          style="flex-basis: 25%"
-          @click="more"
-        >
-          <div
-            class="
-              van-grid-item__content van-grid-item__content--center
-              van-hairline
-            "
-          >
-            <i class="van-icon van-grid-item__icon"
-              ><img
-                src="@/assets/icon/more_icon.png"
-                class="van-icon__image"
-              /><!----></i
-            ><span class="van-grid-item__text">更多</span>
+        <div data-v-fae5bece class="van-grid-item" style="flex-basis: 25%" @click="more">
+          <div class="van-grid-item__content van-grid-item__content--center van-hairline">
+            <i class="van-icon van-grid-item__icon">
+              <img src="@/assets/icon/more_icon.png" class="van-icon__image" />
+              <!---->
+            </i>
+            <span class="van-grid-item__text">更多</span>
           </div>
         </div>
       </div>
 
       <!-- 錄帶看 and 錄客戶box -->
       <div class="custom_box">
-        <nav class="bg1" @click="">
+        <nav class="bg1" @click="AddLook">
           <div class="container">
             <div class="main_title">錄帶看</div>
             <div class="oth_container">
-              記錄帶看客戶<img
-                src="@/assets/icon/arrow_one_icon.png"
-                class="right_icon"
-              />
+              記錄帶看客戶
+              <img src="@/assets/icon/arrow_one_icon.png" class="right_icon" />
             </div>
           </div>
         </nav>
@@ -86,28 +77,29 @@
       </div>
       <!-- 房、室、廳、衛 -->
       <!-- end 房源標題 -->
-      <div data-v-fae5bece="" class="lc_grid van-grid van-hairline--top">
-        <template v-for="(item, index) in ReduceHouse">
-          <div style="flex-basis: 50%">
-            <div data-v-fae5bece="" class="van-grid-item lc_item1">
+      <div data-v-fae5bece class="lc_grid van-grid van-hairline--top">
+        <template v-if="ReduceHouse.length > 0">
+          <div
+            v-for="(item, index) in ReduceHouse"
+            :key="item.BuildingName + '-' + index"
+            style="flex-basis: 50%"
+          >
+            <div @click="detail(item.PropertyKeyId)" data-v-fae5bece class="van-grid-item lc_item1">
               <div class="lc_content">
-                <div data-v-fae5bece="">
-                  {{ item.EstateName }}{{ item.BuildingName }}
-                </div>
+                <div data-v-fae5bece>{{ item.EstateName }}{{ item.BuildingName }}</div>
               </div>
               <div class="lc_content2">
                 <div class="lc_mix">
                   {{ item.CountF }}-{{ item.CountT }}- {{ item.CountW }}-{{
                     item.CountY
                   }}
-
                   |呎
                 </div>
                 <div class="lc_price">{{ item.SalePrice }}萬</div>
                 <div class="lc_cute">
-                  <span class="word">降</span
-                  ><span class="money">{{ item.ReducePrice }}</span
-                  ><span class="word">萬</span>
+                  <span class="word">降</span>
+                  <span class="money">{{ item.ReducePrice }}</span>
+                  <span class="word">萬</span>
                   <img class="left" src="@/assets/icon/right_icon.png" />
                 </div>
               </div>
@@ -147,21 +139,22 @@ export default {
   methods: {
     more() {
       this.$router.push("More");
+      console.log("点击")
     },
     // 頁面跳轉
     house(tags) {
       // 判斷標籤
-      tags.Name=="樓盤管理"
+      tags.Name == "樓盤管理"
         ? router.push("/House")
         : tags.Name=="客戶管理"
         ? router.push("/Customer")
         : tags.Name=="公客池"
         ? router.push("/Lounge")
-        : tags.url=="我的收藏"
-        ? router.push("/Wardrobe")
-        : tags.url=="工作量化"
+        : tags.Name=="我的收藏"
+        ? router.push("/Collect")
+        : tags.Name=="工作量化"
         ? router.push("/Work")
-        : tags.url=="成交報告"
+        : tags.Name=="成交報告"
         ? router.push("/Deal")
         : "";
     },
@@ -184,9 +177,17 @@ export default {
           this.ReduceHouse = res.Result;
         });
     },
+    // 跳轉房源詳情
+    detail(keyId) {
+      this.$router.push({ path: "details", query: { KeyId: keyId } });
+    },
     // 新增客戶
     AddCustomer() {
       this.$router.push("AddCustomer");
+    },
+    // 新增带看
+    AddLook() {
+      this.$router.push("AddLook");
     },
   },
 };
@@ -371,13 +372,13 @@ export default {
             text-align: center;
             line-height: 30px;
             border: solid 0.5px #ffffff;
-            font-size: 20px;
+            font-size: 16px;
             transform: translate(-50%, -50%);
             .word {
               font-size: 16px;
             }
             .money {
-              font-size: 20px;
+              font-size: 16px;
             }
             .left {
               margin-left: 5px;

@@ -129,49 +129,50 @@
 
       <div class="lc_house_container">
         <div class="lc_content">
-          <span class="lc_trans">交易類型: </span>
+          <span class="lc_trans">交易類型：</span>
           {{ customer.InquiryTradeType }}
         </div>
         <div class="lc_content">
-          <span class="lc_trans">心裡租價</span>
+          <span class="lc_trans">心裡租價：</span>
           {{ customer.RentPrice }}
         </div>
         <div class="lc_content">
-          <span class="lc_trans"> 房型 </span>
+          <span class="lc_trans"> 房型：</span>
 
           {{ customer.HouseType }}
         </div>
         <div class="lc_content">
-          <span class="lc_trans"> 面積 </span>
+          <span class="lc_trans"> 面積：</span>
 
           {{ customer.Area }}
         </div>
 
         <div class="lc_content">
-          <span class="lc_trans"> 朝向 </span>
+          <span class="lc_trans"> 朝向：</span>
           {{ customer.HouseDirection }}
         </div>
         <!-- 樓層 -->
         <div class="lc_content">
-          <span class="lc_trans"> 樓層 </span>
+          <span class="lc_trans"> 樓層：</span>
           {{ customer.HouseFloor }}
         </div>
         <!-- 裝修情況 -->
         <div class="lc_content">
-          <span class="lc_trans"> 裝修 </span>
+          <span class="lc_trans"> 裝修：</span>
           {{ customer.DecorationSituation }}
         </div>
         <!-- 購房原因 -->
         <div class="lc_content">
-          <span class="lc_trans"> 購房原因 </span>
+          <span class="lc_trans"> 購房原因：</span>
           {{ customer.BuyReason || "" }}
         </div>
         <!-- 來源 -->
         <div class="lc_content" v-if="customer.ParameterInquirySource">
-          <span class="lc_trans">來源</span>
+          <span class="lc_trans">來源：</span>
           {{ customer.InquirySource }}
         </div>
       </div>
+      <van-divider />
     </div>
 
     <!-- 跟進記錄 、帶看記錄 -->

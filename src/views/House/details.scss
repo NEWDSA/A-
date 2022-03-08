@@ -1,7 +1,8 @@
 .container {
   background-color: #f3f3f3;
   height: 100%;
-  overflow-y:scroll;
+  overflow-y: scroll;
+
   ::-webkit-scrollbar {
     width: 0;
     height: 0
@@ -9,56 +10,7 @@
 
   ::v-deep .van-sticky--fixed {
     .navs {
-      width: 100%;
-      top: 0;
-      height: 40px;
-      line-height: 40;
-      z-index: 200;
-      position: absolute;
-      line-height: 31px;
       background-color: #ffffff;
-
-      .van-popover__wrapper {
-        float: right;
-        margin: 5px 10px 0 10px;
-        // box-sizing: border-box;
-        // border: 1px solid pink;
-
-        img {
-          width: 31px;
-          height: 31px;
-          margin: 5px 0 0 16px;
-          float: left;
-        }
-      }
-
-      img:nth-child(1) {
-        width: 31px;
-        height: 31px;
-        margin: 5px 0 0 16px;
-        float: left;
-      }
-
-      img:nth-child(2) {
-        width: 31px;
-        height: 31px;
-        margin: 5px 8px 0 5px;
-        float: right;
-      }
-
-      img:nth-child(3) {
-        width: 31px;
-        height: 31px;
-        margin: 5px 2px 0 5px;
-        float: right;
-      }
-
-      img:nth-child(4) {
-        width: 31px;
-        height: 31px;
-        margin: 5px 2px 0 5px;
-        float: right;
-      }
     }
   }
 
@@ -67,44 +19,42 @@
     top: 0;
     z-index: 200;
     position: absolute;
-
-    ::v-deep .van-popover__wrapper {
+    height: 40px;
+    line-height: 40;
+    transition: .8s;
+    .van-popover__wrapper {
       float: right;
-      margin: 10px 10px 0 10px;
+      margin: 5px 10px 0 10px;
+    }
+
+    img {
+      width: 31px;
+      height: 31px;
+      margin: 5px 0 0 16px;
+      float: right;
     }
 
     img:nth-child(1) {
-      width: 31px;
-      height: 31px;
-      margin: 10px 0 0 16px;
+      margin: 5px 0 0 16px;
       float: left;
     }
 
     img:nth-child(2) {
-      width: 31px;
-      height: 31px;
-      margin: 10px 8px 0 5px;
-      float: right;
+      margin: 5px 8px 0 5px;
     }
 
     img:nth-child(3) {
-      width: 31px;
-      height: 31px;
-      margin: 10px 2px 0 5px;
-      float: right;
+      margin: 5px 2px 0 5px;
     }
 
     img:nth-child(4) {
-      width: 31px;
-      height: 31px;
-      margin: 10px 2px 0 5px;
-      float: right;
+      margin: 5px 2px 0 5px;
     }
   }
 
   .lc_layout {
 
-    height: 667px;
+    // height: 667px;
     overflow-y: scroll;
 
     .my-swipe {
@@ -208,17 +158,14 @@
         flex-wrap: wrap;
 
         .first {
-          // font-size: 14px;
           color: #333;
-          // padding: 8px;
+    
         }
 
         span {
           font-size: 14px;
-          font-weight: 700;
+          
           margin: 5px;
-          // width: 40%;
-          // display: inline-block;
         }
       }
     }
@@ -505,12 +452,9 @@
     height: 400px;
   }
 }
-
 .nav_follow {
   display: flex;
   justify-content: space-between;
-  // margin: 10px;
-  // margin-top: 10px;
   width: 95%;
   margin: 0 auto;
   font-size: 16px;
@@ -774,7 +718,7 @@
         position: relative;
         width: 50px;
         height: 50px;
-        background: url("/assets/icon/select-img.png") no-repeat;
+        background: url("~@/assets/icon/select-img.png") no-repeat;
         background-size: cover;
       }
 
@@ -824,7 +768,7 @@
   background-color: transparent;
 }
 
-::v-deep .van-image__img{
+::v-deep .van-image__img {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -832,37 +776,53 @@
   top: 0;
 }
 
-::v-deep .van-image{
+::v-deep .van-image {
   position: relative;
   width: 100%;
-  padding-bottom:100%;
+  padding-bottom: 100%;
 }
 
-.ZYVol{
-  .van-field{
+.ZYVol {
+  .van-field {
     padding-left: 10px;
   }
-  .checkName{
+
+  .checkName {
     display: flex;
-    .van-field{
+
+    .van-field {
       width: 50%;
     }
   }
-  .phone{
+
+  .phone {
     display: flex;
-    .address{
+
+    .address {
       width: 45%;
     }
   }
 
 }
-::v-deep .van-tab--active{
+
+::v-deep .van-tab--active {
   color: orange;
 }
-.showVOLPeople{
+
+.showVOLPeople {
   height: 118px;
   overflow-y: scroll;
-  .van-cell{
+
+  .van-cell {
     padding-left: 12px;
   }
+
+
+}
+
+::v-deep .van-uploader__preview-image {
+  .van-image__img {
+    width: 100% !important;
+  }
+
 }

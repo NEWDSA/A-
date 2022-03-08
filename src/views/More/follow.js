@@ -2,8 +2,8 @@
  * @Author: luciano 
  * 更多更進
  * @Date: 2021-12-17 16:21:20 
- * @Last Modified by: luciano
- * @Last Modified time: 2021-12-17 16:22:32
+ * @Last Modified by: Abner
+ * @Last Modified time: 2022-03-04 10:21:18
  */
 import aplush from "@/api/A+"; // 獲取樓詳情 //引入樓盤跟進
 export default {
@@ -23,13 +23,11 @@ export default {
           text: "信息補充",
         },
       ],
-      show: false,
+    followLoading: true,
     };
   },
   mounted() {
     let lc_keyId = this.$route.query.KeyId;
-    console.log("打印KeyId");
-    console.log(lc_keyId);
     let params = {
       PageIndex: this.pageIndex,
       PageSize: this.pageSize,
@@ -37,9 +35,10 @@ export default {
       IsDetails: "true",
       PropertyKeyId: lc_keyId,
     };
-
+    this.followLoading=true;
     aplush.apis.ListiongFollow(params).then((res) => {
       this.FollowUp = res.PropFollows;
+      this.followLoading=false;
     });
   },
   methods: {
@@ -50,7 +49,12 @@ export default {
     // end 返回
     // 新增跟進
     AddFollow() {
-      this.show = true;
+      this.$router.push({
+        path: "/AddFollow",
+        query: {
+          KeyId: this.$route.query.KeyId
+        }
+      });
     },
     // end 新增跟進
   },

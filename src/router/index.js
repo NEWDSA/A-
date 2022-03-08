@@ -86,6 +86,11 @@ export const constantRoutes = [
     }
   },
   {
+    path: '/Collect',
+    name: 'Collect',//我的收藏
+    component: () => import('@/views/House/collect.vue')
+  },
+  {
     path: '/EditHouse',
     name: 'EditHouse', //編輯房源
     component: () => import('@/views/House/edit.vue'),

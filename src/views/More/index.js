@@ -1,8 +1,8 @@
 /*
  * @Author: luciano 
  * @Date: 2021-12-17 16:17:49 
- * @Last Modified by: luciano
- * @Last Modified time: 2022-02-14 16:46:59
+ * @Last Modified by: Abner
+ * @Last Modified time: 2022-03-02 16:58:57
  */
 import {
   Toast
@@ -44,35 +44,35 @@ export default {
       aplus.apis.getMenu().then(res => {
         this.HomeApp = res.HasMenus;
         this.HomeApp.forEach((item) => {
-          item.bage = "-";
+          item.bage = "";
         });
         this.RecoApplication = res.NotHasMenus;
-        console.log('this.HomeApp');
       })
     },
     // 編輯應用
     EditApplication(item) {
-      if (this.index === 0) {
-        this.AppStatus = "編輯";
-        if (this.AppStatus == "編輯") {
-          this.disabled = false;
-        }
-      }
-      ++this.index;
-      if (this.AppStatus == "編輯") {
-        // this.HomeApp.forEach((item) => {
-        //   item.bage = "-";
-        // });
-        this.disabled = false;
-      }
-      // 給應用添加移除標籤
-      if (this.index === 2) {
+      if(this.index==0){
+        this.index=1;
         this.AppStatus = "完成";
+        this.disabled = false;
+        this.HomeApp.forEach((item) => {
+          item.bage = "-";
+        });
+        this.RecoApplication.forEach((item) => {
+          item.bage = "+";
+        });
+      }else{
+        this.index=0;
+        this.AppStatus = "编辑";
+        this.disabled = true;
         this.HomeApp.forEach((item) => {
           item.bage = "";
         });
-        this.index = 0;
-        this.disabled = true;
+        this.RecoApplication.forEach((item) => {
+          item.bage = "";
+        });
+        this.EditApi();
+        this.$router.push("/");
       }
     },
     //拖拽應用
@@ -86,8 +86,6 @@ export default {
           item.index = e.moved.newIndex;
         }
       });
-      this.EditApi();
-
 
     },
     // end 拖拽應用
@@ -96,18 +94,20 @@ export default {
       //待添加應用
       let obj = item;
       // end 待添加應用
-      if (this.AppStatus == "編輯" && this.index == 1) {
+      if (this.AppStatus == "完成" && this.index == 1) {
         this.HomeApp.push(obj);
         // 通過下標尋找對應的對象
         let lc_index = this.HomeApp.findIndex((item) => item == obj);
         // end 通過下標尋找對應的對象
         this.HomeApp.forEach((item, index) => {
-          console.log(item[index]);
           if (index == lc_index) {
             item.bage = "-";
           }
         });
-        this.EditApi();
+        this.RecoApplication.splice(
+          this.RecoApplication.findIndex((item) => item === obj),
+          1
+        );
       }
     },
     // 移除應用
@@ -123,8 +123,9 @@ export default {
               this.HomeApp.findIndex((item) => item === _temp),
               1
             );
-            this.EditApi();
-            this.getApp();
+            _temp.bage="+";
+            this.RecoApplication.push(_temp);
+            //this.getApp();
           });
 
         }

@@ -134,7 +134,6 @@ export default {
     //保存搜索項
     move_search() {
       this.SearchOption.pop(); //移除保存內容
-      // Cookies.set("SearchCookies", JSON.stringify(this.SearchOption));
       localStorage.setItem("SearchCookies", JSON.stringify(this.SearchOption));
     },
     select_save(e) {

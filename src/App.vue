@@ -30,15 +30,7 @@
           <span class="lc_span">消息</span>
         </template>
       </van-tabbar-item>
-      <!-- <van-tabbar-item replace to="/Mine">
-        <template #icon="props">
-          <img :src="props.active ? icon_mine.active : icon_mine.inactive" />
-          <span class="lc_span">我的</span>
-        </template>
-      </van-tabbar-item> -->
     </van-tabbar>
-    <!-- </div> -->
-    <!-- end 对路由进行判断 -->
   </div>
 </template>
 
@@ -46,7 +38,6 @@
 import aplush from "@/api/A+"; // 獲取樓詳情
 import watermark from "./utils/watermark";
 import {mapGetters} from "vuex";
-// import { getUserInfo } from "./api/authentication";
 export default {
   name: "Home",
   data() {
@@ -78,6 +69,7 @@ export default {
       unread_message: "",
     };
   },
+  
   computed: {
     ...mapGetters([
       'userInfo',
@@ -169,7 +161,6 @@ body,
 }
 .van-tabbar-item__icon img {
   display: block;
-  /* height: 0.53333rem; */
   width: 50px;
 }
 .van-tabbar-item__icon img {
@@ -193,7 +184,7 @@ body,
 ::v-deep .van-tabbar-item .van-info {
   margin-top: 10px;
 }
-// ::v-deep .van-badge--fixed {
-//   top: 12px;
-// }
+::v-deep .van-nav-bar .van-icon{
+  color: #2c2e30;
+}
 </style>

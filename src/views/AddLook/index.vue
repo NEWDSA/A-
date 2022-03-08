@@ -846,7 +846,6 @@ export default {
       this.take_time = false;
     },
     confirmPicker_take_see(val) {
-      // TODO:添加適配iphone日期格式
       let year = val.getFullYear();
       let month = val.getMonth() + 1;
       let day = val.getDate();

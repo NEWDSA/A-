@@ -3,7 +3,7 @@
  * 客戶管理
  * @Date: 2021-12-16 15:51:18 
  * @Last Modified by: luciano
- * @Last Modified time: 2022-02-09 11:25:20
+ * @Last Modified time: 2022-03-07 16:08:48
  */
 .lc_search {
   width: 20px;
@@ -77,11 +77,9 @@
 }
 
 article {
-  width: 343px;
   margin: auto;
 
   section {
-    width: 263px;
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
@@ -94,7 +92,7 @@ article {
     // }
 
     .div_active {
-      margin: 2px 0 2px 5px;
+      margin: 2px 0px 2px 20px;
       padding: 8px;
       background-color: #fdf1db;
       color: #CC00CC;
@@ -102,7 +100,7 @@ article {
     }
 
     .div_unactive {
-      margin: 2px 0 2px 5px;
+      margin: 2px 0px 2px 20px;
       padding: 8px;
       background-color: #fdf1db;
       font-size: 14px;
@@ -361,6 +359,11 @@ input:-moz-placeholder {
   margin-left: 20px;
 }
 
+::v-deep .van-pull-refresh {
+  width: 100%;
+  height: calc(100vh - 116px);
+  overflow-y: scroll;
+}
 input:-ms-input-placeholder {
   margin-left: 20px;
 }

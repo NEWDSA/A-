@@ -3,7 +3,7 @@
  * @Date: 2021-11-25 17:40:25 
  * @Last Modified by: luciano
  *  楼盘管理
- * @Last Modified time: 2022-02-11 16:49:42
+ * @Last Modified time: 2022-03-08 10:45:43
  */
 
 
@@ -39,8 +39,8 @@
 
 .lc_box_selected {
   box-sizing: border-box;
-  background-color: #f1f1f1;
-  color: #9c5858;
+  background-color: #f0c6c6;
+  // color: #9c5858;
   font-size: 12px;
   padding: 6px;
   margin: 5px;
@@ -271,9 +271,12 @@
       border-bottom: 0;
     }
   }
-  .lc_tags_hover{
-    color: #f12945;;
+
+  .lc_tags_hover {
+    color: #f12945;
+    ;
   }
+
   ::v-deep .van-cell__value--alone {
     color: #333333;
     padding-left: 16px;
@@ -445,6 +448,14 @@
     padding: 10px;
   }
 
+  .lc_sort_items {
+    height: 300px;
+
+    .lc_items {
+      padding-bottom: 71px;
+    }
+  }
+
   // 媒体查询电脑适配 大于 900
 
   // @media (min-width: 900px) {
@@ -540,6 +551,7 @@
 
 .lc_tree-select {
   height: 300px !important;
+  margin-bottom: 70px;
 }
 
 //體查詢處於某個區間 700 ~ 800
@@ -547,6 +559,16 @@
   .van-dropdown-item__content {
     .van-tree-select {
       height: 200px !important;
+      margin-bottom: 70px;
+      //relative;
+      //absolute;
     }
   }
+}
+
+//162+70=242
+::v-deep .van-pull-refresh {
+  width: 100%;
+  height: calc(100vh - 242px);
+  overflow-y: scroll;
 }

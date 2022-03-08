@@ -1,8 +1,8 @@
 /* 數據請求接口
  * @Author: luciano
  * @Date: 2021-12-17 11:19:15
- * @Last Modified by: luciano
- * @Last Modified time: 2022-02-24 15:08:03
+ * @Last Modified by: Abner
+ * @Last Modified time: 2022-03-03 10:30:29
  */
 
 import lc_request from '@/utils/request'
@@ -171,7 +171,31 @@ export default {
     //添加跟进
     ListiongFollowAdd(params) {
       return lc_request({
-        url: '/api/Property/add-follow',
+        url: '/api/Property/Property-Follow-All-Add',
+        method: 'post',
+        data: params
+      })
+    },
+    // 獲取房源實勘列表
+    ListingSurvey(params) {
+      return lc_request({
+        url: '/api/Property/get_real_survey',
+        method: 'post',
+        data: params
+      })
+    },
+    //根據實勘ID獲取實勘圖片
+    ListingPhotosByrealId(params){
+      return lc_request({
+        url: '/api/Property/get_photos_byrealId',
+        method: 'post',
+        data: params
+      })
+    },
+    // 獲取房源現場相
+    ListingAllPhoto(params) {
+      return lc_request({
+        url: '/api/Property/get_all_photos',
         method: 'post',
         data: params
       })
@@ -182,6 +206,14 @@ export default {
         url: '/api/Property/property-real-survey-obtain-photos',
         method: 'get',
         params: params
+      })
+    },
+    // 新增房源現場相
+    ListingPhotoAdd(params) {
+      return lc_request({
+        url: '/api/Property/upload_real',
+        method: 'post',
+        data: params
       })
     },
     // 添加收藏
@@ -206,6 +238,14 @@ export default {
         url: '/api/Property/trustors',
         method: 'get',
         params: params
+      })
+    },
+    //撥打業主電話
+    ListingOwnerPhone(params) {
+      return lc_request({
+        url: '/api/Property/trustor-call',
+        method: 'post',
+        data: params
       })
     },
     // 獲取鑰匙
